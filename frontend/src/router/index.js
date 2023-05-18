@@ -1,41 +1,42 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
-  {
-    path: '/',
-    redirect: '/feed'
-  },
+  // {
+  //   path: '/',
+  //   redirect: '/login'
+  // },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/Login.vue')
-  },
-  {
-    path: '/profile',
-    name: 'Profile',
-    component: () => import('../views/Profile.vue')
-    // meta: { requiresAuth: true }
-  },
-  {
-    path: '/feed',
-    name: 'Feed',
-    component: () => import('../views/Feed.vue')
-    // meta: { requiresAuth: true }
-  },
-  {
-    path: '/feed/detail',
-    name: 'Detail',
-    component: () => import('../views/Detail.vue')
-  },
-  {
-    path: '/notification',
-    name: 'Notification',
-    component: () => import('../views/Notification.vue')
-  },
-  {
-    path: '/editor',
-    name: 'Editor',
-    component: () => import('../views/Editor.vue')
+    component: () => import('../views/login.vue')
+    // }
+    // },
+    // {
+    //   path: '/profile',
+    //   name: 'Profile',
+    //   component: () => import('../views/Profile.vue')
+    //   // meta: { requiresAuth: true }
+    // },
+    // {
+    //   path: '/feed',
+    //   name: 'Feed',
+    //   component: () => import('../views/Feed.vue')
+    //   // meta: { requiresAuth: true }
+    // },
+    // {
+    //   path: '/feed/detail',
+    //   name: 'Detail',
+    //   component: () => import('../views/Detail.vue')
+    // },
+    // {
+    //   path: '/notification',
+    //   name: 'Notification',
+    //   component: () => import('../views/Notification.vue')
+    // },
+    // {
+    //   path: '/editor',
+    //   name: 'Editor',
+    //   component: () => import('../views/Editor.vue')
   }
 ]
 
