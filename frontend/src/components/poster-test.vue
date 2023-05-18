@@ -15,8 +15,8 @@
         <img alt="example" style="width: 100%" :src="previewImage" />
       </a-modal>
     </div>
-  </template>
-  <script>
+</template>
+<script>
   import { ref } from 'vue';
   function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -72,8 +72,8 @@
     previewVisible.value = true;
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
   };
-  </script>
-  <style scoped>
+</script>
+<style scoped>
   /* you can make up upload button and sample style by using stylesheets */
   .ant-upload-select-picture-card i {
     font-size: 32px;
@@ -84,4 +84,4 @@
     margin-top: 8px;
     color: #666;
   }
-  </style>
+</style>
