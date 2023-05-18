@@ -1,43 +1,30 @@
-html
 <template>
-  <form id="login-form" action="http://localhost:80" method="Post">
     <h1 class="login-font">登录</h1>
     <span>账号/邮箱/手机号</span>
-    <input type="text" maxlength="10" id="username" name="fusername" placeholder="请输入"><br>
+    <input type="text" maxlength="10" v-model="formData.uid" placeholder="请输入"><br>
     <span>密码</span>
-    <input type="password" maxlength="15" id="password" name="fpassword" placeholder="请输入">
+    <input type="password" maxlength="15" placeholder="请输入" v-model="formData.pwd">
     <div class="error-msg"></div>
-    <input type="submit" id="login-button">
-  </form>
+    <input type="submit" @click="login">
 </template>
 <script>
-export default {
-  mounted() {
-    const loginForm = document.getElementById('login-form');
-    const loginButton = document.getElementById('login-button');
-    const errorMsg = document.querySelector('.error-msg');
+import http from '../api/http'
+const router = useRouter()
+const formData = reactive({
+  uid: '',
+  pwd: ''
+})
 
-    loginForm.addEventListener('submit', (event) => {
-      event.preventDefault(); // 防止浏览器刷新页面
+const userStore = useUserStore()
+let { token } = storeToRefs(userStore)
 
-      const formData = new FormData(loginForm);
-
-      fetch('/login', {
-        method: 'Post',
-        body: formData
-      })
-        .then(response => {
-          if (response.ok) {
-            window.location.href = '/user';
-          } else {
-            response.json().then(data => {
-              errorMsg.textContent = '登陆失败';
-            });
-          }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-  }
+const login = () => {
+  http.post('/login', formData)
+    .then(rep => {
+      token.value = rep.data
+      // console.log(formData)
+      if (token.value) router.push('/feed')
+  })
 }
 </script>
 <style scoped>
