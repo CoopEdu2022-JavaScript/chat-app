@@ -1,9 +1,10 @@
-<script setup>
-import login from './components/login.vue'
-</script>
-
 <template>
-  
-  
+    <router-view />
+    <div>token={{ token }}</div>
 </template>
+  
+<script setup>
+  const userStore = useUserStore()
+  let { token } = storeToRefs(userStore)
+</script>
 
