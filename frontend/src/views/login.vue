@@ -5,9 +5,9 @@
   <span>密码</span>
   <input type="password" maxlength="15" placeholder="请输入" v-model="formData.pwd">
   <div class="error-msg"></div>
-  <input type="submit" @click="login">
+  <input value="login" type="submit" @click="login">
 </template>
-<script>
+<script setup>
 import http from '../api/http'
 const router = useRouter()
 const formData = reactive({
@@ -17,7 +17,6 @@ const formData = reactive({
 
 const userStore = useUserStore()
 let { token } = storeToRefs(userStore)
-
 const login = () => {
   http.post('/login', formData)
     .then(rep => {
