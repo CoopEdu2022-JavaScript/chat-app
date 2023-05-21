@@ -1,11 +1,11 @@
 <template>
-    <h1 class="login-font">登录</h1>
-    <span>账号/邮箱/手机号</span>
-    <input type="text" maxlength="10" v-model="formData.uid" placeholder="请输入"><br>
-    <span>密码</span>
-    <input type="password" maxlength="15" placeholder="请输入" v-model="formData.pwd">
-    <div class="error-msg"></div>
-    <input type="submit" @click="login">
+  <h1 class="login-font">登录</h1>
+  <span>账号/邮箱/手机号</span>
+  <input type="text" maxlength="10" v-model="formData.uid" placeholder="请输入"><br>
+  <span>密码</span>
+  <input type="password" maxlength="15" placeholder="请输入" v-model="formData.pwd">
+  <div class="error-msg"></div>
+  <input type="submit" @click="login">
 </template>
 <script>
 import http from '../api/http'
@@ -24,7 +24,7 @@ const login = () => {
       token.value = rep.data
       // console.log(formData)
       if (token.value) router.push('/feed')
-  })
+    })
 }
 </script>
 <style scoped>
