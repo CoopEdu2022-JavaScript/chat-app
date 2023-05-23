@@ -9,6 +9,10 @@
 </template>
 <script setup>
 import http from '../api/http'
+import { useRouter } from "vue-router"
+import { reactive } from "vue"
+import { useUserStore } from '../../store/user';
+import { storeToRefs } from 'pinia';
 const router = useRouter()
 const formData = reactive({
   uid: '',
