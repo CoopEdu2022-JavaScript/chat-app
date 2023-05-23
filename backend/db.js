@@ -15,3 +15,6 @@ db.query('select* from user', (err, data) => {
     console.log('success!', data)
   }
 })
+process.on('exit', function () {
+  db.end()
+})
