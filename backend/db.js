@@ -4,8 +4,8 @@ const mysql = require('mysql')
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '',
-  database: 'msa_db'
+  password: 'Hc20070521',
+  database: 'msachatdatabase'
 })
 
 db.query('select* from user', (err, data) => {

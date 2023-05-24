@@ -1,35 +1,21 @@
 <template>
-    <div class="body">
-        <div class="upper-box">
-            <div class="usericon"></div>
-            <div class="username">Steviline</div>
-            <div class="settings-logo">Logo</div>
-            <div class="tiezi">帖子</div>
-            <div class="fastshot">快拍</div>
-        </div>
-        <div class="context"></div>
-        <div class="lower-box">
-            <div class="mainmenu">首页</div>
-            <div class="add-logo"></div>
-            <div class="mine">我的</div>
-        </div>
+    <div class="user">
+        <div class="usericon"></div>
+        <div class="username">Steviline</div>
+    </div>
+    <div class="settings-logo">Logo</div>
+    <div class="tiezi">帖子</div>
+    <div class="fastshot">快拍</div>
+    <div class="context"></div>
+    <div class="lower-box">
+        <div class="mainmenu">首页</div>
+        <div class="add-logo"></div>
+        <div class="mine">我的</div>
     </div>
 </template>
   
 <script>
-import { defineComponent } from 'vue'
-import { useStore } from 'pinia'
 
-export default defineComponent({
-    name: 'MyComponent',
-    setup() {
-        const store = useStore()
-
-        return {
-            // any data or methods you want to use
-        }
-    }
-})
 </script>
   
 <style scoped>
@@ -38,36 +24,24 @@ export default defineComponent({
     padding: 0;
 }
 
-body {
+.user {
+    display: flex;
+    align-items: flex-end;
+    padding-left: 27.65px;
+    height: 229px;
     background-color: rgb(131, 86, 146);
 }
 
-.body {
-    margin-top: 229px;
-    background-color: rgb(50, 64, 65);
-    display: block;
-    height: 621px;
-    width: 100%;
-    border-radius: 8px 8px 0 0;
-}
-
-.upper-box {
-    display: block;
-    width: 100%;
-    background-color: rgb(29, 29, 29);
-    height: 74px;
-    border-radius: 8px 8px 0 0;
-    position: relative;
-}
-
 .usericon {
-    margin-left: 27.65px;
-    width: 71px;
-    height: 71px;
-    border: 6px solid;
-    border-radius: 71px;
-    position: absolute;
-    bottom: 68px;
+    width: 75px;
+    height: 75px;
+    border: 6px solid #1D1D1D;
+    border-radius: 40.5px;
+    position: relative;
+    top: 10px;
+    background-image: url(https://img2.baidu.com/it/u=523718858,1123582634&fm=253&fmt=auto&app=138&f=JPEG?w=231&h=500);
+    background-size: 100px;
+    background-position: 90px 120px;
 }
 
 .username {

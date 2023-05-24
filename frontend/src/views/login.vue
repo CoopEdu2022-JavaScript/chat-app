@@ -1,11 +1,11 @@
 <template>
   <h1 class="login-font">登录</h1>
-  <span>账号/邮箱/手机号</span>
+  <div class="acc">邮箱</div>
   <input type="text" maxlength="10" v-model="formData.uid" placeholder="请输入"><br>
-  <span>密码</span>
-  <input type="password" maxlength="15" placeholder="请输入" v-model="formData.pwd">
+  <div class="psw">密码</div>
+  <input type="password" minlength="6" maxlength="8" placeholder="请输入6-8位密码" v-model="formData.pwd">
   <div class="error-msg"></div>
-  <input value="login" type="submit" @click="login">
+  <input value="登录" type="submit" @click="login">
 </template>
 <script setup>
 import http from '../api/http'
@@ -31,42 +31,74 @@ const login = () => {
 }
 </script>
 <style scoped>
+div {
+  display: block;
+}
+
 * {
   margin: 0;
   padding: 0;
+  margin-left: 40px;
+  margin-right: 40px;
+  color: #FFFFFF
 }
 
 .login-font {
-  color: white;
-  margin-top: 20%;
-  margin-bottom: 20%;
+  margin-top: 105px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 42px;
+  width: 313px;
+  height: 44px;
 }
 
-body {
-  background-color: rgb(29, 29, 29);
-  padding-left: 13%;
+
+.acc {
+  margin-top: 57px;
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 13px;
 }
 
-span {
-  color: white;
-  font-size: 12px;
-  display: block;
-  margin-bottom: 20px;
+.psw {
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 16px;
 }
 
 input[type="text"],
 input[type="password"] {
+  width: 313px;
+  height: 22px;
   background-color: rgb(29, 29, 29);
-  border: 0;
-  border-bottom: 1px white solid;
-  width: 85%;
-  color: rgb(111, 111, 111);
-  outline: none;
-  line-height: 25px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px gray solid;
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
 }
 
 input[type="text"] {
-  margin-bottom: 30%;
+  margin-bottom: 60px;
+}
+
+imput[type="password"] {
+  margin-bottom: 138px;
 }
 
 input[type="text"]:focus,
@@ -77,10 +109,16 @@ input[type="password"]:focus {
 
 input[type="submit"] {
   background-color: rgb(248, 233, 253);
-  width: 85%;
-  color: white;
+  width: 313px;
+  height: 65px;
   border-radius: 20px;
-  height: 60px;
+  border: none;
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: center;
 }
 
 input[type="submit"]:active {
