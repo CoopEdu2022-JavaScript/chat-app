@@ -1,7 +1,7 @@
 <template>
     <div class="user">
         <div class="usericon"></div>
-        <div class="username">Steviline</div>
+        <div class="username">理塘丁真</div>
     </div>
     <div class="settings-logo">Logo</div>
     <div class="tiezi">帖子</div>
@@ -40,18 +40,23 @@
     position: relative;
     top: 10px;
     background-image: url(https://img2.baidu.com/it/u=523718858,1123582634&fm=253&fmt=auto&app=138&f=JPEG?w=231&h=500);
-    background-size: 100px;
-    background-position: 90px 120px;
+    background-size: 80px;
+    background-position: 80px 110px;
 }
 
 .username {
-    color: white;
+    position: relative;
+    top: 10px;
+    margin-left: 20px;
+    color: #FFFFFF;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 600;
     font-size: 20px;
-    font-weight: 700;
-    position: absolute;
-    bottom: 101px;
-    left: 124px;
-    text-shadow: 0px 1px 7px black;
+    line-height: 75px;
+    width: 81px;
+    height: 75px;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .settings-logo {
