@@ -1,20 +1,10 @@
 
-const mysql = require('mysql')
-
-const db = mysql.createConnection({
+import mysql from 'mysql'
+const db = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: '',
-  database: 'msa_db'
+  password: '123456',
+  database: 'user',
 })
 
-db.query('select* from user', (err, data) => {
-  if (err) {
-    console.log('error!', err)
-  } else {
-    console.log('success!', data)
-  }
-})
-process.on('exit', function () {
-  db.end()
-})
+

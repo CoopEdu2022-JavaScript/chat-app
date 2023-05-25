@@ -1,21 +1,14 @@
 const express = require('express')
 const app = express()
 const router = express.Router()
-const cors = require('cors')
+
 const port = 3000
 const path = require('path')
-const mysql = require('mysql')
+const db = require('./db')
 const crypto = require('crypto')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'msa_db'
-})
 
 router.post('/login', (req, res) => {
   const username = req.body.fusername
