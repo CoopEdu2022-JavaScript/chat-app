@@ -5,13 +5,13 @@ const router = express.Router()
 const cors = require('cors')
 const port = 3000
 const path = require('path')
-const db = require('./db')
+const db = require('../db')
 const crypto = require('crypto')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-router.post('/login', (req, res) => {
+router.post('/', (req, res) => {
   const username = req.body.fusername
   const password = req.body.fpassword
   if (username === undefined) {
@@ -39,7 +39,7 @@ router.post('/login', (req, res) => {
 })
 
 
-process.on('exit', function () {
-  db.end()
-})
+// process.on('exit', function () {
+//   db.end()
+// })
 module.exports = router
