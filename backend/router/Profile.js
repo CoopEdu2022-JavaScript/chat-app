@@ -6,6 +6,8 @@ const port = 3000
 const path = require('path')
 const mysql = require('mysql')
 const crypto = require('crypto')
+const db = require('../db')
+
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 // const { MongoClient, ServerApiVersion } = require('mongodb')
@@ -30,20 +32,17 @@ router.use(express.urlencoded({ extended: true }))
 // }
 // run().catch(console.dir)
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'msa_db'
+
+
+router.get('/', (req, res) => {
+  const { uid } = req.query
+  db.query('SELECT uid,uernames,email,grade FROM user WHERE uid = ?', [uid], (_err, data) => {
+    
+    res.send(data)
+  })
 })
 process.on('exit', function () {
   db.end()
 })
 
-router.get('/profile', (req, res) => {
-  const { uid } = req.query
-  db.query('SELECT * FROM user WHERE uid = ?', [uid], (_err, data) => {
-    data.forEach(info => delete info.pwd)
-    res.send(data)
-  })
-})
+module.exports = router
