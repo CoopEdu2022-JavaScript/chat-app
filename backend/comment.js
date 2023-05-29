@@ -14,13 +14,24 @@ async function createTable(coments_id) {
         password: 'password',
         database: 'mydatabase'
       })
-      const sql = (`
-        CREATE TABLE IF NOT EXISTS ? (
-          id INT PRIMARY KEY AUTO_INCREMENT,
-          name VARCHAR(255) NOT NULL,
-          email VARCHAR(255) NOT NULL UNIQUE,
-          password VARCHAR(255) NOT NULL
-        )`[coments_id])
+    //   const sql = ('SET NAMES utf8mb4;
+    //     SET FOREIGN_KEY_CHECKS = 0;
+        
+    //     -- ----------------------------
+    //     -- Table structure for conment
+    //     -- ----------------------------
+    //     DROP TABLE IF EXISTS `conment`;
+    //     CREATE TABLE `conment`  (
+    //         `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    //         `post_id` bigint NOT NULL,
+    //         `uid` bigint NOT NULL,
+    //         `date` datetime NOT NULL,
+    //         `conment_id` bigint NOT NULL AUTO_INCREMENT,
+    //         PRIMARY KEY (`conment_id`, `post_id`) USING BTREE
+    //     ) ENGINE = InnoDB AUTO_INCREMENT = 1001 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+        
+    //     SET FOREIGN_KEY_CHECKS = 1;
+    //   '[coments_id])
       const [rows, fields] = await connection.execute(sql)
       console.log('Table created successfully')
     } catch (err) {
@@ -41,7 +52,7 @@ router.post('/{id}/comment', (req, res) => {
     })
 router.get('/{id}/comment', (req, res) => {
     const { id } = req.params
-    db.query('SELECT content,date,uid,post_id FROM ? WHERE id = ?', [id], (err, data) => {
+    db.query('SELECT content,date,uid,post_id FROM ? WHERE id = ?', [id,id], (err, data) => {
         if (err) res.status(500).json({ err })
         else res.send(data)
         })
