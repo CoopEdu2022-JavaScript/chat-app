@@ -1,27 +1,132 @@
 <template>
     <div class="user">
         <div class="usericon"></div>
-        <div class="username">理塘丁真</div>
+        <div class="username">MoonShot</div>
     </div>
-    <div class="settings-logo">Logo</div>
-    <div class="tiezi">帖子</div>
-    <div class="fastshot">快拍</div>
-    <div class="context"></div>
-    <div class="lower-box">
+    <img src="../assets/Profile/ic_setting.png" class="settings">
+    <div class="background-pur">
+        <div class="background-blk">
+            <div class="tiezi">帖子</div>
+            <div class="fastshot">快拍</div>
+        </div>
+    </div>
+    <div class="context">
+        <img src="https://th.bing.com/th/id/OIP.hFrKNRbu4jH3427Gl3I4_AHaHQ?w=207&h=203&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
+        <img src="https://th.bing.com/th/id/OIP.FUlFdWUUiMrKbYA7k3BzOQHaHa?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
+        <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.RPe0ThRMPmKnvybT7Z28JQHaHa?w=177&h=180&c=7&r=0&o=5&dpr=1.6&pid=1.7"
+            alt="">
+        <img src="https://th.bing.com/th/id/OIP.FUlFdWUUiMrKbYA7k3BzOQHaHa?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
+        <img src="https://th.bing.com/th/id/OIP.FUlFdWUUiMrKbYA7k3BzOQHaHa?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
+        <img src="https://th.bing.com/th/id/OIP.FUlFdWUUiMrKbYA7k3BzOQHaHa?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
+        <div></div>
+    </div>
+    <div class="btm">
         <div class="mainmenu">首页</div>
-        <div class="add-logo"></div>
+        <button @click="showOptions = !showOptions" class="add-logo"><img src="../assets/Profile/新建帖子logo.png"
+                class="add-logo"></button>
         <div class="mine">我的</div>
+    </div>
+    <div v-if="showOptions" class="showOptions">
+        <button class="postblog">发帖</button>
+        <button class="snap">快拍</button>
     </div>
 </template>
   
-<script>
+<script setup>
+import { ref } from 'vue'
 
+const showOptions = ref(false)
 </script>
   
 <style scoped>
+.showOptions {
+    margin: 0 auto;
+    position: relative;
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.snap {
+    width: 90px;
+    height: 45px;
+    position: relative;
+    bottom: 115px;
+    background-color: rgb(218, 144, 244);
+    border: none;
+    border-radius: 8px;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.postblog {
+    color: #FFFFFF;
+    border-radius: 8px;
+    width: 90px;
+    height: 45px;
+    position: relative;
+    bottom: 115px;
+    background-color: rgb(218, 144, 244);
+    border: none;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center;
+}
+
+.btm {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-left: 62px;
+    padding-right: 62px;
+}
+
+.mainmenu {
+    display: inline-block;
+    color: gray;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    width: 32px;
+    height: 22px;
+}
+
 * {
     margin: 0;
     padding: 0;
+}
+
+.settings {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    bottom: 39px;
+    float: right;
+    margin-right: 28px;
+}
+
+.background-blk {
+    padding-top: 31px;
+    border-radius: 8px 8px 0px 0px;
+    background-color: rgb(29, 29, 29);
+    height: 74px;
+}
+
+.background-pur {
+    background-color: rgb(131, 86, 146);
+    height: 74px;
 }
 
 .user {
@@ -39,9 +144,9 @@
     border-radius: 40.5px;
     position: relative;
     top: 10px;
-    background-image: url(https://img2.baidu.com/it/u=523718858,1123582634&fm=253&fmt=auto&app=138&f=JPEG?w=231&h=500);
-    background-size: 80px;
-    background-position: 80px 110px;
+    background-image: url(https://ts1.cn.mm.bing.net/th/id/R-C.61853f05a57f939cd6ec739ff7e61214?rik=QEwRnHLQtYlc6g&riu=http%3a%2f%2fwww.lgstatic.com%2fthumbnail_300x300%2fi%2fimage2%2fM01%2fA7%2fC9%2fCgoB5lvkC5aATt8fAABmSk5TuSw416.png&ehk=Qp2d%2fXPioALkgThaG4Y5M%2fda0aEZa0YG8lP1GBrSiGk%3d&risl=&pid=ImgRaw&r=0);
+    background-size: 116px;
+    background-position: 104px -13px;
 }
 
 .username {
@@ -54,81 +159,76 @@
     font-weight: 600;
     font-size: 20px;
     line-height: 75px;
-    width: 81px;
     height: 75px;
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-.settings-logo {
-    color: white;
-    font-size: 20px;
-    font-weight: 700;
-    position: absolute;
-    bottom: 101px;
-    left: 337.35px;
-}
-
 .tiezi {
     display: inline-block;
-    margin-top: 39px;
-    margin-left: 82px;
-    width: 32px;
-    height: 22px;
+    width: 50%;
+    text-align: center;
+    height: 42px;
+    line-height: 42px;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 600;
     font-size: 16px;
-    font-weight: bold;
-    color: white
+    line-height: 22px;
+    color: #FFFFFF;
+    border-bottom: #FFFFFF 1px solid;
 }
 
 .fastshot {
     display: inline-block;
-    margin-top: 39px;
-    margin-left: 165px;
-    width: 32px;
-    height: 22px;
+    text-align: center;
+    width: 50%;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 600;
     font-size: 16px;
-    font-weight: bold;
-    color: white
-}
-
-.lower-box {
-    background-color: rgb(40, 40, 40);
-    width: 100%;
-    height: 81px;
-    line-height: 81px;
+    line-height: 22px;
+    color: rgb(153, 153, 153);
 }
 
 .context {
-    display: block;
+    align-content: flex-start;
     height: 468px;
-    width: 100%;
+    background-color: gray;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: scroll;
+    margin-bottom: 15px;
 }
 
-.mainmenu {
+.context * {
     display: block;
-    font-size: 16px;
-    color: white;
-    width: 32px;
-    height: 22px;
-    margin-left: 62px;
+    width: 50%;
+    height: 196.5px;
 }
 
 .add-logo {
-    display: block;
+    background-color: rgb(29, 29, 29);
     width: 45.35px;
     height: 34px;
-    margin-left: 142px;
-    background-color: purple;
+    display: inline-block;
+    border: none;
 }
 
 .mine {
-    display: block;
-    position: absolute;
+    display: inline-block;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 600;
     font-size: 16px;
-    color: white;
-    width: 42px;
-    height: 32px;
-    margin-left: 5px;
-    background-color: #fff;
+    line-height: 22px;
+    text-align: center;
+    width: 32px;
+    height: 22px;
+    color: #FFFFFF;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 </style>
   
