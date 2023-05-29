@@ -1,23 +1,17 @@
+
 const express = require('express')
 const app = express()
 const router = express.Router()
 const cors = require('cors')
 const port = 3000
 const path = require('path')
-const mysql = require('mysql')
+const db = require('../db')
 const crypto = require('crypto')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'msa_db'
-})
-
-router.post('/login', (req, res) => {
+router.post('/', (req, res) => {
   const username = req.body.fusername
   const password = req.body.fpassword
   if (username === undefined) {
@@ -36,18 +30,18 @@ router.post('/login', (req, res) => {
     function (err, results) {
       if (err) throw err
       if (results.length > 0) {
-        res.json({ success: true })
+        res.status(200).json({ success: true })
       } else {
         res.status(401).json({ error: '用户名或密码错误' })
       }
     }
   )
+  
 })
 
-router.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, '', 'login.html'))
-})
-process.on('exit', function () {
-  db.end()
-})
+
+// process.on('exit', function () {
+//   db.end()
+// })
+
 module.exports = router

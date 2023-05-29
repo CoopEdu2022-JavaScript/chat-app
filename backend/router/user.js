@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
   res.send('hellaljksdflkajdskljoworld')
 })
 
-router.post('/login', (req, res) => {
+router.post('/ogin', (req, res) => {
   let { uid, pwd } = req.body
   res.send(uid == 'admin' && pwd == 'admin')
 })
