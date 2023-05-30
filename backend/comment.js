@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const db = require('./db')
+
 const mysql = require('mysql2/promise')
 
 router.use(express.json())

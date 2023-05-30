@@ -1,4 +1,11 @@
 const nodemailer = require('nodemailer')
+const express = require('express')
+const router = express.Router()
+const db = require('./db')
+const mysql = require('mysql2/promise')
+
+router.use(express.json())
+router.use(express.urlencoded({ extended: true }))
 
 async function sendEmails(emails, passwords) {
   try {
@@ -11,7 +18,7 @@ async function sendEmails(emails, passwords) {
           pass: 'fhtjikavgptydieg'
         },
         tls: {
-          rejectUnauthorized: true
+          rejectUnauthorized: false
         }
     })
     for (let i = 0; i < emails.length; i++) {
@@ -31,6 +38,8 @@ async function sendEmails(emails, passwords) {
   }
 }
 
-const emails = ['user1@example.com', 'user2@example.com', 'user3@example.com']
-const passwords = ['password1', 'password2', 'password3']
+const emails = ['1735443634@qq.com']
+const passwords = ['123456']
 sendEmails(emails, passwords)
+
+get
