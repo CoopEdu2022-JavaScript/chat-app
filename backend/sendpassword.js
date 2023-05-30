@@ -42,4 +42,5 @@ const emails = ['1735443634@qq.com']
 const passwords = ['123456']
 sendEmails(emails, passwords)
 
-get
+router.post('/sendpassword', (req, res) => {
+  db.
