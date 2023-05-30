@@ -20,13 +20,13 @@ const routes = [
     path: '/usersettings',
     name: "UserSettings",
     component: () => import("../views/UserSettings.vue")
-  }
-  // {
-  //   path: '/feed',
-  //   name: 'Feed',
-  //   component: () => import('../views/Feed.vue'),
-  //   meta: { requiresAuth: true }
-  // },
+  },
+  {
+    path: '/postblog',
+    name: 'PostBlog',
+    component: () => import('../views/PostBlog.vue'),
+    meta: { requiresAuth: true }
+  },
   // {
   //   path: '/notification',
   //   name: 'Notification',
