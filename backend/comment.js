@@ -17,9 +17,7 @@ async function createTable(coments_id) {
     //   const sql = ('SET NAMES utf8mb4;
     //     SET FOREIGN_KEY_CHECKS = 0;
         
-    //     -- ----------------------------
-    //     -- Table structure for conment
-    //     -- ----------------------------
+        
     //     DROP TABLE IF EXISTS `conment`;
     //     CREATE TABLE `conment`  (
     //         `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
@@ -38,8 +36,8 @@ async function createTable(coments_id) {
       console.error('Error creating table:', err)
     }
   }
-router.post('/{id}/comment', (req, res) => {
-    const { id } = req.params
+router.post('/:id/comment', (req, res) => {
+    const id = req.params
 
     createTable(id)
     const { content, user_id } = req.body
@@ -50,8 +48,8 @@ router.post('/{id}/comment', (req, res) => {
         else res.send(true)
         })
     })
-router.get('/{id}/comment', (req, res) => {
-    const { id } = req.params
+router.get('/:id/comment', (req, res) => {
+    const  id  = req.params
     db.query('SELECT content,date,uid,post_id FROM ? WHERE id = ?', [id,id], (err, data) => {
         if (err) res.status(500).json({ err })
         else res.send(data)
