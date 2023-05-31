@@ -1,10 +1,10 @@
 const express = require('express')
 const multer = require('multer')
 const mysql = require('mysql2/promise')
+const jwt = require('jsonwebtoken')
 const router = express.Router()
-const app = express()
 
-// 配置 multer 中间件
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/')
@@ -19,56 +19,67 @@ const upload = multer({ storage: storage })
 const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: '123456',
-  database: 'user'
+  password: 'password',
+  database: 'mydb'
 })
 
-// 处理上传请求
-router.post('/upload', upload.array('images', 9), async function (req, res, next) {
-	const { post_id } = req.query
-	const files = req.files
-	if (!files || files.length === 0) {
-		const error = new Error('Please upload at least one file')
-		error.status = 400
-		return next(error)
-	}
-	try {
-		// 将文件信息存入数据库
-		const conn = await pool.getConnection()
-		const promises = files.map(file => {
-			return conn.query('INSERT INTO images (filename, path) VALUES (?, ?) WHERE post_id = ?' [file.filename, file.path, post_id])
-		});
-		await Promise.all(promises)
-		conn.release()
-		res.send('Files uploaded successfully')
-	} catch (err) {
-		console.error('Error uploading files:', err)
-		res.status(500).json({ error: 'Internal server error' })
-	}
+// 配置 JWT 密钥
+const JWT_SECRET = 'mysecretkey'
+
+// 登录路由
+router.post('/login', async (req, res) => {
+  try {
+    const { username, password } = req.body
+    const conn = await pool.getConnection()
+    const [rows] = await conn.query('SELECT * FROM user WHERE username = ?', [username])
+    conn.release()
+    if (!rows.length) {
+      res.status(401).json({ message: 'Invalid username or password' })
+      return
+    }
+    const user = rows[0]
+    const match = await bcrypt.compare(password, user.password)
+    if (!match) {
+      res.status(401).json({ message: 'Invalid username or password' })
+      return
+    }
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET)
+    res.json({ token })
+  } catch (err) {
+    console.error('Error logging in:', err)
+    res.status(500).json({ err })
+  }
 })
 
-router.get('/images', async function (req, res) {
-	const { post_id } = req.query
-	try {
-		// Fetch image data from database
-		const conn = await pool.getConnection()
-		const [rows] = await conn.query('SELECT * FROM images')
-		conn.release()
-		// Map rows to image objects
-		const images = rows.map(row => {
-			return {
-				filename: row.filename,
-				path: row.path
-			}
-		})
-		res.json(images)
-	} catch (err) {
-		console.error('Error fetching images:', err)
-		res.status(500).json({ error: 'Internal server error' })
-	}
+// 上传文件路由
+router.post('/upload', authenticateToken, upload.single('file'), async (req, res) => {
+  try {
+    const { filename } = req.file
+    const conn = await pool.getConnection()
+    const [result] = await conn.query('INSERT INTO file (filename) VALUES (?)', [filename])
+    conn.release()
+    res.json({ id: result.insertId, filename })
+  } catch (err) {
+    console.error('Error uploading file:', err)
+    res.status(500).json({ err })
+  }
 })
 
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+  if (token == null) {
+    res.status(401).json({ message: 'Unauthorized' })
+    return
+  }
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    if (err) {
+      res.status(403).json({ message: 'Forbidden' })
+      return
+    }
+    req.user = decoded
+    next()
+  })
+}
 
-router.listen(3000, function () {
-  console.log('Server started on port 3000')
-})
+module.exports = router

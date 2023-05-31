@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const db = require('./db')
 
-process.env.JWT_SECRET = 'mysecretkey'
+
 
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
