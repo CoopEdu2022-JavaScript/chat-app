@@ -39,6 +39,11 @@ const showOptions = ref(false)
 </script>
   
 <style scoped>
+* {
+    margin: 0;
+    padding: 0;
+}
+
 .showOptions {
     margin: 0 auto;
     position: relative;
