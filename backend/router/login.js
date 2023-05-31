@@ -1,47 +1,73 @@
-
 const express = require('express')
-const app = express()
 const router = express.Router()
-const cors = require('cors')
-const port = 3000
-const path = require('path')
-const db = require('../db')
-const crypto = require('crypto')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const db = require('./db')
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+process.env.JWT_SECRET = 'mysecretkey'
 
-router.post('/', (req, res) => {
-  const username = req.body.fusername
-  const password = req.body.fpassword
-  if (username === undefined) {
-    res.status(400).json({ error: '用户名或密码不能为空' })
+router.use(express.json())
+router.use(express.urlencoded({ extended: true }))
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+  if (token == null) {
+    res.status(401).json({ message: 'Unauthorized' })
     return
   }
-  if (password === undefined) {
-    res.status(400).json({ error: '用户名或密码不能为空' })
-    return
-  }
-  const hash = crypto.createHash('sha3-256')
-  hash.update(password)
-  const passwordHashed = hash.digest('hex')
-  db.query('SELECT * FROM users WHERE usernames = ? AND passwords = ?',
-    [username, passwordHashed],
-    function (err, results) {
-      if (err) throw err
-      if (results.length > 0) {
-        res.status(200).json({ success: true })
-      } else {
-        res.status(401).json({ error: '用户名或密码错误' })
-      }
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      res.status(403).json({ message: 'Forbidden' })
+      return
     }
-  )
-  
+    req.user = user
+    next()
+  })
+}
+
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body
+    const sql = 'SELECT * FROM user WHERE email = ?'
+    const values = [email]
+    const [rows] = await db.query(sql, values)
+    if (!rows.length) {
+      res.status(401).json({ message: 'Invalid email or password' })
+      return
+    }
+    const user = rows[0]
+    const match = await bcrypt.compare(password, user.password)
+    if (!match) {
+      res.status(401).json({ message: 'Invalid email or password' })
+      return
+    }
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET)
+    res.json({ token })
+  } catch (err) {
+    console.error('Error logging in:', err)
+    res.status(500).json({ err })
+  }
+})
+
+router.get('/profile', authenticateToken, async (req, res) => {
+  try {
+    const sql = 'SELECT * FROM user WHERE id = ?'
+    const values = [req.user.id]
+    const [rows] = await db.query(sql, values)
+    if (!rows.length) {
+      res.status(404).json({ message: 'User not found' })
+      return
+    }
+    const user = rows[0]
+    res.json({ email: user.email, name: user.name })
+  } catch (err) {
+    console.error('Error fetching profile:', err)
+    res.status(500).json({ err })
+  }
 })
 
 
-// process.on('exit', function () {
-//   db.end()
-// })
 
 module.exports = router
+
