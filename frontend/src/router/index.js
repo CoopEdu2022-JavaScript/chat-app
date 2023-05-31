@@ -27,12 +27,11 @@ const routes = [
     component: () => import('../views/PostBlog.vue'),
     meta: { requiresAuth: true }
   },
-  // {
-  //   path: '/notification',
-  //   name: 'Notification',
-  //   component: () => import('../views/Notification.vue'),
-  //   meta: { requiresAuth: true }
-  // },
+  {
+    path: '/feed',
+    name: 'Feed',
+    component: () => import('../views/Feed.vue'),
+  }
   // {
   //   path: '/editor',
   //   name: 'Editor',

@@ -45,6 +45,11 @@ watch(inputText, (newVal) => {
 });
 </script>
 <style scoped>
+* {
+    margin: 0;
+    padding: 0;
+}
+
 .clear-button {
     position: relative;
     top: 0px;
@@ -59,6 +64,7 @@ watch(inputText, (newVal) => {
 }
 
 .picupload label {
+    border-radius: 10px;
     background-repeat: no-repeat;
     display: block;
     width: 150px;
@@ -72,7 +78,8 @@ input[type="file"] {
 }
 
 .picupload {
-    margin: 36px auto 0 auto;
+    margin-top: 36px;
+    margin-left: 40px;
     width: 75%;
 }
 
@@ -81,7 +88,7 @@ input[type="file"] {
     overflow: auto;
     margin-left: 40px;
     width: 80%;
-    height: 300px;
+    height: 100px;
     background-color: rgb(29, 29, 29);
     border: none;
     font-family: 'PingFang SC';
