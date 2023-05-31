@@ -51,17 +51,25 @@ router.post('/login', async (req, res) => {
   }
 })
 
-// 上传文件路由
-router.post('/upload', authenticateToken, upload.single('file'), async (req, res) => {
+app.post('/upload', upload.array('images', 9), async function (req, res, next) {
+  const files = req.files
+  if (!files || files.length === 0) {
+    const error = new Error('Please upload at least one file')
+    error.status = 400
+    return next(error)
+  }
   try {
-    const { filename } = req.file
+    // 将文件信息存入数据库
     const conn = await pool.getConnection()
-    const [result] = await conn.query('INSERT INTO file (filename) VALUES (?)', [filename])
+    const promises = files.map(file => {
+      return conn.query('INSERT INTO images (filename, path) VALUES (?, ?)', [file.filename, file.path])
+    })
+    await Promise.all(promises)
     conn.release()
-    res.json({ id: result.insertId, filename })
+    res.send('Files uploaded successfully')
   } catch (err) {
-    console.error('Error uploading file:', err)
-    res.status(500).json({ err })
+    console.error('Error uploading files:', err)
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 
