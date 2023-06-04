@@ -31,13 +31,23 @@ const routes = [
     path: '/feed',
     name: 'Feed',
     component: () => import('../views/Feed.vue'),
+  },
+  {
+    path: '/likes',
+    name: 'Likes',
+    component: () => import('../views/Likes.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/replies',
+    name: 'Replies',
+    component: () => import('../views/Replies.vue')
+  },
+  {
+    path: '/postsnapshot',
+    name: 'PostSnapShot',
+    component: () => import('../views/PostSnapShot.vue')
   }
-  // {
-  //   path: '/editor',
-  //   name: 'Editor',
-  //   component: () => import('../views/Editor.vue'),
-  //   meta: { requiresAuth: true }
-  // }
 ]
 
 const router = createRouter({
