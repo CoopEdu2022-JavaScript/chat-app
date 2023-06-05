@@ -232,8 +232,5 @@ const showOptions = ref(false)
     color: #FFFFFF;
 }
 
-::-webkit-scrollbar {
-    display: none;
-}
 </style>
   

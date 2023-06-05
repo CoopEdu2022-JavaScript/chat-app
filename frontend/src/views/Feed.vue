@@ -135,8 +135,8 @@ const showOptions = ref(false)
 }
 
 .blogs {
-    margin: 29px auto 0 auto;
-    width: 353px;
+    margin: 5% auto 5% auto;
+    width: 90%;
     height: 484px;
     background-color: #fff;
 }
@@ -172,8 +172,8 @@ const showOptions = ref(false)
 
 .fastshot-list {
     margin-top: 2px;
-    width: 100%;
-    margin-left: 20px;
+    width: 95%;
+    margin-left: 5%;
     gap: 10px;
     height: 117px;
     display: flex;
@@ -196,7 +196,7 @@ const showOptions = ref(false)
     align-items: center;
     color: gray;
     margin-top: 19px;
-    margin-left: 20px;
+    margin-left: 5%;
 }
 
 .notifications {
@@ -207,22 +207,20 @@ const showOptions = ref(false)
     background-size: contain;
     border: none;
     line-height: 28px;
-    position: relative;
-    left: 12px;
 }
 
 .header {
-    width: 357px;
+    width: 90%;
     line-height: 28px;
     height: 28px;
-    margin: 75px auto 0 auto;
+    margin: 5% auto 5% auto;
     display: flex;
     justify-content: space-between;
 }
 
 .header input {
     line-height: 28px;
-    width: 313px;
+    width: 80%;
     height: 28px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 20px;

@@ -55,7 +55,7 @@
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
-    width: 200px;
+    width: 180px;
     /* identical to box height */
 
 

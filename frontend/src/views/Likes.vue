@@ -135,7 +135,7 @@
     background-color: #fff;
     width: 44px;
     height: 50px;
-    margin-right: 20px;
+    margin-right: 5%;
     border-radius: 8px;
 }
 
@@ -152,7 +152,7 @@
     color: gray;
     position: absolute;
     bottom: 0;
-    margin-left: 12px;
+    margin-left: 10%;
 }
 
 .event {
@@ -194,7 +194,7 @@
     display: inline-block;
     width: 50px;
     height: 50px;
-    margin-left: 8px;
+    margin-left: 3%;
     background-color: red;
     border-radius: 25px;
     margin-right: 16px;
@@ -251,7 +251,7 @@
 .header .placehold {
     width: 16px;
     height: 16px;
-    margin-right: 20px;
+    margin-right: 5%;
 }
 
 .header .return-arrow {
@@ -261,7 +261,7 @@
     background-image: url(../assets/PostBlog/ic_back.png);
     background-size: contain;
     background-color: rgb(29, 29, 29);
-    margin-left: 20px;
+    margin-left: 5%;
 }
 
 .header span {

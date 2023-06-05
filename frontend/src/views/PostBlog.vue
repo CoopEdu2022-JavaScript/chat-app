@@ -70,7 +70,8 @@ watch(inputText, (newVal) => {
     width: 150px;
     height: 150px;
     background-color: rgb(41, 41, 41);
-    background-size: 150px 150px;
+    background-size: cover;
+    background-position:center;
 }
 
 input[type="file"] {
@@ -86,8 +87,6 @@ input[type="file"] {
 .context textarea {
     resize: none;
     overflow: auto;
-    margin-left: 40px;
-    width: 80%;
     height: 100px;
     background-color: rgb(29, 29, 29);
     border: none;
@@ -97,19 +96,21 @@ input[type="file"] {
     font-size: 16px;
     line-height: 22px;
     color: #FFFFFF;
+    width: 100%;
 }
 
 .context {
-    margin-top: 20px;
+    margin: 20px auto 0 auto;
+    width: 80%;
 }
 
 .blogtitle {
-    width: 312px;
+    width: 80%;
     height: 34px;
     margin: 40px auto 0 auto;
     display: flex;
-    justify-content: space-around;
-    align-items: last baseline;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 .blogtitle span {
@@ -118,6 +119,7 @@ input[type="file"] {
 }
 
 .blogtitle input {
+    overflow: auto;
     background-color: rgb(29, 29, 29);
     border: none;
     font-family: 'PingFang SC';
