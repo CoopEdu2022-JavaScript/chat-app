@@ -50,6 +50,12 @@ watch(inputText, (newVal) => {
     padding: 0;
 }
 
+input[placeholder="标题"]:focus,
+textarea:focus {
+    outline: none;
+    border-bottom: 1px solid white;
+}
+
 .clear-button {
     position: relative;
     top: 0px;
@@ -71,7 +77,7 @@ watch(inputText, (newVal) => {
     height: 150px;
     background-color: rgb(41, 41, 41);
     background-size: cover;
-    background-position:center;
+    background-position: center;
 }
 
 input[type="file"] {
@@ -80,7 +86,7 @@ input[type="file"] {
 
 .picupload {
     margin-top: 36px;
-    margin-left: 40px;
+    margin-left: 10%;
     width: 75%;
 }
 
@@ -151,14 +157,14 @@ input[type="file"] {
     background-size: contain;
     border-radius: 15px;
     float: right;
-    margin-right: 20px;
+    margin-right: 5%;
 }
 
 .heading .return-arrow {
     border: none;
     height: 16px;
     width: 16px;
-    margin-left: 20px;
+    margin-left: 5%;
     background-image: url(../assets/PostBlog/ic_back.png);
     background-size: contain;
     background-color: rgb(29, 29, 29);

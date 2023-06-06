@@ -125,7 +125,7 @@ const option2 = () => {
 .header .placehold {
     width: 16px;
     height: 16px;
-    margin-right: 20px;
+    margin-right: 5%;
 }
 
 .header .return-arrow {
@@ -135,7 +135,7 @@ const option2 = () => {
     background-image: url(../assets/PostBlog/ic_back.png);
     background-size: contain;
     background-color: rgb(29, 29, 29);
-    margin-left: 20px;
+    margin-left: 5%;
 }
 
 .header {

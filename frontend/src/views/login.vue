@@ -35,6 +35,12 @@ div {
   display: block;
 }
 
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-bottom: 1px solid white;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -98,14 +104,10 @@ input[type="text"] {
   margin-bottom: 60px;
 }
 
-imput[type="password"] {
+input[type="password"] {
   margin-bottom: 138px;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus {
-  color: white;
-}
 
 
 input[type="submit"] {

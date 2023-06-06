@@ -7,11 +7,11 @@
     <div class="cards">
         <div class="options">
             <div class="opt">
-                <img src="../assets/PostSnapShot/Ellipse 104.png" alt="图片未加载">
+                <img src="../assets/PostSnapShot/5.png" alt="图片未加载">
                 <span>吃饱了</span>
             </div>
             <div class="opt">
-                <img src="../assets/PostSnapShot/Ellipse 107.png" alt="图片未加载">
+                <img src="../assets/PostSnapShot/4.png" alt="图片未加载">
                 <span>有点儿意思</span>
             </div>
             <div class="opt">
@@ -53,7 +53,7 @@
                 <span>充满力量</span>
             </div>
             <div class="opt">
-                <img src="../assets/PostSnapShot/Rectangle 413.png" alt="图片未加载">
+                <img src="../assets/PostSnapShot/10.png" alt="图片未加载">
                 <span>酸了</span>
             </div>
             <div class="opt">
@@ -95,7 +95,7 @@
     text-align: center;
     height: 125px;
     width: 353px;
-    margin-left: 10px;
+    margin-left: 2.5%;
     margin-bottom: 43px;
 }
 
@@ -109,7 +109,7 @@
 }
 
 .title2 {
-    margin-left: 20px;
+    margin-left: 5%;
     margin-top: 16px;
     font-family: 'PingFang SC';
     font-style: normal;
@@ -127,7 +127,7 @@
     line-height: 34px;
     margin-top: 40px;
     color: #FFFFFF;
-    margin-left: 20px;
+    margin-left: 5%;
 }
 
 * {
@@ -142,7 +142,7 @@
     background-image: url(../assets/PostBlog/ic_back.png);
     background-size: contain;
     background-color: rgb(29, 29, 29);
-    margin-left: 20px;
+    margin-left: 5%;
     margin-top: 76px;
 }
 </style>

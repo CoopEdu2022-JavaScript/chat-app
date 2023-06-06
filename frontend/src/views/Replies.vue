@@ -11,7 +11,7 @@
                 <span class="user-icon"></span>
                 <span class="username">UserA</span>
                 <span class="event"> 
-                    fsdfsdfsdfsdfsdf
+                    fsdfsdfsdfdajkshdjkadfjksdfsdfsdf
                 </span>
                 <span class="time">22:00</span>
             </div>
@@ -26,7 +26,7 @@
     background-color: #fff;
     width: 44px;
     height: 50px;
-    margin-right: 20px;
+    margin-right: 5%;
     border-radius: 8px;
 }
 
@@ -42,7 +42,7 @@
     bottom: 0;
     text-align: right;
     color: gray;
-    margin-left: 6px;
+    margin-left: 1%;
 }
 
 .event {
@@ -55,7 +55,7 @@
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
-    width: 180px;
+    width: 60%;
     /* identical to box height */
 
 
@@ -86,10 +86,10 @@
     display: inline-block;
     width: 50px;
     height: 50px;
-    margin-left: 8px;
+    margin-left: 2.4%;
     background-color: red;
     border-radius: 25px;
-    margin-right: 16px;
+    margin-right: 4%;
 }
 
 .read-or-not {
@@ -104,7 +104,7 @@
 .user-block {
     width: 320px;
     height: 50px;
-    margin-left: 20px;
+    margin-left: 5%;
     position: relative;
 }
 
@@ -143,7 +143,7 @@
 .header .placehold {
     width: 16px;
     height: 16px;
-    margin-right: 20px;
+    margin-right: 5%;
 }
 
 .header .return-arrow {
@@ -153,7 +153,7 @@
     background-image: url(../assets/PostBlog/ic_back.png);
     background-size: contain;
     background-color: rgb(29, 29, 29);
-    margin-left: 20px;
+    margin-left: 5%;
 }
 
 .header span {
