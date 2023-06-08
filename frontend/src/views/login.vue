@@ -1,11 +1,13 @@
 <template>
   <h1 class="login-font">登录</h1>
   <div class="acc">邮箱</div>
-  <input type="text" maxlength="10" v-model="formData.uid" placeholder="请输入"><br>
-  <div class="psw">密码</div>
-  <input type="password" minlength="6" maxlength="8" placeholder="请输入6-8位密码" v-model="formData.pwd">
-  <div class="error-msg"></div>
-  <input value="登录" type="submit" @click="login">
+  <form action="">
+    <input type="text" name="ID" maxlength="10" placeholder="请输入"><br>
+    <div class="psw">密码</div>
+    <input type="password" name="passwords" minlength="6" maxlength="8" placeholder="请输入6-8位密码">
+    <div class="error-msg"></div>
+    <input value="登录" type="submit">
+  </form>
 </template>
 <script setup>
 import http from '../api/http'
