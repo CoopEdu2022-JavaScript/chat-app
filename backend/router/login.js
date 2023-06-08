@@ -39,17 +39,14 @@ router.post('/', async (req, res) => {
     if (rows==null) {
       res.status(401).json({ message: 'Invalid email or password' })
       return
-    }
-    const user = rows[0]
-    
-    if (!match) {
-      res.status(401).json({ message: 'Invalid stuID or password' })
-      return
-    } else {
+    }else {
       const token = setToken({ user_id: user.uid })
       res.status(200).json({ message: 'Login success' ,statue: true,token:token})
       
     }
+    const user = rows[0]
+    
+    
     // const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET)
     // res.json({ token })
   } catch (err) {
