@@ -33,15 +33,15 @@ router.use(express.urlencoded({ extended: true }))
 router.post('/', async (req, res) => {
   try {
     const { ID, password } = req.body
-    const sql = 'SELECT passwords,uid FROM users WHERE stuID= ?'
-    const values = [ID]
+    const sql = 'SELECT uid FROM users WHERE stuID= ? AND passwords= ?'
+    const values = [ID,password]
     const [rows,fields] = await db.query(sql, values)
-    if (!rows.length) {
+    if (rows==null) {
       res.status(401).json({ message: 'Invalid email or password' })
       return
     }
     const user = rows[0]
-    const match = await bcrypt.compare(password, user.password)
+    
     if (!match) {
       res.status(401).json({ message: 'Invalid stuID or password' })
       return
