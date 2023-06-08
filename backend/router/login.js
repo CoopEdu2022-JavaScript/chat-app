@@ -3,6 +3,8 @@ const router = express.Router()
 const bcrypt = require('bcryptjs')
 // const jwt = require('jsonwebtoken')
 const db = require('../db')
+const { setToken } = require('../jwt_config')
+const { getPayload } = require('../jwt_config')
 
 
 
@@ -44,7 +46,9 @@ router.post('/', async (req, res) => {
       res.status(401).json({ message: 'Invalid stuID or password' })
       return
     } else {
-      res.status(200).json({ message: 'Login success' ,statue: true,uid:user.uid})
+      const token = setToken({ user_id: user.uid })
+      res.status(200).json({ message: 'Login success' ,statue: true,token:token})
+      
     }
     // const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET)
     // res.json({ token })
@@ -56,9 +60,9 @@ router.post('/', async (req, res) => {
 
 router.get('/profile', async (req, res) => {
   try {
-    
+    const user_id = getPayload(req).user_id
     const sql = 'SELECT * FROM users WHERE uid = ?'
-    const values = [req.query]
+    const values = [user_id]
     const [rows] = await db.query(sql, values)
     if (!rows.length) {
       res.status(404).json({ message: 'User not found' })
