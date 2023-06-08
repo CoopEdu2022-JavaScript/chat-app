@@ -36,6 +36,7 @@ router.post('/', async (req, res) => {
     const sql = 'SELECT uid FROM users WHERE stuID= ? AND passwords= ?'
     const values = [ID,password]
     const [rows,fields] = await db.query(sql, values)
+    const user = rows[0]
     if (rows==null) {
       res.status(401).json({ message: 'Invalid email or password' })
       return
@@ -44,7 +45,7 @@ router.post('/', async (req, res) => {
       res.status(200).json({ message: 'Login success' ,statue: true,token:token})
       
     }
-    const user = rows[0]
+    
     
     
     // const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET)
