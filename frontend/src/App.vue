@@ -15,5 +15,6 @@ let { token } = storeToRefs(userStore)
     bottom: 0;
     color: white;
 }
+
 </style>
 

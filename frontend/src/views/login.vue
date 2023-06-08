@@ -35,11 +35,15 @@ div {
   display: block;
 }
 
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-bottom: 1px solid white;
+}
+
 * {
   margin: 0;
   padding: 0;
-  margin-left: 40px;
-  margin-right: 40px;
   color: #FFFFFF
 }
 
@@ -51,7 +55,8 @@ div {
   font-weight: 600;
   font-size: 30px;
   line-height: 42px;
-  width: 313px;
+  width: 80%;
+  margin-left: 10%;
   height: 44px;
 }
 
@@ -63,9 +68,9 @@ div {
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
-  width: 28px;
   height: 28px;
   margin-bottom: 13px;
+  margin-left: 10%;
 }
 
 .psw {
@@ -75,11 +80,12 @@ div {
   font-size: 14px;
   line-height: 20px;
   margin-bottom: 16px;
+  margin-left: 10%;
 }
 
 input[type="text"],
 input[type="password"] {
-  width: 313px;
+  width: 80%;
   height: 22px;
   background-color: rgb(29, 29, 29);
   border-top: none;
@@ -91,25 +97,22 @@ input[type="password"] {
   font-weight: 400;
   font-size: 16px;
   line-height: 22px;
+  margin-left: 10%;
 }
 
 input[type="text"] {
   margin-bottom: 60px;
 }
 
-imput[type="password"] {
+input[type="password"] {
   margin-bottom: 138px;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus {
-  color: white;
-}
 
 
 input[type="submit"] {
   background-color: rgb(248, 233, 253);
-  width: 313px;
+  width: 80%;
   height: 65px;
   border-radius: 20px;
   border: none;
@@ -119,6 +122,7 @@ input[type="submit"] {
   font-size: 20px;
   line-height: 28px;
   text-align: center;
+  margin-left: 10%;
 }
 
 input[type="submit"]:active {

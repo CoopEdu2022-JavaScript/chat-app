@@ -119,7 +119,7 @@ const showOptions = ref(false)
     position: relative;
     bottom: 39px;
     float: right;
-    margin-right: 28px;
+    margin-right: 5.5%;
 }
 
 .background-blk {
@@ -157,7 +157,7 @@ const showOptions = ref(false)
 .username {
     position: relative;
     top: 10px;
-    margin-left: 20px;
+    margin-left: 5%;
     color: #FFFFFF;
     font-family: 'PingFang SC';
     font-style: normal;
@@ -232,8 +232,5 @@ const showOptions = ref(false)
     color: #FFFFFF;
 }
 
-::-webkit-scrollbar {
-    display: none;
-}
 </style>
   

@@ -50,6 +50,12 @@ watch(inputText, (newVal) => {
     padding: 0;
 }
 
+input[placeholder="标题"]:focus,
+textarea:focus {
+    outline: none;
+    border-bottom: 1px solid white;
+}
+
 .clear-button {
     position: relative;
     top: 0px;
@@ -70,7 +76,8 @@ watch(inputText, (newVal) => {
     width: 150px;
     height: 150px;
     background-color: rgb(41, 41, 41);
-    background-size: 150px 150px;
+    background-size: cover;
+    background-position: center;
 }
 
 input[type="file"] {
@@ -79,15 +86,13 @@ input[type="file"] {
 
 .picupload {
     margin-top: 36px;
-    margin-left: 40px;
+    margin-left: 10%;
     width: 75%;
 }
 
 .context textarea {
     resize: none;
     overflow: auto;
-    margin-left: 40px;
-    width: 80%;
     height: 100px;
     background-color: rgb(29, 29, 29);
     border: none;
@@ -97,19 +102,21 @@ input[type="file"] {
     font-size: 16px;
     line-height: 22px;
     color: #FFFFFF;
+    width: 100%;
 }
 
 .context {
-    margin-top: 20px;
+    margin: 20px auto 0 auto;
+    width: 80%;
 }
 
 .blogtitle {
-    width: 312px;
+    width: 80%;
     height: 34px;
     margin: 40px auto 0 auto;
     display: flex;
-    justify-content: space-around;
-    align-items: last baseline;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 .blogtitle span {
@@ -118,6 +125,7 @@ input[type="file"] {
 }
 
 .blogtitle input {
+    overflow: auto;
     background-color: rgb(29, 29, 29);
     border: none;
     font-family: 'PingFang SC';
@@ -149,14 +157,14 @@ input[type="file"] {
     background-size: contain;
     border-radius: 15px;
     float: right;
-    margin-right: 20px;
+    margin-right: 5%;
 }
 
 .heading .return-arrow {
     border: none;
     height: 16px;
     width: 16px;
-    margin-left: 20px;
+    margin-left: 5%;
     background-image: url(../assets/PostBlog/ic_back.png);
     background-size: contain;
     background-color: rgb(29, 29, 29);
