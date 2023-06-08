@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 const express = require('express')
 const router = express.Router()
-const db = require('./db')
+const db = require('../db')
 
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
@@ -10,7 +10,7 @@ router.post('/post', async (req, res) => {
   try {
     const { title, content, user_id } = req.body
     const time = (new Date()).toISOString().slice(0, 19).replace('T', ' ')
-    const sql = 'INSERT INTO post (title, content, date, uid) VALUES (?, ?, ?, ?)'
+    const sql = 'INSERT INTO post (title, content, date, uid,likes) VALUES (?, ?, ?, ?,0)'
     const values = [title, content, time, user_id]
     await db.query(sql, values)
     res.send(true)
@@ -22,7 +22,7 @@ router.post('/post', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const { id } = req.params
+    const id  = req.params
     const sql = 'SELECT title, content, date, uid, likes, comments_id, post_id FROM post WHERE id = ?'
     const values = [id]
     const rows = await db.query(sql, values)

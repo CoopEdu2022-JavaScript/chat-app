@@ -6,36 +6,6 @@ const mysql = require('mysql2/promise')
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
-async function createTable(coments_id) {
-    try {
-      const connection = await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: 'password',
-        database: 'mydatabase'
-      })
-    //   const sql = ('SET NAMES utf8mb4;
-    //     SET FOREIGN_KEY_CHECKS = 0;
-        
-        
-    //     DROP TABLE IF EXISTS `conment`;
-    //     CREATE TABLE `conment`  (
-    //         `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-    //         `post_id` bigint NOT NULL,
-    //         `uid` bigint NOT NULL,
-    //         `date` datetime NOT NULL,
-    //         `conment_id` bigint NOT NULL AUTO_INCREMENT,
-    //         PRIMARY KEY (`conment_id`, `post_id`) USING BTREE
-    //     ) ENGINE = InnoDB AUTO_INCREMENT = 1001 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
-        
-    //     SET FOREIGN_KEY_CHECKS = 1;
-    //   '[coments_id])
-      const [rows, fields] = await connection.execute(sql)
-      console.log('Table created successfully')
-    } catch (err) {
-      console.error('Error creating table:', err)
-    }
-  }
 router.post('/:id/comment', (req, res) => {
     const id = req.params
 
