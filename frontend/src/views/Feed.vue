@@ -39,7 +39,7 @@
     </div>
     <div v-if="showOptions" class="showOptions">
         <button class="postblog">发帖</button>
-        <button class="snap">快拍</button>
+        <button class="snap">快拍</button> 
     </div>
 </template>
 <script setup>
