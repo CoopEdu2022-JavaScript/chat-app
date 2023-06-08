@@ -1,37 +1,50 @@
 <template>
   <h1 class="login-font">登录</h1>
   <div class="acc">邮箱</div>
-  <form action="">
-    <input type="text" name="ID" maxlength="10" placeholder="请输入"><br>
-    <div class="psw">密码</div>
-    <input type="password" name="passwords" minlength="6" maxlength="8" placeholder="请输入6-8位密码">
-    <div class="error-msg"></div>
-    <input value="登录" type="submit">
-  </form>
+  <input v-model="formData.ID" type="text" name="ID" maxlength="10" placeholder="请输入"><br>
+  <div class="psw">密码</div>
+  <input v-model="formData.password" type="password" name="password" minlength="6" maxlength="8" placeholder="请输入6-8位密码">
+  <div class="error-msg">{{ errorMsg }}</div>
+  <button type="submit" @click="login">登录</button>
 </template>
+
 <script setup>
 import http from '../api/http'
 import { useRouter } from "vue-router"
-import { reactive } from "vue"
+import { reactive, ref } from "vue"
 import { useUserStore } from '../../store/user';
 import { storeToRefs } from 'pinia';
+
 const router = useRouter()
 const formData = reactive({
-  uid: '',
-  pwd: ''
+  ID: '',
+  password: ''
 })
-
-const userStore = useUserStore()
-let { token } = storeToRefs(userStore)
+const { user_id, token } = storeToRefs(useUserStore())
+const errorMsg = ref('')
 const login = () => {
+
   http.post('/login', formData)
-    .then(rep => {
-      token.value = rep.data
-      // console.log(formData)
-      if (token.value) router.push('/feed')
+    .then(response => {
+      if (response.data.statue) {
+        user_id.value = response.data.user_id
+        token.value = response.data.token
+        router.push('/feed')
+      } else {
+        errorMsg.value = response.data.message
+      }
+    })
+    .catch(error => {
+      errorMsg.value = '登录失败，请稍后重试。'
     })
 }
 </script>
+
+<style scoped>
+/* 样式不变 */
+</style>
+
+
 <style scoped>
 div {
   display: block;
@@ -112,7 +125,7 @@ input[type="password"] {
 
 
 
-input[type="submit"] {
+button {
   background-color: rgb(248, 233, 253);
   width: 80%;
   height: 65px;
@@ -127,7 +140,7 @@ input[type="submit"] {
   margin-left: 10%;
 }
 
-input[type="submit"]:active {
+button:active {
   background-color: rgb(189, 108, 216);
 }
 

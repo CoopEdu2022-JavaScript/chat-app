@@ -1,12 +1,18 @@
 <template>
     <router-view />
     <span class="token">token={{ token }}</span>
+    <button @click="test">dqwdwhdkqjwhhk</button>
 </template>
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '../store/user.js'
 const userStore = useUserStore()
 let { token } = storeToRefs(userStore)
+const test = () => {
+  http.get('/').then((rep) => {
+    console.log(rep.data)
+  })
+}
 </script>
 <style scoped>
 .token {
