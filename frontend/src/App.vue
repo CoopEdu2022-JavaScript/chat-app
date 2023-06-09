@@ -1,7 +1,6 @@
 <template>
-    <router-view />
-    <span class="token">token={{ token }}</span>
-    <button @click="test">dqwdwhdkqjwhhk</button>
+  <router-view />
+  <!-- <span class="token">token={{ token }}</span> -->
 </template>
 <script setup>
 import { storeToRefs } from 'pinia'
@@ -13,14 +12,15 @@ const test = () => {
     console.log(rep.data)
   })
 }
+
 </script>
+
 <style scoped>
 .token {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    color: white;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  color: white;
 }
-
 </style>
 

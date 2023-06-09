@@ -1,6 +1,7 @@
+
 <template>
   <h1 class="login-font">登录</h1>
-  <div class="acc">邮箱</div>
+  <div class="acc">学号</div>
   <input v-model="formData.ID" type="text" name="ID" maxlength="10" placeholder="请输入"><br>
   <div class="psw">密码</div>
   <input v-model="formData.password" type="password" name="password" minlength="6" maxlength="8" placeholder="请输入6-8位密码">
@@ -9,26 +10,28 @@
 </template>
 
 <script setup>
+
 import http from '../api/http'
 import { useRouter } from "vue-router"
 import { reactive, ref } from "vue"
 import { useUserStore } from '../../store/user';
 import { storeToRefs } from 'pinia';
-
 const router = useRouter()
 const formData = reactive({
   ID: '',
   password: ''
 })
-const { user_id, token } = storeToRefs(useUserStore())
+const { token } = storeToRefs(useUserStore())
 const errorMsg = ref('')
 const login = () => {
 
   http.post('/login', formData)
     .then(response => {
+      console.log(response.data.token)
+      const TOKEN_KEY = 'my_jwt_token'
       if (response.data.statue) {
-        user_id.value = response.data.user_id
         token.value = response.data.token
+        localStorage.setItem(TOKEN_KEY, token.value) // 将令牌存储到 localStorage 中
         router.push('/feed')
       } else {
         errorMsg.value = response.data.message
@@ -46,6 +49,15 @@ const login = () => {
 
 
 <style scoped>
+.error-msg {
+  margin-top: 3%;
+  margin-left: 10%;
+  font-size: 12px;
+  color: rgb(255, 189, 189);
+  margin-bottom: 30%;
+  height: 12px;
+}
+
 div {
   display: block;
 }
@@ -119,10 +131,6 @@ input[type="text"] {
   margin-bottom: 60px;
 }
 
-input[type="password"] {
-  margin-bottom: 138px;
-}
-
 
 
 button {
@@ -142,12 +150,6 @@ button {
 
 button:active {
   background-color: rgb(189, 108, 216);
-}
-
-.error-msg {
-  font-size: 12px;
-  color: rgb(255, 189, 189);
-  margin-bottom: 106px;
 }
 </style>
 

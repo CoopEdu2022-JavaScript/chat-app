@@ -32,19 +32,23 @@
     </div>
     <div class="blogs">Blogs</div>
     <div class="btm">
-        <div class="mainmenu">首页</div>
+        <button class="mainmenu">首页</button>
         <button @click="showOptions = !showOptions" class="add-logo"><img src="../assets/Profile/新建帖子logo.png"
                 class="add-logo"></button>
-        <div class="mine">我的</div>
+        <button @click="goToProfile" class="mine">我的</button>
     </div>
     <div v-if="showOptions" class="showOptions">
         <button class="postblog">发帖</button>
-        <button class="snap">快拍</button> 
+        <button class="snap">快拍</button>
     </div>
 </template>
 <script setup>
 import { ref } from 'vue'
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
+function goToProfile() {
+    router.push('/profile');
+}
 const showOptions = ref(false)
 </script>
 <style scoped>
@@ -66,7 +70,9 @@ const showOptions = ref(false)
     text-align: center;
     width: 32px;
     height: 22px;
-    color: #FFFFFF;
+    background-color: rgb(29, 29, 29);
+    border: none;
+    color: rgb(153, 153, 153);
 }
 
 .showOptions {
@@ -112,8 +118,8 @@ const showOptions = ref(false)
 }
 
 .mainmenu {
+    background-color: rgb(29, 29, 29);
     display: inline-block;
-    color: gray;
     font-family: 'PingFang SC';
     font-style: normal;
     font-weight: 600;
@@ -121,6 +127,8 @@ const showOptions = ref(false)
     line-height: 22px;
     width: 32px;
     height: 22px;
+    border: none;
+    color: #FFFFFF;
 }
 
 .btm {

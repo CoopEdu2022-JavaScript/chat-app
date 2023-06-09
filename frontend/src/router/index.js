@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-
+import { useAuthStore } from '../../store/auth'
 const routes = [
   {
     path: '/',
@@ -31,6 +31,7 @@ const routes = [
     path: '/feed',
     name: 'Feed',
     component: () => import('../views/Feed.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/likes',
@@ -55,13 +56,14 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach((to, from, next) => {
-//   const token = useAuthStore().token // 判断用户是否已登录
-//   if (to.matched.some(record => record.meta.requiresAuth) && !token) {
-//     next('/login')
-//   } else {
-//     next()
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = useAuthStore().token // 判断用户是否已登录
+  console.log(isAuthenticated)
+  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
+    next('/login')
+  } else {
+    next()
+  }
+})
 
 export default router
