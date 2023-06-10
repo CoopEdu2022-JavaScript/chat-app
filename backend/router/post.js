@@ -100,6 +100,17 @@ router.get('/:id/hlike', async(req, res) => {
   }
 })                                                      
 
+router.get('/getallpost', async (req, res) => {
+  const { user_id } = getPayload(req)
+  try {
+    const sql = 'SELECT * FROM post where uid = ?'
+    const values = [user_id]
+    const [rows] = await db.query(sql, values)
+    res.json(rows[0])
+  } catch (err) {
+    console.error('Error fetching post:', err)
+    res.status(500).json({ err })
+  }
 
 module.exports = router
 
