@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer')
 const express = require('express')
 const router = express.Router()
-const db = require('./db')
-const mysql = require('mysql2/promise')
+const db = require('../db')
+
 
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
@@ -38,9 +38,9 @@ async function sendEmails(emails, passwords) {
   }
 }
 
-const emails = ['1735443634@qq.com']
-const passwords = ['123456']
-sendEmails(emails, passwords)
+// const emails = ['1735443634@qq.com']
+// const passwords = ['123456']
+// sendEmails(emails, passwords)
 
 router.post('/sendpassword', async(req, res) => {
   try {
@@ -52,15 +52,17 @@ router.post('/sendpassword', async(req, res) => {
     const  [rows, fields] = await db.query(sql)
     let emails = []
     let passwords = []
-    for (let i = 0; i < rows.length; i++) {
-      emails.push(rows[i].email)
-      passwords.push(rows[i].password)
+    for (let i = 0; i < rows[0].length; i++) {
+      emails.push(rows[0][i].email)
+      passwords.push(rows[0][i].password)
     }
     sendEmails(emails, passwords)
     res.send(true)
     
   } catch(err){
-    console.error('not success', err)
-        res.status(500).json({err});
-      } 
-    });
+    console.error('not success', err);
+    res.status(500).json({err});
+  } 
+});
+
+module.exports = router

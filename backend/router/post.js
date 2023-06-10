@@ -11,7 +11,7 @@ router.post('/newpost', async (req, res) => {
     const { user_id } = getPayload(req)
     const { title, content} = req.body
     
-    const sql = `INSERT INTO post (title, content,date, uid, likes) VALUES ('${title}', '${content}', NOW(),${user_id}, 0)`
+    const sql = `INSERT INTO post (title, content,date, uid, likes,coments_id) VALUES ('${title}', '${content}', NOW(),${user_id}, 0)`
     
     const [rows]= await db.query(sql)
     res.json(rows[0])
@@ -24,7 +24,7 @@ router.post('/newpost', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const id  = req.params.id
-    const sql = 'SELECT title, content, date, uid, likes, coments_id, post_id FROM post WHERE post_id = ?'
+    const sql = 'SELECT * FROM post WHERE post_id = ?'
     const values = [id]
     const [rows] = await db.query(sql, values)
     res.json(rows[0])
