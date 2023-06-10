@@ -43,7 +43,6 @@ router.post('/', async (req, res) => {
     }else {
       const token = setToken({ user_id: user.uid })
       res.status(200).json({ message: 'Login success' ,statue: true,token:token})
-      
     }
     
     

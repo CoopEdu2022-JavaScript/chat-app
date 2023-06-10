@@ -6,7 +6,7 @@ const port = 3000
 app.use(express.json())
 
 const corsOptions = {
-  origin: 'http://localhost:5173'
+  origin: ['http://localhost:5173', 'http://172.10.21.169:5173', 'http://10.16.0.152:5173']
 }
 app.use(cors(corsOptions))
 
