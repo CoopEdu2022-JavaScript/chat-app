@@ -1,57 +1,45 @@
 const express = require('express')
 const multer = require('multer')
 const db = require('../db')
-const jwt = require('jsonwebtoken')
+
 const router = express.Router()
 const { getPayload } = require('../jwt_config')
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname)
-  }
-})
-const upload = multer({ storage: storage })
+const upload = multer({ dest: 'uploads/' })
+
 
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
-app.post('/:id', upload.single('image'), async function (req, res, next) {
-  const files = req.files
-  const { id } = req.params
+router.post('/:id/upload', upload.single('image'), async (req, res) => {
+  const {id} = req.params
   const user_id = getPayload(req).user_id
-  if (!files || files.length === 0) {
-    const error = new Error('Please upload at least one file')
-    error.status = 400
-    return next(error)
-  }
+  const { originalname, mimetype, filename, path, size } = req.file
+  const sql = 'INSERT INTO images (name, type, filename, path, size,post_id,uid) VALUES (?, ?, ?, ?, ?);UPDATE post SET images = images + 1 WHERE post_id = ?'
+  const values = [originalname, mimetype, filename, path, size,id,user_id,id]
   try {
-    
-    await db.query(`INSERT INTO images (user_id, date,post_id) VALUES (${user_id}, NOW()),id`)
-    res.send('Files uploaded successfully')
+    const conn = await db.getConnection()
+    const [rows] = await conn.query(sql, values)
+    conn.release()
+    console.log('File uploaded successfully')
+    res.send('File uploaded successfully')
   } catch (err) {
-    console.error('Error uploading files:', err)
+    console.error('Error uploading file:', err)
     res.status(500).json({ error: 'Internal server error' })
   }
 })
-
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1]
-  if (token == null) {
-    res.status(401).json({ message: 'Unauthorized' })
-    return
+router.get('/:id', async (req, res) => {
+  try {
+    const id  = req.params.id
+    const sql = 'SELECT * FROM post WHERE post_id = ?'
+    const values = [id]
+    const [rows] = await db.query(sql, values)
+    res.json(rows[0])
+  } catch (err) {
+    console.error('Error fetching post:', err)
+    res.status(500).json({ err })
   }
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      res.status(403).json({ message: 'Forbidden' })
-      return
-    }
-    req.user = decoded
-    next()
-  })
-}
+})
+
 
 module.exports = router

@@ -111,6 +111,7 @@ router.get('/getallpost', async (req, res) => {
     console.error('Error fetching post:', err)
     res.status(500).json({ err })
   }
+})
 
 module.exports = router
 
