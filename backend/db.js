@@ -4,11 +4,12 @@ const mysql = require('mysql2')
 const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: 'Hc20070521',
+  password: '123456',
   database: 'user',
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  multipleStatements: true
 })
 
 module.exports = pool.promise()
