@@ -57,6 +57,7 @@ router.post('/', async (req, res) => {
 
 router.get('/profile', async (req, res) => {
   try {
+    console.log(req)
     const user_id = getPayload(req).user_id
     const sql = 'SELECT * FROM users WHERE uid = ?'
     const values = [user_id]
@@ -66,7 +67,7 @@ router.get('/profile', async (req, res) => {
       return
     }
     const user = rows[0]
-    res.json({ email: user.email, name: user.name ,stuID:user.stuID})
+    res.json({ email: user.email, name: user.usernames ,stuID:user.stuID})
   } catch (err) {
     console.error('Error fetching profile:', err)
     res.status(500).json({ err })
