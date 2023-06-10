@@ -25,10 +25,8 @@ const formData = reactive({
 const { token } = storeToRefs(useUserStore())
 const errorMsg = ref('')
 const login = () => {
-
   http.post('/login', formData)
     .then(response => {
-      console.log(response.data.token)
       const TOKEN_KEY = 'my_jwt_token'
       if (response.data.statue) {
         token.value = response.data.token

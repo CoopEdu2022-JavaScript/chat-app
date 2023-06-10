@@ -38,7 +38,7 @@
         <button @click="goToProfile" class="mine">我的</button>
     </div>
     <div v-if="showOptions" class="showOptions">
-        <button class="postblog">发帖</button>
+        <button class="postblog" @click="goToPostBlog">发帖</button>
         <button class="snap">快拍</button>
     </div>
 </template>
@@ -48,6 +48,9 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 function goToProfile() {
     router.push('/profile');
+}
+function goToPostBlog() {
+    router.push('/postblog');
 }
 const showOptions = ref(false)
 </script>

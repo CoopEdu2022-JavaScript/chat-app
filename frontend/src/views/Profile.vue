@@ -1,7 +1,7 @@
 <template>
     <div class="user">
         <div class="usericon"></div>
-        <div class="username">{{ user ? user.name : '' }}</div>
+        <div class="username">{{ user ? user.usernames : '' }}</div>
     </div>
     <img src="../assets/Profile/ic_setting.png" class="settings">
     <div class="background-pur">
@@ -27,7 +27,7 @@
         <button class="mine">我的</button>
     </div>
     <div v-if="showOptions" class="showOptions">
-        <button class="postblog">发帖</button>
+        <button @click="goToPostBlog" class="postblog">发帖</button>
         <button class="snap">快拍</button>
     </div>
 </template>
@@ -47,13 +47,15 @@ http.get('/login/profile', {
   }
 })
   .then(response => {
-    console.log(response)
     user.value=response.data
   })
 //============
 const router = useRouter();
 function goToFeed() {
     router.push('/feed');
+}
+function goToPostBlog() {
+    router.push('/postblog');
 }
 const showOptions = ref(false)
 </script>
