@@ -41,5 +41,28 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+router.get('/:id', async function (req, res, next) {
+  const { id } = req.params
+  const user_id = getPayload(req).user_id
+  try {
+    const [rows] = await db.query('SELECT * FROM images WHERE post_id = ?', [id])
+    if (rows.length === 0) {
+      const error = new Error('Image not found')
+      error.status = 404
+      return next(error)
+    }
+    const { filename, mimetype, size } = rows[0]
+    const filePath = path.join(__dirname, '..', 'uploads', filename)
+    const fileStream = fs.createReadStream(filePath)
+    res.setHeader('Content-Type', mimetype)
+    res.setHeader('Content-Length', size)
+    fileStream.pipe(res)
+  } catch (err) {
+    console.error('Error retrieving image:', err)
+    const error = new Error('Internal server error')
+    error.status = 500
+    next(error)
+  }
+})
 
 module.exports = router
