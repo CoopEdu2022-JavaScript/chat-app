@@ -21,19 +21,19 @@ router.post('/newpost', async (req, res) => {
   }
 })
 
-router.get('/:id', async (req, res) => {
-  try {
-    const id  = req.params.id
-    const sql = 'SELECT * FROM post WHERE post_id = ?'
-    const values = [id]
-    const [rows] = await db.query(sql, values)
-    res.json(rows[0])
-  } catch (err) {
-    console.error('Error fetching post:', err)
-    res.status(500).json({ err })
-  }
-})
-
+// router.get('/:id', async (req, res) => {
+//   try {
+//     const id  = req.params.id
+//     const sql = 'SELECT * FROM post WHERE post_id = ?'
+//     const values = [id]
+//     const [rows] = await db.query(sql, values)
+//     res.json(rows[0])
+//   } catch (err) {
+//     console.error('Error fetching post:', err)
+//     res.status(500).json({ err })
+//   }
+// })
+//上面先注释掉，不然跑不了
 router.put('/:id/likes', async(req, res) => {
   // const { id } = req.params
   // db.query('UPDATE post SET likes = likes + 1 WHERE id = ?', [id], (err, data) => {
@@ -101,17 +101,16 @@ router.get('/:id/hlike', async(req, res) => {
 })                                                      
 
 router.get('/getallpost', async (req, res) => {
-  const { user_id } = getPayload(req)
   try {
+    const { user_id } = getPayload(req)
     const sql = 'SELECT * FROM post where uid = ?'
     const values = [user_id]
     const [rows] = await db.query(sql, values)
-    res.json(rows[0])
+    res.json(rows)
   } catch (err) {
     console.error('Error fetching post:', err)
     res.status(500).json({ err })
   }
-
+})
 module.exports = router
-
 
