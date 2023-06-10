@@ -1,7 +1,7 @@
 <template>
     <div class="user">
         <div class="usericon"></div>
-        <div class="username">MoonShot</div>
+        <div class="username">{{ user ? user.name : '' }}</div>
     </div>
     <img src="../assets/Profile/ic_setting.png" class="settings">
     <div class="background-pur">
@@ -35,6 +35,22 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
+//===========
+import http from '../api/http'
+const user = ref(null)
+const TOKEN_KEY = 'my_jwt_token'
+const token = localStorage.getItem(TOKEN_KEY)
+
+http.get('/login/profile', {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+})
+  .then(response => {
+    console.log(response)
+    user.value=response.data
+  })
+//============
 const router = useRouter();
 function goToFeed() {
     router.push('/feed');
