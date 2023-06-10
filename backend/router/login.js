@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
     const { ID, password } = req.body
     const sql = 'SELECT uid FROM users WHERE stuID= ? AND passwords= ?'
     const values = [ID,password]
-    const [rows,fields] = await db.query(sql, values)
+    const [rows] = await db.query(sql, values)
     const user = rows[0]
     if (rows==null) {
       res.status(401).json({ message: 'Invalid email or password' })
@@ -67,7 +67,7 @@ router.get('/profile', async (req, res) => {
       return
     }
     const user = rows[0]
-    res.json({ email: user.email, name: user.name ,stuID:user.stuID})
+    res.json({ email: user.email, usernames: user.usernames ,stuID:user.stuID})
   } catch (err) {
     console.error('Error fetching profile:', err)
     res.status(500).json({ err })

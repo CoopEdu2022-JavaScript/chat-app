@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const jwtConfig = {
-  secretKey: 'you_shell_not_pass!', // JWT signing key
+  secretKey: '123', // JWT signing key
   algorithm: 'HS256', // encryption algorithm
   expiresIn: '1h'  // expire time
 }
