@@ -18,7 +18,7 @@ const upload = multer({ storage: storage })
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
-app.post(':id/upload', upload.array('images', 9), async function (req, res, next) {
+app.post('/:id', upload.single('image'), async function (req, res, next) {
   const files = req.files
   const { id } = req.params
   const user_id = getPayload(req).user_id
@@ -29,7 +29,7 @@ app.post(':id/upload', upload.array('images', 9), async function (req, res, next
   }
   try {
     
-    await db.query(`INSERT INTO images (user_id, date) VALUES (${user_id}, NOW())`)
+    await db.query(`INSERT INTO images (user_id, date,post_id) VALUES (${user_id}, NOW()),id`)
     res.send('Files uploaded successfully')
   } catch (err) {
     console.error('Error uploading files:', err)
