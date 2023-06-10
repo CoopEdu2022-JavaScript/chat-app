@@ -1,15 +1,15 @@
 <template>
     <div class="heading">
-        <button class="return-arrow"></button>
-        <button class="postblog">
+        <button @click="goBack" class="return-arrow"></button>
+        <button type="submit" @click="sendPost" class="postblog">
         </button>
     </div>
     <div class="blogtitle">
-        <input maxlength="20" placeholder="标题" v-model="inputText" />
+        <input v-model="formData.title" name="title" maxlength="20" placeholder="标题" />
         <span>{{ textCount }}/20</span>
     </div>
     <div class="context">
-        <textarea placeholder="分享你的生活" cols="30" rows="10"></textarea>
+        <textarea v-model="formData.content" name="content" placeholder="分享你的生活" cols="30" rows="10"></textarea>
     </div>
     <div class="picupload">
         <label for="fileInput" class="custom-file-input" :style="{ backgroundImage: `url(${previewSrc})` }">
@@ -19,11 +19,33 @@
     </div>
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, reactive } from 'vue';
 import previewImage from '../assets/PostBlog/btn_addphotos.png';
+import { useRouter } from 'vue-router';
+import http from '../api/http'
+const router = useRouter();
 const inputText = ref('');
 const textCount = ref(0);
 const previewSrc = ref(previewImage);
+const TOKEN_KEY = 'my_jwt_token';
+const token = localStorage.getItem(TOKEN_KEY);
+const formData = reactive({
+    title: '',
+    content: ''
+})
+const sendPost = () => {
+    http.post('/post/newpost', formData, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            router.push('/feed')
+        })
+        .catch(error => {
+            //
+        })
+}
 function handleFileChange(event) {
     const file = event.target.files[0];
     if (file) {
@@ -39,6 +61,9 @@ function clearPreview(event) {
     previewSrc.value = previewImage;
     const fileInput = document.querySelector('#fileInput');
     fileInput.value = '';
+}
+function goBack() {
+    router.go(-1)
 }
 watch(inputText, (newVal) => {
     textCount.value = newVal.length;
