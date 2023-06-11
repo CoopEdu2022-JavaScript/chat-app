@@ -87,10 +87,9 @@ const showOptions = ref(false)
 }
 
 .snap {
+    right: 20%;
     width: 90px;
     height: 45px;
-    position: relative;
-    bottom: 115px;
     background-color: rgb(218, 144, 244);
     border: none;
     border-radius: 8px;
@@ -101,6 +100,7 @@ const showOptions = ref(false)
     line-height: 22px;
     text-align: center;
     color: #FFFFFF;
+    position:fixed;
 }
 
 .postblog {
@@ -108,8 +108,6 @@ const showOptions = ref(false)
     border-radius: 8px;
     width: 90px;
     height: 45px;
-    position: relative;
-    bottom: 115px;
     background-color: rgb(218, 144, 244);
     border: none;
     font-family: 'PingFang SC';
@@ -118,6 +116,8 @@ const showOptions = ref(false)
     font-size: 16px;
     line-height: 22px;
     text-align: center;
+    left: 20%;
+    position: fixed;
 }
 
 .mainmenu {
@@ -142,7 +142,10 @@ const showOptions = ref(false)
     flex-wrap: wrap;
     padding-left: 62px;
     padding-right: 62px;
-    margin-top: 20px;
+    background-color: rgb(29, 29, 29);
+    position: fixed;
+    bottom:0;
+    padding-bottom: 5%;
 }
 
 .blogs {
