@@ -3,36 +3,41 @@ const express = require('express')
 const router = express.Router()
 const db = require('../db')
 const { getPayload } = require('../jwt_config')
+const {v5 : uuidv5} = require("uuid")
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
 router.post('/newpost', async (req, res) => {
   try {
+    
     const { user_id } = getPayload(req)
     const { title, content} = req.body
-    
-    const sql = `INSERT INTO post (title, content,date, uid, likes,coments_id) VALUES ('${title}', '${content}', NOW(),${user_id}, 0,0)`
+    const namespace = '8e884ace-bee4-11e4-8dfc-aa07a5b093db'
+    const time = new Date().getTime().toString()
+    const uuid = uuidv5(`${title}${content}${user_id}${time}`, namespace)
+    const sql = `INSERT INTO post (title, content,date, uid, likes,coments_id,post_id) VALUES ('${title}', '${content}', NOW(),${user_id}, 0,0,'${uuid}')`
     
     const [rows]= await db.query(sql)
-    res.json(rows[0])
+    
+    res.json({state:true , post_id:uuid})
   } catch (err) {
     console.error('Error creating post:', err)
     res.status(500).json({ err })
   }
 })
 
-// router.get('/:id', async (req, res) => {
-//   try {
-//     const id  = req.params.id
-//     const sql = 'SELECT * FROM post WHERE post_id = ?'
-//     const values = [id]
-//     const [rows] = await db.query(sql, values)
-//     res.json(rows[0])
-//   } catch (err) {
-//     console.error('Error fetching post:', err)
-//     res.status(500).json({ err })
-//   }
-// })
+router.get('/:id', async (req, res) => {
+  try {
+    const id  = req.params.id
+    const sql = 'SELECT * FROM post WHERE post_id = ?'
+    const values = [id]
+    const [rows] = await db.query(sql, values)
+    res.json(rows[0])
+  } catch (err) {
+    console.error('Error fetching post:', err)
+    res.status(500).json({ err })
+  }
+})
 //上面先注释掉，不然跑不了
 router.put('/:id/likes', async(req, res) => {
   // const { id } = req.params

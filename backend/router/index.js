@@ -1,7 +1,9 @@
 const userRouter = require('./user')
 const loginRouter = require('./login')
 const postRouter = require('./post')
-const coments_id = require('./comment')
+const comentsRouter = require('./comment')
+const uploadRouter = require('./upload')
+const sendMailRouter = require('./sendpassword')
 module.exports = app => {
-  app.use('/login', loginRouter).use('/user', userRouter).use('/post', postRouter).use('/comment', coments_id)
+  app.use('/login', loginRouter).use('/user', userRouter).use('/post', postRouter).use('/comment', comentsRouter).use('/upload', uploadRouter).use('/sendpassword', sendMailRouter)
 }

@@ -1,6 +1,8 @@
 const express = require('express')
 const multer = require('multer')
 const db = require('../db')
+const fs = require('fs')
+const path = require('path')
 
 const router = express.Router()
 const { getPayload } = require('../jwt_config')
@@ -15,7 +17,7 @@ router.post('/:id/upload', upload.single('image'), async (req, res) => {
   const {id} = req.params
   const user_id = getPayload(req).user_id
   const { originalname, mimetype, filename, path, size } = req.file
-  const sql = 'INSERT INTO images (name, type, filename, path, size,post_id,uid) VALUES (?, ?, ?, ?, ?);UPDATE post SET images = images + 1 WHERE post_id = ?'
+  const sql = 'INSERT INTO images (name, type, filename, path, size,post_id,uid) VALUES (?,?,?, ?, ?, ?, ?);UPDATE post SET images = images + 1 WHERE post_id = ?'
   const values = [originalname, mimetype, filename, path, size,id,user_id,id]
   try {
     const conn = await db.getConnection()
