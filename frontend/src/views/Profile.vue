@@ -3,7 +3,7 @@
         <div class="usericon"></div>
         <div class="username">{{ user ? user.usernames : '' }}</div>
     </div>
-    <img src="../assets/Profile/ic_setting.png" class="settings">
+    <button @click="goToSettings" class="settings"></button>
     <div class="background-pur">
         <div class="background-blk">
             <div class="tiezi">帖子</div>
@@ -73,6 +73,9 @@ function goToFeed() {
 }
 function goToPostBlog() {
     router.push('/postblog');
+}
+function goToSettings(){
+    router.push('/usersettings')
 }
 const showOptions = ref(false)
 </script>
@@ -162,6 +165,10 @@ const showOptions = ref(false)
     bottom: 39px;
     float: right;
     margin-right: 5.5%;
+    background-image: url("../assets/Profile/ic_setting.png");
+    background-size: contain;
+    background-color: rgb(131, 86, 146);
+    border:none;
 }
 
 .background-blk {

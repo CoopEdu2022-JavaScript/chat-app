@@ -29,10 +29,24 @@ const textCount = ref(0);
 const previewSrc = ref(previewImage);
 const TOKEN_KEY = 'my_jwt_token';
 const token = localStorage.getItem(TOKEN_KEY);
+const imageFile=ref(null);
 const formData = reactive({
     title: '',
     content: ''
 })
+const sendPic=()=>{
+    http.post('/post/newpost', formData, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            router.push('/feed')
+        })
+        .catch(error => {
+            //
+        })
+}
 const sendPost = () => {
     http.post('/post/newpost', formData, {
         headers: {
@@ -54,6 +68,7 @@ function handleFileChange(event) {
             previewSrc.value = reader.result;
         });
         reader.readAsDataURL(file);
+        imageFile.value=file;
     }
 }
 function clearPreview(event) {

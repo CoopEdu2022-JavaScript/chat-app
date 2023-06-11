@@ -19,7 +19,8 @@ const routes = [
   {
     path: '/usersettings',
     name: "UserSettings",
-    component: () => import("../views/UserSettings.vue")
+    component: () => import("../views/UserSettings.vue"),
+    meta: { requiresAuth: true }
   },
   {
     path: '/postblog',
@@ -42,12 +43,14 @@ const routes = [
   {
     path: '/replies',
     name: 'Replies',
-    component: () => import('../views/Replies.vue')
+    component: () => import('../views/Replies.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/postsnapshot',
     name: 'PostSnapShot',
-    component: () => import('../views/PostSnapShot.vue')
+    component: () => import('../views/PostSnapShot.vue'),
+    meta: { requiresAuth: true }
   }
 ]
 
