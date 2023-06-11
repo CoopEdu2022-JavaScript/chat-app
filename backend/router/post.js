@@ -38,6 +38,18 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ err })
   }
 })
+router.put('/:id/fix', async (req, res) => {
+  try {
+    const id  = req.params.id
+    const { title, content} = req.body
+    const sql = `UPDATE post SET title = '${title}', content = '${content}' ,date = NOW() WHERE post_id = ${id}`
+    const [rows] = await db.query(sql)
+    res.json({state:true})
+  } catch (err) {
+    console.error('Error fetching post:', err)
+    res.status(500).json({ err })
+  }
+})
 //上面先注释掉，不然跑不了
 router.put('/:id/likes', async(req, res) => {
   // const { id } = req.params
