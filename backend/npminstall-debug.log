@@ -1,9 +1,9 @@
 {
-  root: 'C:\\Users\\zhang\\chat-app-1\\backend',
+  root: 'C:\\Users\\17354\\Desktop\\chat-app\\backend',
   registry: 'https://registry.npmmirror.com',
   pkgs: [
     {
-      name: 'bcrypt',
+      name: 'mullter',
       version: 'latest',
       type: 'tag',
       alias: undefined,
@@ -12,16 +12,15 @@
   ],
   production: false,
   cacheStrict: false,
-  cacheDir: 'C:\\Users\\zhang\\.npminstall_tarball',
+  cacheDir: null,
   env: {
     npm_config_registry: 'https://registry.npmmirror.com',
-    npm_config_argv: '{"remain":[],"cooked":["--fix-bug-versions","--china","--userconfig=C:\\\\Users\\\\zhang\\\\.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","bcrypt"],"original":["--fix-bug-versions","--china","--userconfig=C:\\\\Users\\\\zhang\\\\.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","bcrypt"]}',
-    npm_config_user_agent: 'npminstall/7.8.0 npm/? node/v20.1.0 win32 x64',
-    npm_config_cache: 'C:\\Users\\zhang\\.npminstall_tarball',
+    npm_config_argv: '{"remain":[],"cooked":["--fix-bug-versions","--china","--userconfig=C:\\\\Users\\\\17354\\\\.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","mullter"],"original":["--fix-bug-versions","--china","--userconfig=C:\\\\Users\\\\17354\\\\.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","mullter"]}',
+    npm_config_user_agent: 'npminstall/7.6.0 npm/? node/v18.15.0 win32 x64',
     NODE: 'C:\\Program Files\\nodejs\\node.exe',
     npm_node_execpath: 'C:\\Program Files\\nodejs\\node.exe',
-    npm_execpath: 'C:\\Users\\zhang\\AppData\\Roaming\\npm\\node_modules\\cnpm\\node_modules\\npminstall\\bin\\install.js',
-    npm_config_userconfig: 'C:\\Users\\zhang\\.cnpmrc',
+    npm_execpath: 'C:\\Users\\17354\\AppData\\Roaming\\npm\\node_modules\\cnpm\\node_modules\\npminstall\\bin\\install.js',
+    npm_config_userconfig: 'C:\\Users\\17354\\.cnpmrc',
     npm_config_disturl: 'https://cdn.npmmirror.com/binaries/node',
     npm_config_r: 'https://registry.npmmirror.com',
     COREPACK_NPM_REGISTRY: 'https://registry.npmmirror.com',
@@ -49,8 +48,9 @@
     npm_config_sharp_binary_host: 'https://cdn.npmmirror.com/binaries/sharp',
     npm_config_sharp_libvips_binary_host: 'https://cdn.npmmirror.com/binaries/sharp-libvips',
     npm_config_robotjs_binary_host: 'https://cdn.npmmirror.com/binaries/robotjs',
-    npm_rootpath: 'C:\\Users\\zhang\\chat-app-1\\backend',
-    INIT_CWD: 'C:\\Users\\zhang\\chat-app-1\\backend'
+    npm_rootpath: 'C:\\Users\\17354\\Desktop\\chat-app\\backend',
+    INIT_CWD: 'C:\\Users\\17354\\Desktop\\chat-app\\backend',
+    npm_config_cache: 'C:\\Users\\17354\\.npminstall_tarball'
   },
   binaryMirrors: {
     ENVS: {
@@ -184,10 +184,9 @@
   disableFallbackStore: false,
   workspacesMap: Map(0) {},
   enableWorkspace: false,
-  workspaceRoot: 'C:\\Users\\zhang\\chat-app-1\\backend',
+  workspaceRoot: 'C:\\Users\\17354\\Desktop\\chat-app\\backend',
   isWorkspaceRoot: true,
   isWorkspacePackage: false,
-  offline: false,
   strictSSL: true,
   ignoreScripts: false,
   ignoreOptionalDependencies: false,

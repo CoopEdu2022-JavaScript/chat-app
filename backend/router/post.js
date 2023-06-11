@@ -105,7 +105,7 @@ router.get('/:id/hlike', async(req, res) => {
   }
 })                                                      
 
-router.get('/getallpost', async (req, res) => {
+router.get('/users/getallpost', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
     const sql = 'SELECT * FROM post where uid = ?'

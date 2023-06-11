@@ -1,7 +1,7 @@
 <template>
     <div class="heading">
         <button @click="goBack" class="return-arrow"></button>
-        <button type="submit" :disabled="!canPost" :class="{ active: canPost }" @click="sendPost" class="postblog">发布
+        <button type="submit" :disabled="!canPost" :class="{ active: canPost }" @click="sendBlog" class="postblog">发布
         </button>
     </div>
     <div class="blogtitle">
@@ -23,31 +23,40 @@ import { ref, watch, reactive } from 'vue';
 import previewImage from '../assets/PostBlog/btn_addphotos.png';
 import { useRouter } from 'vue-router';
 import http from '../api/http'
+const formDataImage = new FormData();
 const router = useRouter();
 const textCount = ref(0);
 const previewSrc = ref(previewImage);
 const TOKEN_KEY = 'my_jwt_token';
 const token = localStorage.getItem(TOKEN_KEY);
 const imageFile = ref(null);
+const postId = ref(null);
 const formData = reactive({
     title: '',
     content: ''
 })
-const sendPic = () => {
-    http.post('/post/newpost', formData, {
+const sendBlog = () => {
+    sendPost().
+    then(() => { sendPic(); })
+}
+const sendPost = () => {
+    return http.post('/post/newpost', formData, {
         headers: {
             Authorization: `Bearer ${token}`
         }
     })
         .then(response => {
-            router.push('/feed')
+            postId.value = response.data.post_id
+            console.log(postId)
         })
         .catch(error => {
             //
         })
 }
-const sendPost = () => {
-    http.post('/post/newpost', formData, {
+const sendPic = () => {
+    formDataImage.append('image', imageFile.value);
+    console.log(imageFile.value)
+    http.post(`/upload/${postId.value}/upload`, formDataImage, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -83,7 +92,7 @@ watch(() => formData.title, (newVal) => {
     textCount.value = newVal.length;
 });
 const canPost = computed(() => {
-  return formData.title.trim() !== '' && formData.content.trim() !== ''
+    return formData.title.trim() !== '' && formData.content.trim() !== ''
 })
 </script>
 <style scoped>
@@ -216,6 +225,7 @@ input[type="file"] {
 .heading .postblog:link {
     background-color: rgb(41, 41, 41);
 }
+
 .active {
     background-color: rgb(218, 144, 244);
 }
