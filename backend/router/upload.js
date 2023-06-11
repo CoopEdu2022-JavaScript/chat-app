@@ -17,7 +17,7 @@ router.post('/:id/upload', upload.single('image'), async (req, res) => {
   const {id} = req.params
   const user_id = getPayload(req).user_id
   const { originalname, mimetype, filename, path, size } = req.file
-  const sql = 'INSERT INTO images (name, type, filename, path, size,post_id,uid) VALUES (?,?,?, ?, ?, ?, ?);UPDATE post SET images = images + 1 WHERE post_id = ?'
+  const sql = 'INSERT INTO images_post (name, type, filename, path, size,post_id,uid) VALUES (?,?,?, ?, ?, ?, ?);UPDATE post SET images = images + 1 WHERE post_id = ?'
   const values = [originalname, mimetype, filename, path, size,id,user_id,id]
   try {
     const conn = await db.getConnection()
@@ -63,7 +63,7 @@ router.get('/:id', async function (req, res, next) {
   const { id } = req.params
   const user_id = getPayload(req).user_id
   try {
-    const [rows] = await db.query('SELECT * FROM images WHERE post_id = ?', [id])
+    const [rows] = await db.query('SELECT * FROM images_post WHERE post_id = ?', [id])
     if (rows.length === 0) {
       const error = new Error('Image not found')
       error.status = 404
