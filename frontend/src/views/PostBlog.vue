@@ -1,7 +1,7 @@
 <template>
     <div class="heading">
         <button @click="goBack" class="return-arrow"></button>
-        <button type="submit" @click="sendPost" class="postblog">
+        <button type="submit" :disabled="!canPost" :class="{ active: canPost }" @click="sendPost" class="postblog">发布
         </button>
     </div>
     <div class="blogtitle">
@@ -24,15 +24,28 @@ import previewImage from '../assets/PostBlog/btn_addphotos.png';
 import { useRouter } from 'vue-router';
 import http from '../api/http'
 const router = useRouter();
-const inputText = ref('');
 const textCount = ref(0);
 const previewSrc = ref(previewImage);
 const TOKEN_KEY = 'my_jwt_token';
 const token = localStorage.getItem(TOKEN_KEY);
+const imageFile = ref(null);
 const formData = reactive({
     title: '',
     content: ''
 })
+const sendPic = () => {
+    http.post('/post/newpost', formData, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            router.push('/feed')
+        })
+        .catch(error => {
+            //
+        })
+}
 const sendPost = () => {
     http.post('/post/newpost', formData, {
         headers: {
@@ -54,6 +67,7 @@ function handleFileChange(event) {
             previewSrc.value = reader.result;
         });
         reader.readAsDataURL(file);
+        imageFile.value = file;
     }
 }
 function clearPreview(event) {
@@ -65,9 +79,12 @@ function clearPreview(event) {
 function goBack() {
     router.go(-1)
 }
-watch(inputText, (newVal) => {
+watch(() => formData.title, (newVal) => {
     textCount.value = newVal.length;
 });
+const canPost = computed(() => {
+  return formData.title.trim() !== '' && formData.content.trim() !== ''
+})
 </script>
 <style scoped>
 * {
@@ -178,11 +195,29 @@ input[type="file"] {
     height: 30px;
     line-height: 30px;
     border: none;
-    background-image: url(../assets/PostBlog/ic_add_publish.png);
     background-size: contain;
     border-radius: 15px;
     float: right;
     margin-right: 5%;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height */
+
+    text-align: center;
+
+    /* text/text_white_100 */
+
+    color: #FFFFFF;
+}
+
+.heading .postblog:link {
+    background-color: rgb(41, 41, 41);
+}
+.active {
+    background-color: rgb(218, 144, 244);
 }
 
 .heading .return-arrow {

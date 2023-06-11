@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <button class="return-arrow"></button>
+        <button @click="goBack" class="return-arrow"></button>
         <span>设置</span>
         <span class="placehold"></span>
     </div>
@@ -20,17 +20,20 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-
+import { useRouter } from 'vue-router';
 const showModal = ref(false)
-
+const router=useRouter();
 const option1 = () => {
-    alert('return')
     showModal.value = false
 }
 
 const option2 = () => {
-    alert('exit')
+    localStorage.removeItem('my_jwt_token')//用来删除token
+    router.push('/login')
     showModal.value = false
+}
+function goBack(){
+    router.go(-1)
 }
 </script>
 <style scoped>

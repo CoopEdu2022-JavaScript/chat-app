@@ -16,7 +16,7 @@ import { useRouter } from "vue-router"
 import { reactive, ref } from "vue"
 import { useUserStore } from '../../store/user';
 import { storeToRefs } from 'pinia';
-localStorage.removeItem('my_jwt_token')//记得删这行代码，调试用
+localStorage.removeItem('my_jwt_token')//用来删除token
 const router = useRouter()
 const formData = reactive({
   ID: '',

@@ -3,7 +3,7 @@
         <div class="usericon"></div>
         <div class="username">{{ user ? user.usernames : '' }}</div>
     </div>
-    <img src="../assets/Profile/ic_setting.png" class="settings">
+    <button @click="goToSettings" class="settings"></button>
     <div class="background-pur">
         <div class="background-blk">
             <div class="tiezi">帖子</div>
@@ -12,9 +12,9 @@
     </div>
     <div class="context">
         <div v-for="post in posts" :key="post.id" class="test">
-      <h2>{{ post.title }}</h2>
-      <p>{{ post.content }}</p>
-    </div>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content }}</p>
+        </div>
         <img src="https://th.bing.com/th/id/OIP.hFrKNRbu4jH3427Gl3I4_AHaHQ?w=207&h=203&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
         <img src="https://th.bing.com/th/id/OIP.FUlFdWUUiMrKbYA7k3BzOQHaHa?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
         <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.RPe0ThRMPmKnvybT7Z28JQHaHa?w=177&h=180&c=7&r=0&o=5&dpr=1.6&pid=1.7"
@@ -46,26 +46,26 @@ const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
 const posts = ref([])
 http.get('/login/profile', {
-  headers: {
-    Authorization: `Bearer ${token}`
-  }
-})
-  .then(response => {
-    console.log(response.data)
-    user.value=response.data
-
-    // 发出第二个请求
-    return http.get('/post/getallpost', {
-      headers: {
+    headers: {
         Authorization: `Bearer ${token}`
-      }
+    }
+})
+    .then(response => {
+        console.log(response.data)
+        user.value = response.data
+
+        // 发出第二个请求
+        return http.get('/post/getallpost', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
     })
-  })
-  .then(response => {
-    console.log(response.data)
-    posts.value=response.data
-    console.log(posts[0])
-  })
+    .then(response => {
+        console.log(response.data)
+        posts.value = response.data
+        console.log(posts[0])
+    })
 //==========
 const router = useRouter();
 function goToFeed() {
@@ -74,11 +74,13 @@ function goToFeed() {
 function goToPostBlog() {
     router.push('/postblog');
 }
+function goToSettings() {
+    router.push('/usersettings')
+}
 const showOptions = ref(false)
 </script>
   
 <style scoped>
-
 * {
     margin: 0;
     padding: 0;
@@ -95,7 +97,8 @@ const showOptions = ref(false)
 .snap {
     width: 90px;
     height: 45px;
-    position: relative;
+    right: 20%;
+    position: fixed;
     bottom: 115px;
     background-color: rgb(218, 144, 244);
     border: none;
@@ -114,7 +117,6 @@ const showOptions = ref(false)
     border-radius: 8px;
     width: 90px;
     height: 45px;
-    position: relative;
     bottom: 115px;
     background-color: rgb(218, 144, 244);
     border: none;
@@ -124,6 +126,8 @@ const showOptions = ref(false)
     font-size: 16px;
     line-height: 22px;
     text-align: center;
+    position: fixed;
+    left: 20%;
 }
 
 .btm {
@@ -134,6 +138,10 @@ const showOptions = ref(false)
     flex-wrap: wrap;
     padding-left: 62px;
     padding-right: 62px;
+    position: absolute;
+    bottom: 0;
+    padding-bottom: 5%;
+    background-color: rgb(29, 29, 29);
 }
 
 .mainmenu {
@@ -162,6 +170,10 @@ const showOptions = ref(false)
     bottom: 39px;
     float: right;
     margin-right: 5.5%;
+    background-image: url("../assets/Profile/ic_setting.png");
+    background-size: contain;
+    background-color: rgb(131, 86, 146);
+    border: none;
 }
 
 .background-blk {
