@@ -30,7 +30,12 @@
             <span class="fastshot-words">MoonShot</span>
         </span>
     </div>
-    <div class="blogs">Blogs</div>
+    <div class="blogs">Blogs
+        <!-- <div v-for="post in posts" :key="post.id" class="test">
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content }}</p>
+        </div> 等后端的推送算法写完再解开-->
+    </div>
     <div class="btm">
         <button class="mainmenu">首页</button>
         <button @click="showOptions = !showOptions" class="add-logo"><img src="../assets/Profile/新建帖子logo.png"
@@ -52,9 +57,18 @@ function goToProfile() {
 function goToPostBlog() {
     router.push('/postblog');
 }
-const showOptions = ref(false)
+// const showOptions = ref(false)
+// const posts=ref([]);
+// http.post('/post/feed')
+//     .then(response => {
+// posts.value=response.data;
+//     })
+//     .catch(error => {
+//    //
+// }) 等后端的推荐算法写完再解开
 </script>
 <style scoped>
+
 .add-logo {
     background-color: rgb(29, 29, 29);
     width: 45.35px;
