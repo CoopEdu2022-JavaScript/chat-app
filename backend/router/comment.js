@@ -54,6 +54,18 @@ router.put('/:id/comment', async(req, res) => {
 	}
 })
 
+router.delete('/:id/comment', async(req, res) => {
+	try {
+		const {id} = req.params
+		const user_id = getPayload(req).user_id
+		await db.query(`DELETE FROM conment WHERE post_id = ${id} AND user_id = ${user_id};UPDATE post SET coments_id = coments_id - 1 WHERE post_id = ${id}`)
+		res.json({state:true})
+	} catch (err) {
+		console.error('Error deleting comment:', err)
+		res.status(500).json({ err })
+	}
+})
+
 module.exports = router
 
 
