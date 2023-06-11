@@ -15,14 +15,6 @@
             <h2>{{ post.title }}</h2>
             <p>{{ post.content }}</p>
         </div>
-        <img src="https://th.bing.com/th/id/OIP.hFrKNRbu4jH3427Gl3I4_AHaHQ?w=207&h=203&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
-        <img src="https://th.bing.com/th/id/OIP.FUlFdWUUiMrKbYA7k3BzOQHaHa?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
-        <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.RPe0ThRMPmKnvybT7Z28JQHaHa?w=177&h=180&c=7&r=0&o=5&dpr=1.6&pid=1.7"
-            alt="">
-        <img src="https://th.bing.com/th/id/OIP.FUlFdWUUiMrKbYA7k3BzOQHaHa?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
-        <img src="https://th.bing.com/th/id/OIP.FUlFdWUUiMrKbYA7k3BzOQHaHa?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
-        <img src="https://th.bing.com/th/id/OIP.FUlFdWUUiMrKbYA7k3BzOQHaHa?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
-        <div></div>
     </div>
     <div class="btm">
         <button @click="goToFeed" class="mainmenu">首页</button>
@@ -55,7 +47,7 @@ http.get('/login/profile', {
         user.value = response.data
 
         // 发出第二个请求
-        return http.get('/post/getallpost', {
+        return http.get('/post/users/getallpost', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -64,7 +56,6 @@ http.get('/login/profile', {
     .then(response => {
         console.log(response.data)
         posts.value = response.data
-        console.log(posts[0])
     })
 //==========
 const router = useRouter();
@@ -99,7 +90,7 @@ const showOptions = ref(false)
     height: 45px;
     right: 20%;
     position: fixed;
-    bottom: 115px;
+    bottom: 13%;
     background-color: rgb(218, 144, 244);
     border: none;
     border-radius: 8px;
@@ -117,7 +108,7 @@ const showOptions = ref(false)
     border-radius: 8px;
     width: 90px;
     height: 45px;
-    bottom: 115px;
+    bottom: 13%;
     background-color: rgb(218, 144, 244);
     border: none;
     font-family: 'PingFang SC';
@@ -138,7 +129,7 @@ const showOptions = ref(false)
     flex-wrap: wrap;
     padding-left: 62px;
     padding-right: 62px;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     padding-bottom: 5%;
     background-color: rgb(29, 29, 29);

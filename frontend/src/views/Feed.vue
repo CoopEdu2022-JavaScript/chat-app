@@ -88,6 +88,7 @@ const showOptions = ref(false)
 
 .snap {
     right: 20%;
+    bottom:13%;
     width: 90px;
     height: 45px;
     background-color: rgb(218, 144, 244);
@@ -106,6 +107,7 @@ const showOptions = ref(false)
 .postblog {
     color: #FFFFFF;
     border-radius: 8px;
+    bottom:13%;
     width: 90px;
     height: 45px;
     background-color: rgb(218, 144, 244);
