@@ -11,6 +11,10 @@
         </div>
     </div>
     <div class="context">
+        <div v-for="post in posts" :key="post.id" class="test">
+      <h2>{{ post.title }}</h2>
+      <p>{{ post.content }}</p>
+    </div>
         <img src="https://th.bing.com/th/id/OIP.hFrKNRbu4jH3427Gl3I4_AHaHQ?w=207&h=203&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
         <img src="https://th.bing.com/th/id/OIP.FUlFdWUUiMrKbYA7k3BzOQHaHa?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="">
         <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.RPe0ThRMPmKnvybT7Z28JQHaHa?w=177&h=180&c=7&r=0&o=5&dpr=1.6&pid=1.7"
@@ -40,16 +44,29 @@ import http from '../api/http'
 const user = ref(null)
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
-
+const posts = ref([])
 http.get('/login/profile', {
   headers: {
     Authorization: `Bearer ${token}`
   }
 })
   .then(response => {
+    console.log(response.data)
     user.value=response.data
+
+    // 发出第二个请求
+    return http.get('/post/getallpost', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
   })
-//============
+  .then(response => {
+    console.log(response.data)
+    posts.value=response.data
+    console.log(posts[0])
+  })
+//==========
 const router = useRouter();
 function goToFeed() {
     router.push('/feed');
@@ -61,6 +78,7 @@ const showOptions = ref(false)
 </script>
   
 <style scoped>
+
 * {
     margin: 0;
     padding: 0;
