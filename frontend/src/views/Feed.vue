@@ -30,11 +30,15 @@
             <span class="fastshot-words">MoonShot</span>
         </span>
     </div>
-    <div class="blogs">Blogs
-        <!-- <div v-for="post in posts" :key="post.id" class="test">
+    <div class="blogs">
+        <div v-for="post in posts" :key="post.id" class="user_blogs">
+            <div class="user_inf">
+                <div class="user_icon"></div>
+                <div class="user_name">{{ getUsername(post.userId) }}</div>
+            </div>
             <h2>{{ post.title }}</h2>
             <p>{{ post.content }}</p>
-        </div> 等后端的推送算法写完再解开-->
+        </div>
     </div>
     <div class="btm">
         <button class="mainmenu">首页</button>
@@ -51,23 +55,55 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 const router = useRouter();
+const TOKEN_KEY = 'my_jwt_token'
+const token = localStorage.getItem(TOKEN_KEY)
 function goToProfile() {
     router.push('/profile');
 }
 function goToPostBlog() {
     router.push('/postblog');
 }
-// const showOptions = ref(false)
-// const posts=ref([]);
-// http.post('/post/feed')
-//     .then(response => {
-// posts.value=response.data;
-//     })
-//     .catch(error => {
-//    //
-// }) 等后端的推荐算法写完再解开
+function getUsername(uid){
+  http.post('/', uid)
+    .then(response => {
+    })
+    .catch(error => {
+    })
+}
+//===================测试
+const showOptions = ref(false)
+const posts = ref([]);
+http.get('/post/users/getallpost', {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+})
+    .then(response => {
+        console.log(response.data)
+        posts.value = response.data
+    })
+//===================
 </script>
 <style scoped>
+.user_icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-image: url(https://ts1.cn.mm.bing.net/th/id/R-C.61853f05a57f939cd6ec739ff7e61214?rik=QEwRnHLQtYlc6g&riu=http%3a%2f%2fwww.lgstatic.com%2fthumbnail_300x300%2fi%2fimage2%2fM01%2fA7%2fC9%2fCgoB5lvkC5aATt8fAABmSk5TuSw416.png&ehk=Qp2d%2fXPioALkgThaG4Y5M%2fda0aEZa0YG8lP1GBrSiGk%3d&risl=&pid=ImgRaw&r=0);
+    background-size: 75px;
+    background-position: 66px -10px;
+}
+
+.user_inf {
+    width: 50%;
+    height: 40px;
+    background-color: green;
+}
+
+.user_blogs {
+    width: 100%;
+    padding-top: 5%;
+}
 
 .add-logo {
     background-color: rgb(29, 29, 29);
@@ -102,7 +138,7 @@ function goToPostBlog() {
 
 .snap {
     right: 20%;
-    bottom:13%;
+    bottom: 13%;
     width: 90px;
     height: 45px;
     background-color: rgb(218, 144, 244);
@@ -115,13 +151,13 @@ function goToPostBlog() {
     line-height: 22px;
     text-align: center;
     color: #FFFFFF;
-    position:fixed;
+    position: fixed;
 }
 
 .postblog {
     color: #FFFFFF;
     border-radius: 8px;
-    bottom:13%;
+    bottom: 13%;
     width: 90px;
     height: 45px;
     background-color: rgb(218, 144, 244);
@@ -160,7 +196,7 @@ function goToPostBlog() {
     padding-right: 62px;
     background-color: rgb(29, 29, 29);
     position: fixed;
-    bottom:0;
+    bottom: 0;
     padding-bottom: 5%;
 }
 
@@ -169,6 +205,7 @@ function goToPostBlog() {
     width: 90%;
     height: 484px;
     background-color: #fff;
+    padding: 0% 5% 0 5%;
 }
 
 .fastshot-words {
@@ -261,5 +298,4 @@ function goToPostBlog() {
     background-position: 13px 8px;
     padding-left: 30px;
     color: white;
-}
-</style>
+}</style>
