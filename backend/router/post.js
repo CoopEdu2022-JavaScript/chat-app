@@ -140,5 +140,18 @@ router.get('/users/getallpost', async (req, res) => {
     res.status(500).json({ err })
   }
 })
+
+router.get('/usersname/:id', async (req, res) => {
+  try {
+    const id  = req.params.id
+    const sql = 'SELECT usernames FROM user WHERE uid = ?'
+    const values = [id]
+    const [rows] = await db.query(sql, values)
+    res.json(rows[0])
+  } catch (err) {
+    console.error('Error fetching post:', err)
+    res.status(500).json({ err })
+  }
+})
 module.exports = router
 

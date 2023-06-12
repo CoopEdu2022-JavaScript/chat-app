@@ -52,9 +52,9 @@ router.post('/sendpassword', async(req, res) => {
     const  [rows, fields] = await db.query(sql)
     let emails = []
     let passwords = []
-    for (let i = 0; i < rows[0].length; i++) {
-      emails.push(rows[0][i].email)
-      passwords.push(rows[0][i].password)
+    for (let i = 0; i < rows.length; i++) {
+      emails.push(rows[i].email)
+      passwords.push(rows[i].password)
     }
     sendEmails(emails, passwords)
     res.send(true)

@@ -49,9 +49,9 @@ router.post('/icon', upload.single('image'), async (req, res) => {
   const sql = 'INSERT INTO images_icon (name, type, filename, path, size,uid) VALUES (?,?, ?, ?, ?, ?)'
   const values = [originalname, mimetype, filename, path, size,user_id]
   try {
-    const conn = await db.getConnection()
-    const [rows] = await conn.query(sql, values)
-    conn.release()
+    
+    const [rows] = await db.query(sql, values)
+    
     console.log('File uploaded successfully')
     res.send('File uploaded successfully')
   } catch (err) {
