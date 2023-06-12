@@ -1,4 +1,5 @@
 <template>
+    <!-- <div id="overlay"></div> 按按钮时显示遮罩,并把下面的元素都变成不可交互-->
     <div class="user">
         <div class="usericon"></div>
         <div class="username">{{ user ? user.usernames : '' }}</div>
@@ -72,6 +73,16 @@ const showOptions = ref(false)
 </script>
   
 <style scoped>
+/* #overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;  使其处于最上层 
+  display: none;  初始状态下隐藏遮罩层
+}   这里是遮罩的css*/
 * {
     margin: 0;
     padding: 0;

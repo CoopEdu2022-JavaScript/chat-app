@@ -36,8 +36,10 @@ const formData = reactive({
     content: ''
 })
 const sendBlog = () => {
-    sendPost().
-    then(() => { sendPic(); })
+    sendPost()
+    router.push('/feed')
+    // sendPost().
+    // then(() => { sendPic(); })
 }
 const sendPost = () => {
     return http.post('/post/newpost', formData, {
