@@ -31,10 +31,11 @@
         </span>
     </div>
     <div class="blogs">
-        <div v-for="post in posts" :key="post.id" class="user_blogs">
+        <div v-for="(post, index) in posts" :key="post.id" class="user_blogs">
             <div class="user_inf">
                 <div class="user_icon"></div>
-                <div class="user_name">{{ getUsername(post.userId) }}</div>
+                <div class="user_name">{{ postAuthors[index] }}</div>
+                <div class="time">sad</div>
             </div>
             <h2>{{ post.title }}</h2>
             <p>{{ post.content }}</p>
@@ -63,16 +64,27 @@ function goToProfile() {
 function goToPostBlog() {
     router.push('/postblog');
 }
-function getUsername(uid){
-  http.post('/', uid)
-    .then(response => {
-    })
-    .catch(error => {
-    })
+async function getUsername(uid) {
+    try {
+        const response = await http.get(`/post/usersname/${uid}`);
+        console.log(response.data.usernames);
+        return response.data.usernames;
+    } catch (error) {
+        console.log(error);
+        return '';
+    }
 }
+async function anotherAsyncFunction(uid) {
+    const usernamesPromise = getUsername(uid); // 调用getUsername()函数，并返回Promise对象
+    const usernames = await usernamesPromise; // 等待Promise完成，并将结果赋给usernames变量
+    console.log(usernames); // 输出用户名
+    return usernames;
+}
+
 //===================测试
 const showOptions = ref(false)
 const posts = ref([]);
+const postAuthors = ref([]);
 http.get('/post/users/getallpost', {
     headers: {
         Authorization: `Bearer ${token}`
@@ -81,10 +93,45 @@ http.get('/post/users/getallpost', {
     .then(response => {
         console.log(response.data)
         posts.value = response.data
+        // 获取并保存每篇文章的作者名字
+        response.data.forEach(post => {
+            anotherAsyncFunction(post.uid).then(username => {
+                postAuthors.value.push(username);
+            });
+        });
     })
 //===================
 </script>
 <style scoped>
+.user_name {
+    position: absolute;
+    top: 0;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 14px;
+    /* identical to box height */
+
+
+    /* text/text_white_100 */
+
+    color: #FFFFFF;
+}
+
+.time {
+    position: absolute;
+    bottom: 0;
+    /* Regular/七级文字 */
+
+font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 17px;
+color:rgb(191, 191, 191);
+}
+
 .user_icon {
     width: 40px;
     height: 40px;
@@ -92,12 +139,18 @@ http.get('/post/users/getallpost', {
     background-image: url(https://ts1.cn.mm.bing.net/th/id/R-C.61853f05a57f939cd6ec739ff7e61214?rik=QEwRnHLQtYlc6g&riu=http%3a%2f%2fwww.lgstatic.com%2fthumbnail_300x300%2fi%2fimage2%2fM01%2fA7%2fC9%2fCgoB5lvkC5aATt8fAABmSk5TuSw416.png&ehk=Qp2d%2fXPioALkgThaG4Y5M%2fda0aEZa0YG8lP1GBrSiGk%3d&risl=&pid=ImgRaw&r=0);
     background-size: 75px;
     background-position: 66px -10px;
+    margin-right: 8px;
 }
 
 .user_inf {
     width: 50%;
     height: 40px;
     background-color: green;
+    position: relative;
+}
+
+.user_inf * {
+    display: inline-block;
 }
 
 .user_blogs {

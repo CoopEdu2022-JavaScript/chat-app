@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="context">
-        <div v-for="post in posts" :key="post.id" class="test">
+        <div v-for="post in posts" :key="post.id" class="context-blog">
             <h2>{{ post.title }}</h2>
             <p>{{ post.content }}</p>
         </div>
@@ -261,7 +261,7 @@ const showOptions = ref(false)
     margin-bottom: 15px;
 }
 
-.context * {
+.context .context-blog {
     display: block;
     width: 50%;
     height: 196.5px;
