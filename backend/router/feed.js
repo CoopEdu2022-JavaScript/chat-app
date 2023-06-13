@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
         const [rows3] = await db.query(sql3)
         all.push.apply(all, rows, rows2, rows3)
 
-        res.json(all[0])
+        res.send(all)
     } catch (err) {
         console.error('Error fetching feed:', err)
         res.status(500).json({ err })
