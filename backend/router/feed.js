@@ -9,7 +9,7 @@ router.use(express.urlencoded({ extended: true }))
 router.get('/', async (req, res) => {
     try {
         const { user_id } = getPayload(req)
-        let sql = 'SELECT post_id FROM post ORDER BY time DESC LIMIT 10'
+        let sql = 'SELECT post_id FROM post ORDER BY date DESC LIMIT 10'
         
         let all = []
         
