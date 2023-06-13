@@ -158,5 +158,20 @@ router.get('/usersname/:id', async (req, res) => {
   }
 })
 
+router.get('/users', async (req, res) => {
+  try {
+
+    const { user_id } = getPayload(req)
+    const id  = req.query.id
+    const sql = 'SELECT uersname FROM post WHERE uid = ?'
+    const values = [id]
+    const [rows] = await db.query(sql, values)
+    res.json(rows[0])
+  } catch (err) {
+    console.error('Error fetching post:', err)
+    res.status(500).json({ err })
+  }
+})
+
 module.exports = router
 
