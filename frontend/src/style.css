@@ -45,12 +45,21 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
+h1{
+  font-family: 'PingFang SC';
+font-style: normal;
+font-weight: 600;
+font-size: 30px;
+line-height: 42px;
+/* identical to box height */
 
-/* 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+
+/* text/text_white_100 */
+
+color: #FFFFFF;
 }
+/* 
+
 
 button {
   border-radius: 8px;

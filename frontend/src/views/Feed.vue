@@ -37,8 +37,13 @@
                 <div class="user_name">{{ postAuthors[index] }}</div>
                 <div class="time">sad</div>
             </div>
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.content }}</p>
+            <h1>{{ post.title }}</h1>
+            <div class="user_blogs_context">{{ post.content }}</div>
+            <div class="functions">
+                <button @click="toggleLike" :class="{ 'liked': data.liked, 'not-liked': !data.liked }" class="like"></button>
+                <button class="comments"></button>
+                <input type="text" placeholder="回复" class="send_comment">
+            </div>
         </div>
     </div>
     <div class="btm">
@@ -58,6 +63,17 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
+const data = reactive({
+  liked: false
+})
+const toggleLike = () => {
+    data.liked = !data.liked
+    if (data.liked) {
+        data.bgImage = '../assets/Feed/ic_like_final_active.png'
+    } else {
+        data.bgImage = '../assets/Feed/ic_like_final.png'
+    }
+}
 function goToProfile() {
     router.push('/profile');
 }
@@ -103,6 +119,32 @@ http.get('/post/users/getallpost', {
 //===================
 </script>
 <style scoped>
+.comments{
+    background-image: url(../assets/Feed/ic_comment.png);
+}
+.liked {
+background-image: url('../assets/Feed/ic_like_final_active.png');
+}
+
+.not-liked {
+background-image: url('../assets/Feed/ic_like_final.png');
+}
+.like,.comments{
+    background-size: contain;
+    width: 25px;
+    height: 25px;
+    border: none;
+    background-color: rgb(40, 40, 40);
+}
+
+.user_blogs_context {
+    margin-bottom: 5%;
+}
+
+.user_blogs h1 {
+    margin-bottom: 5%;
+}
+
 .user_name {
     position: absolute;
     top: 0;
@@ -124,12 +166,12 @@ http.get('/post/users/getallpost', {
     bottom: 0;
     /* Regular/七级文字 */
 
-font-family: 'PingFang SC';
-font-style: normal;
-font-weight: 400;
-font-size: 12px;
-line-height: 17px;
-color:rgb(191, 191, 191);
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 17px;
+    color: rgb(191, 191, 191);
 }
 
 .user_icon {
@@ -147,6 +189,7 @@ color:rgb(191, 191, 191);
     height: 40px;
     background-color: green;
     position: relative;
+    margin-bottom: 5%;
 }
 
 .user_inf * {
@@ -257,8 +300,9 @@ color:rgb(191, 191, 191);
     margin: 5% auto 5% auto;
     width: 90%;
     height: 484px;
-    background-color: #fff;
+    background-color: rgb(40, 40, 40);
     padding: 0% 5% 0 5%;
+    border-radius: 8px;
 }
 
 .fastshot-words {
