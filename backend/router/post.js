@@ -148,7 +148,7 @@ router.get('/usersname/:id', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
     const id  = req.params.id
-    const sql = 'SELECT usernames FROM user WHERE uid = ?'
+    const sql = 'SELECT usernames FROM users WHERE uid = ? LIMIT 1'
     const values = [id]
     const [rows] = await db.query(sql, values)
     res.json(rows[0])
