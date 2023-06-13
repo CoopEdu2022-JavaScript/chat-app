@@ -28,6 +28,7 @@ router.post('/newpost', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
+    const { user_id } = getPayload(req)
     const id  = req.params.id
     const sql = 'SELECT * FROM post WHERE post_id = ?'
     const values = [id]
@@ -40,9 +41,10 @@ router.get('/:id', async (req, res) => {
 })
 router.put('/:id/fix', async (req, res) => {
   try {
+    const { user_id } = getPayload(req)
     const id  = req.params.id
     const { title, content} = req.body
-    const sql = `UPDATE post SET title = '${title}', content = '${content}' ,date = NOW() WHERE post_id = ${id}`
+    const sql = `UPDATE post SET title = '${title}', content = '${content}' ,date = NOW() WHERE post_id = ${id} AND uid = ${user_id}`
     const [rows] = await db.query(sql)
     res.json({state:true})
   } catch (err) {
@@ -52,8 +54,9 @@ router.put('/:id/fix', async (req, res) => {
 })
 router.delete('/:id/delete', async (req, res) => {
   try {
+    const { user_id } = getPayload(req)
     const id  = req.params.id
-    const sql = `DELETE FROM post WHERE post_id = ${id}`
+    const sql = `DELETE FROM post WHERE post_id = ${id};DELETE FROM like_post WHERE post_id = ${id};DELETE FROM comment WHERE post_id = ${id} ;DELETE FROM conment WHERE post_id = ${id};Delete FROM images_post WHERE post_id = ${id}`
     const [rows] = await db.query(sql)
     res.json({state:true})
   } catch (err) {
@@ -61,7 +64,7 @@ router.delete('/:id/delete', async (req, res) => {
     res.status(500).json({ err })
   }
 })
-//上面先注释掉，不然跑不了
+
 router.put('/:id/likes', async(req, res) => {
   // const { id } = req.params
   // db.query('UPDATE post SET likes = likes + 1 WHERE id = ?', [id], (err, data) => {
@@ -143,6 +146,7 @@ router.get('/users/getallpost', async (req, res) => {
 
 router.get('/usersname/:id', async (req, res) => {
   try {
+    const { user_id } = getPayload(req)
     const id  = req.params.id
     const sql = 'SELECT usernames FROM user WHERE uid = ?'
     const values = [id]
@@ -153,5 +157,6 @@ router.get('/usersname/:id', async (req, res) => {
     res.status(500).json({ err })
   }
 })
+
 module.exports = router
 

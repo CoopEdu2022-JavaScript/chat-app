@@ -32,7 +32,7 @@ router.get('/:id/comment', (req, res) => {
 	// })
 	try {
 		const {id} = req.params
-		const sql = `SELECT content,date,uid,post_id FROM conment WHERE post_id = ${id}`
+		const sql = `SELECT content,date,uid,post_id,conment_id FROM conment WHERE post_id = ${id}`
 		const [rows] = db.query(sql)
 		res.json(rows[0])
 	} catch (err) {
@@ -43,10 +43,11 @@ router.get('/:id/comment', (req, res) => {
 
 router.put('/:id/comment', async(req, res) => {
 	try {
+		const {conmemt_id} = req.query
 		const {id} = req.params
 		const { content} = req.body
 		const user_id = getPayload(req).user_id
-		await db.query(`UPDATE conment SET content = '${content}',date=now() WHERE post_id = ${id} AND user_id = ${user_id}`)
+		await db.query(`UPDATE conment SET content = '${content}',date=now() WHERE post_id = ${id} AND user_id = ${user_id} AND conment_id = ${conmemt_id}`)
 		res.json({state:true})
 	} catch (err) {
 		console.error('Error updating comment:', err)
@@ -56,9 +57,10 @@ router.put('/:id/comment', async(req, res) => {
 
 router.delete('/:id/comment', async(req, res) => {
 	try {
+		const {conmemt_id} = req.query
 		const {id} = req.params
 		const user_id = getPayload(req).user_id
-		await db.query(`DELETE FROM conment WHERE post_id = ${id} AND user_id = ${user_id};UPDATE post SET coments_id = coments_id - 1 WHERE post_id = ${id}`)
+		await db.query(`DELETE FROM conment WHERE post_id = ${id} AND user_id = ${user_id} AND conment_id = ${conmemt_id};UPDATE post SET coments_id = coments_id - 1 WHERE post_id = ${id}`)
 		res.json({state:true})
 	} catch (err) {
 		console.error('Error deleting comment:', err)

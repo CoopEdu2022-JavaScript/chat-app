@@ -46,6 +46,7 @@ router.post('/icon', upload.single('image'), async (req, res) => {
   
   const user_id = getPayload(req).user_id
   const { originalname, mimetype, filename, path, size } = req.file
+  
   const sql = 'INSERT INTO images_icon (name, type, filename, path, size,uid) VALUES (?,?, ?, ?, ?, ?)'
   const values = [originalname, mimetype, filename, path, size,user_id]
   try {
