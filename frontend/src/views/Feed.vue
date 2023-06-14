@@ -74,7 +74,7 @@ const like = (post_id,post_A) => {
             Authorization: `Bearer ${token}`
         }
     }).then(response => {
-        console.log(response.data.likes)
+        console.log(response.data.isLiked)
         post_A.isLiked = response.data.isLiked;
         post_A.isLiked = !post_A.isLiked
         post_A.likes += (post_A.isLiked ? 1 : -1)
@@ -83,7 +83,7 @@ const like = (post_id,post_A) => {
             Authorization: `Bearer ${token}`
         }
     })
-        else http.post(`/post/${post_id}/unlike`,{
+        else http.delete(`/post/${post_id}/unlike`,{
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -122,8 +122,8 @@ http.get('/feed', {
     }
 })
     .then(response => {
-        console.log(response)
         posts.value = response.data
+        console.log(response.data[0])
         // 获取并保存每篇文章的作者名字
         response.data.forEach(post => {
             console.log(post.post_id)

@@ -87,7 +87,7 @@ router.post('/:id/likes', async (req, res) => {
 
 })
 
-router.post('/:id/unlike', async (req, res) => {
+router.delete('/:id/unlike', async (req, res) => {
   // const { id } = req.params
   // db.query('UPDATE post SET likes = likes - 1 WHERE id = ?', [id], (err, data) => {
   //   if (err) res.status(500).json({ err })
@@ -97,7 +97,7 @@ router.post('/:id/unlike', async (req, res) => {
     const id = req.params.id
     const { user_id } = getPayload(req)
     const sql = `DELETE FROM like_post WHERE post_id = ? AND uid = ?;
-    UPDATE post SET likes = likes - 1 WHERE post_id = ?`
+    UPDATE post SET likes=likes-1 WHERE post_id = ?`
     const values = [id,user_id,id]
     const [rows] = await db.query(sql,values)
     res.send(true)
@@ -122,7 +122,8 @@ router.get('/:id/hlike', async (req, res) => {
     const values = [id, id, user_id]
     const [rows] = await db.query(sql, values)
     let isLiked = false;
-    if (!rows[0][1] == null) isLiked = true;
+    console.log(rows)
+    if (!rows[1][0] == []) isLiked = true;
     res.json({ likes: rows[0][0].likes, isLiked })
 
   } catch (err) {
