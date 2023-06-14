@@ -37,7 +37,8 @@ const formData = reactive({
 })
 const sendBlog = () => {
     sendPost()
-    router.push('/feed') 
+    router.push('/feed').then(() => {
+    location.reload()})
     // sendPost().
     // then(() => { sendPic(); })
 }

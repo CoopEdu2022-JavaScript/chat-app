@@ -40,7 +40,7 @@
             <h1>{{ post.title }}</h1>
             <div class="user_blogs_context">{{ post.content }}</div>
             <div class="functions">
-                <button @click.stop="like(post.post_id,post)" :state="post.liked ? 'press' : 'release'" class="likes"></button>: {{
+                <button @click.stop="like(post.post_id,post)" :state="post.isLiked ? 'press' : 'release'" class="likes"></button>: {{
                     post.likes }}
                 <button class="comments"></button>
                 <input type="text" placeholder="回复" class="send_comment">
@@ -59,21 +59,26 @@
     </div>
 </template>
 <script setup>
+import http from '../api/http'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
+const showOptions = ref(false)
+const posts = ref([]);
+const postAuthors = ref([]);
 const like = (post_id,post_A) => {
     http.get(`/post/${post_id}/hlike`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
     }).then(response => {
-        post_A.liked = response.data.isLiked;
-        post_A.liked = !post_A.liked
-        post_A.likes += (post_A.liked ? 1 : -1)
-        if (post_A.liked) http.post(`post/${post_id}/likes`,{
+        console.log(response.data.likes)
+        post_A.isLiked = response.data.isLiked;
+        post_A.isLiked = !post_A.isLiked
+        post_A.likes += (post_A.isLiked ? 1 : -1)
+        if (post_A.isLiked) http.post(`post/${post_id}/likes`,{
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -92,11 +97,11 @@ function goToPostBlog() {
 }
 async function getUsername(postid) {
     try {
-        const response = await http.get(`/post/${postid}/users`,{
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
+        const response = await http.get(`/post/${postid}/users`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         console.log(response.data);
         return response.data.usernames;
     } catch (error) {
@@ -111,16 +116,13 @@ async function getUserNames(postid) {
     return usernames;
 }
 
-//===================测试
-const showOptions = ref(false)
-const posts = ref([]);
-const postAuthors = ref([]);
 http.get('/feed', {
     headers: {
         Authorization: `Bearer ${token}`
     }
 })
     .then(response => {
+        console.log(response)
         posts.value = response.data
         // 获取并保存每篇文章的作者名字
         response.data.forEach(post => {
