@@ -40,10 +40,21 @@
             <h1>{{ post.title }}</h1>
             <div class="user_blogs_context">{{ post.content }}</div>
             <div class="functions">
-                <button @click.stop="like(post.post_id,post)" :state="post.isLiked ? 'press' : 'release'" class="likes"></button>: {{
-                    post.likes }}
+                <button @click.stop="like(post.post_id, post)" :state="post.isLiked ? 'press' : 'release'"
+                    class="likes"></button>
+                <div class="likes-count">{{
+                    post.likes }}</div>
                 <button class="comments"></button>
-                <input type="text" placeholder="回复" class="send_comment">
+                <div class="comment-count">{{
+                    post.coments_id }}</div>
+                <input type="text" placeholder="回复 最多15字" class="send-comment" maxlength="15" v-model="commentContent">
+                <button class="send-comment-button" :class="{ active: isCommentContentValid }"
+                    :disabled="!isCommentContentValid" @click="submitComment(post)">发送</button>
+            </div>
+            <div class="comment-area">
+                <div class="comment">
+                    {{ findComment(post) }}
+                </div>
             </div>
         </div>
     </div>
@@ -68,7 +79,29 @@ const token = localStorage.getItem(TOKEN_KEY)
 const showOptions = ref(false)
 const posts = ref([]);
 const postAuthors = ref([]);
-const like = (post_id,post_A) => {
+const commentContent = ref('');
+
+const isCommentContentValid = computed(() => {
+    return commentContent.value.trim() !== '';
+});
+const findComment = async (post) => {
+  const response = await http.get(`/comment/${post.post_id}/comment`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  console.log(response.data[0]);
+  return response.data[0].content;
+};
+const submitComment = (post) => {
+    // 发送评论
+    console.log('发送评论:', commentContent.value);
+    http.post(`/comment/${post.post_id}/comment`,{ content: commentContent.value }
+    )
+    // 清空输入框
+    commentContent.value = '';
+}
+const like = (post_id, post_A) => {
     http.get(`/post/${post_id}/hlike`, {
         headers: {
             Authorization: `Bearer ${token}`
@@ -78,17 +111,18 @@ const like = (post_id,post_A) => {
         post_A.isLiked = response.data.isLiked;
         post_A.isLiked = !post_A.isLiked
         post_A.likes += (post_A.isLiked ? 1 : -1)
-        if (post_A.isLiked) http.post(`post/${post_id}/likes`,{
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
+        if (post_A.isLiked) http.post(`post/${post_id}/likes`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        else http.delete(`/post/${post_id}/unlike`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
     })
-        else http.delete(`/post/${post_id}/unlike`,{
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-})}
+}
 function goToProfile() {
     router.push('/profile');
 }
@@ -126,8 +160,15 @@ http.get('/feed', {
         console.log(response.data)
         // 获取并保存每篇文章的作者名字
         response.data.forEach(post => {
+            http.get(`/post/${post.post_id}/hlike`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(response => {
+                post.isLiked=response.data.isLiked;
+                post.likes=response.data.likes;
+            })
             console.log(post.post_id)
-            post.likes=0;
             getUserNames(post.post_id).then(username => {
                 postAuthors.value.push(username);
             });
@@ -138,12 +179,71 @@ http.get('/feed', {
 //==================
 </script>
 <style scoped>
+.comment{
+color:white
+}
+button.active {
+    color: black;
+}
+
+.send-comment-button {
+    width: 20%;
+    margin-left: 3%;
+    position: relative;
+    bottom: 7px;
+    height: 34px;
+    border-radius: 17px;
+    border: 3px solid gray;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    color: rgb(204, 204, 204);
+}
+
+.send-comment::placeholder {
+    color: rgb(153, 153, 153);
+}
+
+.send-comment {
+    width: 45%;
+    position: relative;
+    bottom: 5px;
+    height: 34px;
+    border-radius: 17px;
+    border: 3px solid gray;
+    padding-left: 5%;
+    box-sizing: border-box;
+    padding-right: 5%;
+    white-space: pre-wrap;
+    /* 保留回车符并自动换行 */
+}
+
+.likes-count,
+.comment-count {
+    height: 25px;
+    line-height: 25px;
+    display: inline-block;
+    position: relative;
+    bottom: 5px;
+    margin-left: 2%;
+    margin-right: 2%;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 17px;
+    color: rgb(204, 204, 204);
+}
+
 [state='press'] {
-  background-image: url(../assets/Feed/ic_like_final_active.png);
+    background-image: url(../assets/Feed/ic_like_final_active.png);
 }
-[state='release'    ]{
-background-image: url(../assets/Feed/ic_like_final.png);
+
+[state='release'] {
+    background-image: url(../assets/Feed/ic_like_final.png);
 }
+
 .comments {
     background-image: url(../assets/Feed/ic_comment.png);
 }
@@ -159,6 +259,15 @@ background-image: url(../assets/Feed/ic_like_final.png);
 
 .user_blogs_context {
     margin-bottom: 5%;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    display: flex;
+    align-items: center;
+
+    color: #FFFFFF;
 }
 
 .user_blogs h1 {
@@ -318,9 +427,8 @@ background-image: url(../assets/Feed/ic_like_final.png);
 .blogs {
     margin: 5% auto 5% auto;
     width: 90%;
-    height: 484px;
     background-color: rgb(40, 40, 40);
-    padding: 0% 5% 0 5%;
+    padding: 0% 5% 5% 5%;
     border-radius: 8px;
 }
 

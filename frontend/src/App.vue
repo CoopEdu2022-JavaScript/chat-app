@@ -12,7 +12,6 @@ const test = () => {
     console.log(rep.data)
   })
 }
-
 </script>
 
 <style scoped>

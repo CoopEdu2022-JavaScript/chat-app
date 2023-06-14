@@ -69,7 +69,7 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = useAuthStore().token // 判断用户是否已登录
   console.log(isAuthenticated)
   if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
-    next('/login')
+    router.push('/login')
   } else {
     next()
   }
