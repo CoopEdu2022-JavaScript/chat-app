@@ -123,7 +123,7 @@ http.get('/feed', {
 })
     .then(response => {
         posts.value = response.data
-        console.log(response.data[0])
+        console.log(response.data)
         // 获取并保存每篇文章的作者名字
         response.data.forEach(post => {
             console.log(post.post_id)
@@ -207,7 +207,6 @@ background-image: url(../assets/Feed/ic_like_final.png);
 .user_inf {
     width: 50%;
     height: 40px;
-    background-color: green;
     position: relative;
     margin-bottom: 5%;
 }

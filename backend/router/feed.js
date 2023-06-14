@@ -11,20 +11,19 @@ router.get('/', async (req, res) => {
         const { user_id } = getPayload(req)
         let sql = 'SELECT post_id FROM post ORDER BY date DESC LIMIT 10'
         
-        let all = []
-        
         const [rows] = await db.query(sql)
-        let sql2 = 'SELECT post_id FROM post ORDER BY likes DESC LIMIT 10'
-        const [rows2] = await db.query(sql2)
-        let sql3 = 'SELECT post_id FROM post ORDER BY coments_id DESC LIMIT 10'
-        const [rows3] = await db.query(sql3)
-        all.push.apply(all, rows, rows2, rows3)
+        
+        const all = await Promise.all(
+            rows.map(async ({ post_id }) => {
+                const [postRows] = await db.query('SELECT * FROM post WHERE post_id = ?', [post_id])
+                return postRows[0]
+            })
+        )
 
         res.send(all)
     } catch (err) {
         console.error('Error fetching feed:', err)
         res.status(500).json({ err })
     }
-    }
-)
+})
 module.exports = router
