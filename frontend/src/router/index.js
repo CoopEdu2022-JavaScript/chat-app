@@ -51,6 +51,12 @@ const routes = [
     name: 'PostSnapShot',
     component: () => import('../views/PostSnapShot.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path:'/post',
+    name:'Post',
+    component: ()=>import('../components/Post.vue'),
+    meta: {requiresAuth:true}
   }
 ]
 

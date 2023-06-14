@@ -40,7 +40,7 @@
             <h1>{{ post.title }}</h1>
             <div class="user_blogs_context">{{ post.content }}</div>
             <div class="functions">
-                <button @click="toggleLike" :class="{ 'liked': data.liked, 'not-liked': !data.liked }" class="like"></button>
+                <button @click.stop="like" :state="post.liked?'press':'release'" class="likes"></button>: {{ post.likes }}
                 <button class="comments"></button>
                 <input type="text" placeholder="回复" class="send_comment">
             </div>
@@ -63,16 +63,19 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
-const data = reactive({
-  liked: false
-})
-const toggleLike = () => {
-    data.liked = !data.liked
-    if (data.liked) {
-        data.bgImage = '../assets/Feed/ic_like_final_active.png'
-    } else {
-        data.bgImage = '../assets/Feed/ic_like_final.png'
+const like = () => {
+    http.get(`/post/${post.id}/hlike`, {
+    headers: {
+        Authorization: `Bearer ${token}`
     }
+})
+    .then(response => {
+       post.liked=response.data.isLiked;
+    })
+  post.liked = !post.liked
+  post.likes += (post.liked ? 1 : -1)
+  if (post.liked) http.post(`feed/${post.id}/like`)
+  else http.post(`feed/${post.id}/unlike`)
 }
 function goToProfile() {
     router.push('/profile');
@@ -101,7 +104,7 @@ async function anotherAsyncFunction(uid) {
 const showOptions = ref(false)
 const posts = ref([]);
 const postAuthors = ref([]);
-http.get('/post/users/getallpost', {
+http.get('/', {
     headers: {
         Authorization: `Bearer ${token}`
     }
@@ -117,19 +120,13 @@ http.get('/post/users/getallpost', {
         });
     })
 //===================
+//==================
 </script>
 <style scoped>
 .comments{
     background-image: url(../assets/Feed/ic_comment.png);
 }
-.liked {
-background-image: url('../assets/Feed/ic_like_final_active.png');
-}
-
-.not-liked {
-background-image: url('../assets/Feed/ic_like_final.png');
-}
-.like,.comments{
+.likes,.comments{
     background-size: contain;
     width: 25px;
     height: 25px;
