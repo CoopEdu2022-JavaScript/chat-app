@@ -15,7 +15,7 @@ router.post('/newpost', async (req, res) => {
     const namespace = '8e884ace-bee4-11e4-8dfc-aa07a5b093db'
     const time = new Date().getTime().toString()
     const uuid = uuidv5(`${title}${content}${user_id}${time}`, namespace)
-    const sql = `INSERT INTO post (title, content,date, uid, likes,coments_id,post_id) VALUES ('${title}', '${content}', NOW(),${user_id}, 0,0,'${uuid}')`
+    const sql = `INSERT INTO post (title, content,date, uid, likes,coments_id,post_id,images) VALUES ('${title}', '${content}', NOW(),${user_id}, 0,0,'${uuid}',9099)`
     
     const [rows]= await db.query(sql)
     
@@ -74,10 +74,10 @@ router.put('/:id/likes', async(req, res) => {
   try {
     const { user_id } = getPayload(req)
     const id  = req.params.id
-    const sql = `INSERT INTO like_post (post_id, uid, time) VALUES (${id}, ${user_id}, NOW());
-    UPDATE post SET likes = likes + 1 WHERE post_id = ${id}`
-    
-    const [rows] = await db.query(sql)
+    const sql = `INSERT INTO like_post (post_id, uid, time) VALUES (?, ?, NOW());
+    UPDATE post SET likes = likes + 1 WHERE post_id = ?;`
+    const values = [id, user_id, id]
+    const [rows] = await db.query(sql, values)
     
     res.json({state:true})
   } catch(err){
@@ -178,5 +178,23 @@ router.get(':id/users', async (req, res) => {
   }
 })
 
+router.get('/:id/detail', async (req, res) => {
+  try {
+    const { user_id } = getPayload(req)
+    const id  = req.params.id
+    const sql = 'SELECT * FROM post WHERE post_id = ?'
+    const values = [id]
+    const [rows] = await db.query(sql, values)
+    const sql2 = 'SELECT usernames FROM users WHERE uid = ? LIMIT 1'
+    const values2 = [rows[0].uid]
+    const [rows2] = await db.query(sql2, values2)
+    const sql3 = 'SELECT * FROM images_post WHERE post_id = ?'
+    const values3 = [id]
+    const [rows3] = await db.query(sql3, values3)
+    const sql4 = 'SELECT * FROM like_post WHERE post_id = ?'
+    const values4 = [id]
+
+    res.json({ ...rows[0], usernames: rows2[0].usernames, images: rows3 })
+    
 module.exports = router
 
