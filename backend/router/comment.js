@@ -43,7 +43,7 @@ WHERE conment.post_id = ?
 			postId: row.post_id,
 			commentId: row.comment_id
 		}))
-		res.send(comments)
+		res.json(comments)
 	} catch (err) {
 		console.error('Error fetching comments:', err)
 		res.status(500).json({ err })

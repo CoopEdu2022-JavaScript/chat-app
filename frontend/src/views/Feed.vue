@@ -47,13 +47,13 @@
                 <button class="comments"></button>
                 <div class="comment-count">{{
                     post.coments_id }}</div>
-                <input type="text" placeholder="回复 最多15字" class="send-comment" maxlength="15" v-model="commentContent">
-                <button class="send-comment-button" :class="{ active: isCommentContentValid }"
-                    :disabled="!isCommentContentValid" @click="submitComment(post)">发送</button>
+                <input type="text" placeholder="回复 最多15字" class="send-comment" maxlength="15" v-model="post.commentContent">
+                <button class="send-comment-button" :class="{ active: isCommentContentValid(post) }"
+                    :disabled="!isCommentContentValid(post)" @click="submitComment(post)">发送</button>
             </div>
-            <div class="comment-area">
+            <div class="comment-area" v-for="(comment,index) in comments" :key="comment.postId">
                 <div class="comment">
-                    {{ findComment(post) }}
+                    {{ findComment(post,index).username }}:{{ findComment(post,index).content }}
                 </div>
             </div>
         </div>
@@ -80,26 +80,25 @@ const showOptions = ref(false)
 const posts = ref([]);
 const postAuthors = ref([]);
 const commentContent = ref('');
-
-const isCommentContentValid = computed(() => {
-    return commentContent.value.trim() !== '';
-});
-const findComment = async (post) => {
+const comments=ref([])
+const isCommentContentValid = (post) => {
+    return post.commentContent !== '';
+};
+const findComment = async (post,index) => {
   const response = await http.get(`/comment/${post.post_id}/comment`, {
     headers: {
       Authorization: `Bearer ${token}`
-    }
-  });
-  console.log(response.data[0]);
-  return response.data[0].content;
+    }})
+    console.log(response.data);
+    return response.data[index].postId
 };
 const submitComment = (post) => {
     // 发送评论
-    console.log('发送评论:', commentContent.value);
-    http.post(`/comment/${post.post_id}/comment`,{ content: commentContent.value }
+    console.log('发送评论:', post.commentContent);
+    http.post(`/comment/${post.post_id}/comment`,{ content: post.commentContent}
     )
     // 清空输入框
-    commentContent.value = '';
+    post.commentContent = '';
 }
 const like = (post_id, post_A) => {
     http.get(`/post/${post_id}/hlike`, {
@@ -167,11 +166,13 @@ http.get('/feed', {
             }).then(response => {
                 post.isLiked=response.data.isLiked;
                 post.likes=response.data.likes;
+                post.commentContent = '';
             })
             console.log(post.post_id)
             getUserNames(post.post_id).then(username => {
                 postAuthors.value.push(username);
             });
+            // if(findComment(post)!=[])comments.value.push(findComment(post));
         });
     })
 
