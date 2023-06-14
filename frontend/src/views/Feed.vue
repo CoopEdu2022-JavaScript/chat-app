@@ -40,7 +40,8 @@
             <h1>{{ post.title }}</h1>
             <div class="user_blogs_context">{{ post.content }}</div>
             <div class="functions">
-                <button @click.stop="like" :state="post.liked?'press':'release'" class="likes"></button>: {{ post.likes }}
+                <button @click.stop="like(post.post_id,post)" :state="post.liked ? 'press' : 'release'" class="likes"></button>: {{
+                    post.likes }}
                 <button class="comments"></button>
                 <input type="text" placeholder="回复" class="send_comment">
             </div>
@@ -63,38 +64,48 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
-const like = () => {
-    http.get(`/post/${post.id}/hlike`, {
-    headers: {
-        Authorization: `Bearer ${token}`
-    }
-})
-    .then(response => {
-       post.liked=response.data.isLiked;
+const like = (post_id,post_A) => {
+    http.get(`/post/${post_id}/hlike`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }).then(response => {
+        post_A.liked = response.data.isLiked;
+        post_A.liked = !post_A.liked
+        post_A.likes += (post_A.liked ? 1 : -1)
+        if (post_A.liked) http.post(`post/${post_id}/likes`,{
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
     })
-  post.liked = !post.liked
-  post.likes += (post.liked ? 1 : -1)
-  if (post.liked) http.post(`feed/${post.id}/like`)
-  else http.post(`feed/${post.id}/unlike`)
-}
+        else http.post(`/post/${post_id}/unlike`,{
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+})}
 function goToProfile() {
     router.push('/profile');
 }
 function goToPostBlog() {
     router.push('/postblog');
 }
-async function getUsername(uid) {
+async function getUsername(postid) {
     try {
-        const response = await http.get(`/post/usersname/${uid}`);
-        console.log(response.data.usernames);
+        const response = await http.get(`/post/${postid}/users`,{
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+        console.log(response.data);
         return response.data.usernames;
     } catch (error) {
         console.log(error);
         return '';
     }
 }
-async function anotherAsyncFunction(uid) {
-    const usernamesPromise = getUsername(uid); // 调用getUsername()函数，并返回Promise对象
+async function getUserNames(postid) {
+    const usernamesPromise = getUsername(postid); // 调用getUsername()函数，并返回Promise对象
     const usernames = await usernamesPromise; // 等待Promise完成，并将结果赋给usernames变量
     console.log(usernames); // 输出用户名
     return usernames;
@@ -104,29 +115,39 @@ async function anotherAsyncFunction(uid) {
 const showOptions = ref(false)
 const posts = ref([]);
 const postAuthors = ref([]);
-http.get('/', {
+http.get('/feed', {
     headers: {
         Authorization: `Bearer ${token}`
     }
 })
     .then(response => {
-        console.log(response.data)
         posts.value = response.data
         // 获取并保存每篇文章的作者名字
         response.data.forEach(post => {
-            anotherAsyncFunction(post.uid).then(username => {
+            console.log(post.post_id)
+            post.likes=0;
+            getUserNames(post.post_id).then(username => {
                 postAuthors.value.push(username);
             });
         });
     })
+
 //===================
 //==================
 </script>
 <style scoped>
-.comments{
+[state='press'] {
+  background-image: url(../assets/Feed/ic_like_final_active.png);
+}
+[state='release'    ]{
+background-image: url(../assets/Feed/ic_like_final.png);
+}
+.comments {
     background-image: url(../assets/Feed/ic_comment.png);
 }
-.likes,.comments{
+
+.likes,
+.comments {
     background-size: contain;
     width: 25px;
     height: 25px;
@@ -392,4 +413,5 @@ http.get('/', {
     background-position: 13px 8px;
     padding-left: 30px;
     color: white;
-}</style>
+}
+</style>
