@@ -9,7 +9,7 @@
         <div v-if="showModal" class="log modal-overlay" @click="showModal = false">
             <div class="modal" @click.stop>
                 <div class="ask-for-logout">退出登录?</div>
-                <div class="username">@MoonShot</div>
+                <div class="username"></div>
                 <div class="options">
                     <button @click="option1">取消</button>
                     <button @click="option2">确认</button>

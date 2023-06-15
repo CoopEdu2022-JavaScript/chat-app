@@ -1,7 +1,7 @@
 <template>
     <div class="heading">
         <button @click="goBack" class="return-arrow"></button>
-        <button type="submit" :disabled="!canPost" :class="{ active: canPost }" @click="sendBlog" class="postblog">发布
+        <button type="submit" :disabled="!canPost" :class="{ active: canPost }" @click="sendPost" class="postblog">发布
         </button>
     </div>
     <div class="blogtitle">
@@ -12,6 +12,7 @@
         <textarea v-model="formData.content" name="content" placeholder="分享你的生活" cols="30" rows="10"></textarea>
     </div>
     <div class="picupload">
+        目前发图片功能仅供预览，不可使用
         <label for="fileInput" class="custom-file-input" :style="{ backgroundImage: `url(${previewSrc})` }">
             <input type="file" id="fileInput" accept="image/*" hidden @change="handleFileChange">
             <button v-if="previewSrc !== previewImage" class="clear-button" @click="clearPreview">x</button>
@@ -38,12 +39,14 @@ const formData = reactive({
 const sendBlog = () => {
     sendPost()
     router.push('/feed').then(() => {
-    location.reload()})
+        location.reload()
+    })
     // sendPost().
     // then(() => { sendPic(); })
 }
 const sendPost = () => {
-    return http.post('/post/newpost', formData, {
+    console.log(formData)
+    http.post('/post/newpost', formData, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -51,6 +54,9 @@ const sendPost = () => {
         .then(response => {
             postId.value = response.data.post_id
             console.log(postId)
+            router.push('/feed').then(() => {
+                location.reload()
+            })
         })
         .catch(error => {
             //
@@ -142,6 +148,7 @@ input[type="file"] {
     margin-top: 36px;
     margin-left: 10%;
     width: 75%;
+    color: white;
 }
 
 .context textarea {

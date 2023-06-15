@@ -13,8 +13,11 @@
     </div>
     <div class="context">
         <div v-for="post in posts" :key="post.id" class="context-blog">
-            <h2>{{ post.title }}</h2>
+            <div class="context-blog">
+                            <h2>{{ post.title }}</h2>
             <p>{{ post.content }}</p>
+            <button class="delete-post" @click="del_post(post)">Delete</button>
+            </div>
         </div>
     </div>
     <div class="btm">
@@ -37,6 +40,11 @@ import http from '../api/http'
 const user = ref(null)
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
+const del_post = (post) => {
+    http.delete(`/post/${post.post_id}/delete`, { headers: { Authorization: `Bearer ${token}` } }).then(()=>{
+        location.reload()
+    })
+}
 const posts = ref([])
 http.get('/login/profile', {
     headers: {
@@ -83,6 +91,12 @@ const showOptions = ref(false)
   z-index: 999;  使其处于最上层 
   display: none;  初始状态下隐藏遮罩层
 }   这里是遮罩的css*/
+.delete-post{
+    border:none;
+    border-radius: 20px;
+    background-color: rgb(221, 162, 162);
+color:#FFFFFF;
+}
 * {
     margin: 0;
     padding: 0;
@@ -265,6 +279,8 @@ const showOptions = ref(false)
     display: block;
     width: 50%;
     height: 196.5px;
+    background-color: white;
+    overflow: hidden;
 }
 
 .add-logo {

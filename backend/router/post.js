@@ -9,16 +9,15 @@ router.use(express.urlencoded({ extended: true }))
 
 router.post('/newpost', async (req, res) => {
   try {
-
     const { user_id } = getPayload(req)
     const { title, content } = req.body
+    console.log(title)
     const namespace = '8e884ace-bee4-11e4-8dfc-aa07a5b093db'
     const time = new Date().getTime().toString()
     const uuid = uuidv5(`${title}${content}${user_id}${time}`, namespace)
-    const sql = `INSERT INTO post (title, content,date, uid, likes,coments_id,post_id,images) VALUES ('${title}', '${content}', NOW(),${user_id}, 0,0,'${uuid}',9099)`
-
-    const [rows] = await db.query(sql)
-
+    const values = [title, content, user_id, uuid]
+    const sql = `INSERT INTO post (title, content,date, uid, likes,coments_id,post_id,images) VALUES (?,?,NOW(),?,0,0,?,9099)`
+    const [rows] = await db.query(sql, values)
     res.json({ state: true, post_id: uuid })
   } catch (err) {
     console.error('Error creating post:', err)
@@ -56,8 +55,11 @@ router.delete('/:id/delete', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
     const id = req.params.id
-    const sql = `DELETE FROM post WHERE post_id = ${id};DELETE FROM like_post WHERE post_id = ${id};DELETE FROM comment WHERE post_id = ${id} ;DELETE FROM conment WHERE post_id = ${id};Delete FROM images_post WHERE post_id = ${id}`
-    const [rows] = await db.query(sql)
+    const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? ;Delete FROM images_post WHERE post_id = ?`
+    const values = [id, user_id, id, id, id]
+
+    const [rows] = await db.query(sql, values)
+
     res.json({ state: true })
   } catch (err) {
     console.error('Error fetching post:', err)
@@ -98,8 +100,8 @@ router.delete('/:id/unlike', async (req, res) => {
     const { user_id } = getPayload(req)
     const sql = `DELETE FROM like_post WHERE post_id = ? AND uid = ?;
     UPDATE post SET likes=likes-1 WHERE post_id = ?`
-    const values = [id,user_id,id]
-    const [rows] = await db.query(sql,values)
+    const values = [id, user_id, id]
+    const [rows] = await db.query(sql, values)
     res.send(true)
   } catch (err) {
     console.error('not success', err)
@@ -162,7 +164,7 @@ router.get('/usersname/:id', async (req, res) => {
 router.get('/:id/users', async (req, res) => {
   try {
 
-    const { user_id } = getPayload(req) 
+    const { user_id } = getPayload(req)
     const id = req.params.id
     const sql = 'SELECT uid FROM post WHERE post_id = ?'
     const values = [id]

@@ -57,6 +57,12 @@ const routes = [
     name:'Post',
     component: ()=>import('../components/Post.vue'),
     meta: {requiresAuth:true}
+  },
+  {
+    path:'/comment',
+    name:'Comment',
+    component:()=>import('../views/Comments.vue'),
+    meta: {requiresAuth:true}
   }
 ]
 

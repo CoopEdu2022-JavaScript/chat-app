@@ -35,7 +35,7 @@
             <div class="user_inf">
                 <div class="user_icon"></div>
                 <div class="user_name">{{ postAuthors[index] }}</div>
-                <div class="time">sad</div>
+                <div class="time">{{ post.date.slice(0, 19).replace('T', ' ') }}</div>
             </div>
             <h1>{{ post.title }}</h1>
             <div class="user_blogs_context">{{ post.content }}</div>
@@ -44,17 +44,12 @@
                     class="likes"></button>
                 <div class="likes-count">{{
                     post.likes }}</div>
-                <button class="comments"></button>
+                <button class="comments" @click="goToComments(post.post_id)"></button>
                 <div class="comment-count">{{
                     post.coments_id }}</div>
                 <input type="text" placeholder="回复 最多15字" class="send-comment" maxlength="15" v-model="post.commentContent">
                 <button class="send-comment-button" :class="{ active: isCommentContentValid(post) }"
                     :disabled="!isCommentContentValid(post)" @click="submitComment(post)">发送</button>
-            </div>
-            <div class="comment-area" v-for="(comment,index) in comments" :key="comment.postId">
-                <div class="comment">
-                    {{ findComment(post,index).username }}:{{ findComment(post,index).content }}
-                </div>
             </div>
         </div>
     </div>
@@ -84,21 +79,31 @@ const comments=ref([])
 const isCommentContentValid = (post) => {
     return post.commentContent !== '';
 };
-const findComment = async (post,index) => {
-  const response = await http.get(`/comment/${post.post_id}/comment`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }})
-    console.log(response.data);
-    return response.data[index].postId
-};
+// const findComment = async (post,index) => {
+//   const response = await http.get(`/comment/${post.post_id}/comment`, {
+//     headers: {
+//       Authorization: `Bearer ${token}`
+//     }})
+//     console.log(response.data);
+//     return response.data[index].postId
+// };
+const playSound = () => {
+  const audio = new Audio('../assets/feed/5c894e8c6b62443588.mp3');
+  audio.play();
+}
 const submitComment = (post) => {
-    // 发送评论
-    console.log('发送评论:', post.commentContent);
-    http.post(`/comment/${post.post_id}/comment`,{ content: post.commentContent}
-    )
-    // 清空输入框
-    post.commentContent = '';
+  // 发送评论
+  console.log('发送评论:', post.commentContent);
+  http.post(`/comment/${post.post_id}/comment`,{ content: post.commentContent})
+    .then(() => {
+      // 清空输入框
+      post.commentContent = '';
+      // 刷新feed页面
+      location.reload();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 const like = (post_id, post_A) => {
     http.get(`/post/${post_id}/hlike`, {
@@ -121,6 +126,13 @@ const like = (post_id, post_A) => {
             }
         })
     })
+}
+function goToComments(postID) {
+  // Store the postID in sessionStorage
+  sessionStorage.setItem('postID', postID);
+
+  // Navigate to the comment page
+  router.push('/comment');
 }
 function goToProfile() {
     router.push('/profile');
@@ -180,9 +192,6 @@ http.get('/feed', {
 //==================
 </script>
 <style scoped>
-.comment{
-color:white
-}
 button.active {
     color: black;
 }
@@ -302,6 +311,7 @@ button.active {
     font-size: 12px;
     line-height: 17px;
     color: rgb(191, 191, 191);
+    width: 100%;
 }
 
 .user_icon {
