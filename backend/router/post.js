@@ -56,8 +56,11 @@ router.delete('/:id/delete', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
     const id = req.params.id
-    const sql = `DELETE FROM post WHERE post_id = ${id};DELETE FROM like_post WHERE post_id = ${id};DELETE FROM comment WHERE post_id = ${id} ;DELETE FROM conment WHERE post_id = ${id};Delete FROM images_post WHERE post_id = ${id}`
-    const [rows] = await db.query(sql)
+    const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ?;Delete FROM images_post WHERE post_id = ?`
+    const values = [id, user_id, id, id, id, id]
+  
+    const [rows] = await db.query(sql,values)
+    
     res.json({ state: true })
   } catch (err) {
     console.error('Error fetching post:', err)

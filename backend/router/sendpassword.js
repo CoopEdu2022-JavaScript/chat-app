@@ -44,7 +44,7 @@ async function sendEmails(emails, passwords) {
 
 router.post('/sendpassword', async(req, res) => {
   try {
-    let sql = 'SELECT (email,password) FROM user'
+    let sql = 'SELECT (email,password) FROM users'
     const { email } = req.body
     if (email){
       sql = 'SELECT (email,password) FROM user WHERE email = ?', [email]
