@@ -181,23 +181,76 @@ router.get('/:id/users', async (req, res) => {
   }
 })
 
-// router.get('/:id/detail', async (req, res) => {
-//   try {
-//     const { user_id } = getPayload(req)
-//     const id  = req.params.id
-//     const sql = 'SELECT * FROM post WHERE post_id = ?'
-//     const values = [id]
-//     const [rows] = await db.query(sql, values)
-//     const sql2 = 'SELECT usernames FROM users WHERE uid = ? LIMIT 1'
-//     const values2 = [rows[0].uid]
-//     const [rows2] = await db.query(sql2, values2)
-//     const sql3 = 'SELECT * FROM images_post WHERE post_id = ?'
-//     const values3 = [id]
-//     const [rows3] = await db.query(sql3, values3)
-//     const sql4 = 'SELECT * FROM like_post WHERE post_id = ?'
-//     const values4 = [id]
+router.get('/:id/detail', async (req, res) => {
+  try {
+    const { user_id } = getPayload(req)
+    const id = req.params.id
+    const sql = 'SELECT * FROM post WHERE post_id = ?'
+    const values = [id]
+    const sql2 = 'SELECT usernames FROM users WHERE uid = ? LIMIT 1'
+    const sql3 = 'SELECT * FROM images_post WHERE post_id = ?'
+    const sql4 = 'SELECT * FROM like_post WHERE post_id = ?'
+    const promises = [
+      db.query(sql, values),
+      db.query(sql2, [values[0]]),
+      db.query(sql3, values),
+      db.query(sql4, values)
+    ]
+Promise.all(promises)
+  .then(([rows, rows2, rows3, rows4]) => {
+    const post = rows[0]
+    const usernames = rows2[0].usernames
+    const images = rows3
+    const likes = rows4.length
+    res.json({ ...post, usernames, images, likes })
+  })
+  .catch(err => {
+    console.error('Error fetching post:', err)
+    const error = new Error('Internal server error')
+    error.status = 500
+    next(error)
+  })
+  } catch (err) {
+    console.error('Error fetching post:', err)
+    res.status(500).json({ err })
+  }
+})
 
-//     res.json({ ...rows[0], usernames: rows2[0].usernames, images: rows3 })
-
+router.get('/detail', async (req, res, next) => {
+  try {
+    const { user_id } = getPayload(req)
+    const ids = req.query.ids.split(',')
+    const sql = 'SELECT * FROM post WHERE post_id IN (?)'
+    const values = [ids]
+    const sql2 = 'SELECT usernames FROM users WHERE uid = ? LIMIT 1'
+    const sql3 = 'SELECT * FROM images_post WHERE post_id IN (?)'
+    const sql4 = 'SELECT post_id, COUNT(*) AS likes FROM like_post WHERE post_id IN (?) GROUP BY post_id'
+    const promises = [
+      db.query(sql, values),
+      db.query(sql2, [values[0][0]]),
+      db.query(sql3, values),
+      db.query(sql4, values)
+    ]
+    Promise.all(promises)
+      .then(([rows, rows2, rows3, rows4]) => {
+        const posts = rows.map(post => {
+          const usernames = rows2[0].usernames
+          const images = rows3.filter(image => image.post_id === post.post_id)
+          const likes = rows4.find(like => like.post_id === post.post_id)?.likes || 0
+          return { ...post, usernames, images, likes }
+        })
+        res.json(posts)
+      })
+      .catch(err => {
+        console.error('Error fetching posts:', err)
+        const error = new Error('Internal server error')
+        error.status = 500
+        next(error)
+      })
+  } catch (err) {
+    console.error('Error fetching posts:', err)
+    res.status(500).json({ err })
+  }
+})
 module.exports = router
 
