@@ -1,9 +1,9 @@
 <template>
     <div class="header">
-        <input type="search" v-model="searchTerm" @keydown.enter.prevent="submitSearch">
-        <button class="notifications"></button>
+        <input type="search" v-model="searchTerm" @keydown.enter.prevent="submitSearch" placeholder="搜索功能开发中">
+        <button class="notifications" @click="notif_making"></button>
     </div>
-    <p class="title1">好友快拍</p>
+    <!-- <p class="title1">好友快拍</p> 快拍功能，未实现
     <div class="fastshot-list">
         <span class="user-block">
             <span class="fastshot-pic"></span>
@@ -29,7 +29,7 @@
             <span class="fastshot-pic"></span>
             <span class="fastshot-words">MoonShot</span>
         </span>
-    </div>
+    </div> -->
     <div class="blogs">
         <div v-for="(post, index) in posts" :key="post.id" class="user_blogs">
             <div class="user_inf">
@@ -61,7 +61,7 @@
     </div>
     <div v-if="showOptions" class="showOptions">
         <button class="postblog" @click="goToPostBlog">发帖</button>
-        <button class="snap">快拍</button>
+        <button class="snap">快拍(开发中)</button>
     </div>
 </template>
 <script setup>
@@ -75,7 +75,7 @@ const showOptions = ref(false)
 const posts = ref([]);
 const postAuthors = ref([]);
 const commentContent = ref('');
-const comments=ref([])
+const comments = ref([])
 const isCommentContentValid = (post) => {
     return post.commentContent !== '';
 };
@@ -87,23 +87,24 @@ const isCommentContentValid = (post) => {
 //     console.log(response.data);
 //     return response.data[index].postId
 // };
-const playSound = () => {
-  const audio = new Audio('../assets/feed/5c894e8c6b62443588.mp3');
-  audio.play();
-}
+const notif_making = () => {
+  setTimeout(() => {
+    alert("叮~~~(铃铛声)\n这边检测到您点击了通知按钮呢\n遗憾的是我们还在开发呢");
+  }, 300);
+};
 const submitComment = (post) => {
-  // 发送评论
-  console.log('发送评论:', post.commentContent);
-  http.post(`/comment/${post.post_id}/comment`,{ content: post.commentContent})
-    .then(() => {
-      // 清空输入框
-      post.commentContent = '';
-      // 刷新feed页面
-      location.reload();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+    // 发送评论
+    console.log('发送评论:', post.commentContent);
+    http.post(`/comment/${post.post_id}/comment`, { content: post.commentContent })
+        .then(() => {
+            // 清空输入框
+            post.commentContent = '';
+            // 刷新feed页面
+            location.reload();
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 }
 const like = (post_id, post_A) => {
     http.get(`/post/${post_id}/hlike`, {
@@ -128,11 +129,11 @@ const like = (post_id, post_A) => {
     })
 }
 function goToComments(postID) {
-  // Store the postID in sessionStorage
-  sessionStorage.setItem('postID', postID);
+    // Store the postID in sessionStorage
+    sessionStorage.setItem('postID', postID);
 
-  // Navigate to the comment page
-  router.push('/comment');
+    // Navigate to the comment page
+    router.push('/comment');
 }
 function goToProfile() {
     router.push('/profile');
@@ -176,8 +177,8 @@ http.get('/feed', {
                     Authorization: `Bearer ${token}`
                 }
             }).then(response => {
-                post.isLiked=response.data.isLiked;
-                post.likes=response.data.likes;
+                post.isLiked = response.data.isLiked;
+                post.likes = response.data.likes;
                 post.commentContent = '';
             })
             console.log(post.post_id)
@@ -276,7 +277,8 @@ button.active {
     line-height: 22px;
     display: flex;
     align-items: center;
-
+    word-wrap: break-word;
+  overflow: scroll;
     color: #FFFFFF;
 }
 
@@ -376,7 +378,7 @@ button.active {
     bottom: 13%;
     width: 90px;
     height: 45px;
-    background-color: rgb(218, 144, 244);
+    background-color: gray;
     border: none;
     border-radius: 8px;
     font-family: 'PingFang SC';
@@ -509,6 +511,10 @@ button.active {
     background-size: contain;
     border: none;
     line-height: 28px;
+}
+
+.notifications:active {
+    background-image: url(../assets/Feed/ic_home_notification_active.png);
 }
 
 .header {

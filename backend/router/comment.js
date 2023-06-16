@@ -28,11 +28,11 @@ router.get('/:id/comment', async (req, res) => {
 	try {
 		const { user_id } = getPayload(req)
 		const id = req.params.id
-		const values = [user_id,id]
+		const values = [id]
 		const sql = `
-		SELECT conment.content, conment.date, users.usernames, conment.post_id, conment.conment_id 
+		SELECT conment.content, conment.date, users.usernames, conment.post_id, conment.conment_id, conment.uid
 FROM conment 
-INNER JOIN users ON users.uid = ?
+INNER JOIN users ON users.uid = conment.uid
 WHERE conment.post_id = ?
 	  `
 		const [rows] = await db.query(sql, values)

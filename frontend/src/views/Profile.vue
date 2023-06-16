@@ -8,16 +8,14 @@
     <div class="background-pur">
         <div class="background-blk">
             <div class="tiezi">帖子</div>
-            <div class="fastshot">快拍</div>
+            <div class="fastshot">快拍(开发中)</div>
         </div>
     </div>
     <div class="context">
         <div v-for="post in posts" :key="post.id" class="context-blog">
-            <div class="context-blog">
-                            <h2>{{ post.title }}</h2>
+            <h2>{{ post.title }}</h2>
             <p>{{ post.content }}</p>
             <button class="delete-post" @click="del_post(post)">Delete</button>
-            </div>
         </div>
     </div>
     <div class="btm">
@@ -28,7 +26,7 @@
     </div>
     <div v-if="showOptions" class="showOptions">
         <button @click="goToPostBlog" class="postblog">发帖</button>
-        <button class="snap">快拍</button>
+        <button class="snap">快拍(开发中)</button>
     </div>
 </template>
   
@@ -41,7 +39,7 @@ const user = ref(null)
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
 const del_post = (post) => {
-    http.delete(`/post/${post.post_id}/delete`, { headers: { Authorization: `Bearer ${token}` } }).then(()=>{
+    http.delete(`/post/${post.post_id}/delete`, { headers: { Authorization: `Bearer ${token}` } }).then(() => {
         location.reload()
     })
 }
@@ -91,12 +89,16 @@ const showOptions = ref(false)
   z-index: 999;  使其处于最上层 
   display: none;  初始状态下隐藏遮罩层
 }   这里是遮罩的css*/
-.delete-post{
-    border:none;
+.delete-post {
+    border: none;
     border-radius: 20px;
     background-color: rgb(221, 162, 162);
-color:#FFFFFF;
+    color: #FFFFFF;
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
+
 * {
     margin: 0;
     padding: 0;
@@ -116,7 +118,7 @@ color:#FFFFFF;
     right: 20%;
     position: fixed;
     bottom: 13%;
-    background-color: rgb(218, 144, 244);
+    background-color: gray;
     border: none;
     border-radius: 8px;
     font-family: 'PingFang SC';
@@ -271,16 +273,16 @@ color:#FFFFFF;
     background-color: gray;
     display: flex;
     flex-wrap: wrap;
-    overflow: scroll;
     margin-bottom: 15px;
 }
 
-.context .context-blog {
+.context-blog {
     display: block;
     width: 50%;
     height: 196.5px;
     background-color: white;
     overflow: hidden;
+    position: relative;
 }
 
 .add-logo {

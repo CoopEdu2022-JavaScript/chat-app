@@ -35,6 +35,7 @@ font-style: 30px;
 color:white;
 width: 100%;
 background-color: gray;
+border-bottom: rgb(29, 29, 29) solid 1px;
 }.return {
     margin-top: 5%;
     margin-bottom: 5%;
