@@ -50,7 +50,7 @@ http.get('/login/profile', {
     }
 })
     .then(response => {
-        console.log(response.data)
+        //console.log(response.data)
         user.value = response.data
 
         // 发出第二个请求
@@ -61,7 +61,7 @@ http.get('/login/profile', {
         })
     })
     .then(response => {
-        console.log(response.data)
+        //console.log(response.data)
         posts.value = response.data
     })
 //==========
@@ -221,7 +221,7 @@ const showOptions = ref(false)
     border-radius: 40.5px;
     position: relative;
     top: 10px;
-    background-image: url(https://ts1.cn.mm.bing.net/th/id/R-C.61853f05a57f939cd6ec739ff7e61214?rik=QEwRnHLQtYlc6g&riu=http%3a%2f%2fwww.lgstatic.com%2fthumbnail_300x300%2fi%2fimage2%2fM01%2fA7%2fC9%2fCgoB5lvkC5aATt8fAABmSk5TuSw416.png&ehk=Qp2d%2fXPioALkgThaG4Y5M%2fda0aEZa0YG8lP1GBrSiGk%3d&risl=&pid=ImgRaw&r=0);
+    background-image: url(../assets//Feed/moonshotlogo.png);
     background-size: 116px;
     background-position: 104px -13px;
 }

@@ -10,16 +10,16 @@ router.use(express.urlencoded({ extended: true }))
 async function sendEmails(emails, passwords) {
   try {
     const transporter = nodemailer.createTransport({
-        host: 'smtp.qq.com',
-        port: 465,
-        secure: true,
-        auth: {
-          user: '2149637268@qq.com',
-          pass: 'fhtjikavgptydieg'
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
+      host: 'smtp.qq.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: '2149637268@qq.com',
+        pass: 'fhtjikavgptydieg'
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
     })
     for (let i = 0; i < emails.length; i++) {
       const email = emails[i]
@@ -31,7 +31,7 @@ async function sendEmails(emails, passwords) {
         text: `Your password is ${password}`
       }
       const info = await transporter.sendMail(mailOptions)
-      console.log(`Email sent to ${email}: ${info.messageId}`)
+      //console.log(`Email sent to ${email}: ${info.messageId}`)
     }
   } catch (err) {
     console.error('Error sending emails:', err)
@@ -42,14 +42,14 @@ async function sendEmails(emails, passwords) {
 // const passwords = ['123456']
 // sendEmails(emails, passwords)
 
-router.post('/sendpassword', async(req, res) => {
+router.post('/sendpassword', async (req, res) => {
   try {
     let sql = 'SELECT (email,password) FROM users'
     const { email } = req.body
-    if (email){
+    if (email) {
       sql = 'SELECT (email,password) FROM user WHERE email = ?', [email]
     }
-    const  [rows, fields] = await db.query(sql)
+    const [rows, fields] = await db.query(sql)
     let emails = []
     let passwords = []
     for (let i = 0; i < rows.length; i++) {
@@ -58,11 +58,11 @@ router.post('/sendpassword', async(req, res) => {
     }
     sendEmails(emails, passwords)
     res.send(true)
-    
-  } catch(err){
+
+  } catch (err) {
     console.error('not success', err);
-    res.status(500).json({err});
-  } 
+    res.status(500).json({ err });
+  }
 });
 
 module.exports = router

@@ -9,7 +9,8 @@
         <span>{{ textCount }}/20</span>
     </div>
     <div class="context">
-        <textarea v-model="formData.content" name="content" placeholder="分享你的生活" cols="30" rows="10" maxlength="200"></textarea>
+        <textarea v-model="formData.content" name="content" placeholder="分享你的生活" cols="30" rows="10"
+            maxlength="200"></textarea>
     </div>
     <div class="picupload">
         目前发图片功能仅供预览，不可使用
@@ -53,7 +54,7 @@ const sendPost = () => {
     
     isSending = true; // 设置标志为 true，表示正在发送
 
-    console.log(formData)
+    //console.log(formData)
     
     http.post('/post/newpost', formData, {
         headers: {
@@ -62,7 +63,7 @@ const sendPost = () => {
     })
         .then(response => {
             postId.value = response.data.post_id
-            console.log(postId)
+            //console.log(postId)
             router.push('/feed').then(() => {
                 location.reload()
             })
@@ -76,7 +77,7 @@ const sendPost = () => {
 }
 const sendPic = () => {
     formDataImage.append('image', imageFile.value);
-    console.log(imageFile.value)
+    //console.log(imageFile.value)
     http.post(`/upload/${postId.value}/upload`, formDataImage, {
         headers: {
             Authorization: `Bearer ${token}`

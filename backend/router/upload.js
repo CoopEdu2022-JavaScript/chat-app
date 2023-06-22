@@ -14,16 +14,16 @@ router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
 router.post('/:id/upload', upload.single('image'), async (req, res) => {
-  const {id} = req.params
+  const { id } = req.params
   const user_id = getPayload(req).user_id
   const { originalname, mimetype, filename, path, size } = req.file
   const sql = 'INSERT INTO images_post (name, type, filename, path, size,post_id,uid) VALUES (?,?,?, ?, ?, ?, ?);UPDATE post SET images = images + 1 WHERE post_id = ?'
-  const values = [originalname, mimetype, filename, path, size,id,user_id,id]
+  const values = [originalname, mimetype, filename, path, size, id, user_id, id]
   try {
     const conn = await db.getConnection()
     const [rows] = await conn.query(sql, values)
     conn.release()
-    console.log('File uploaded successfully')
+    //console.log('File uploaded successfully')
     res.send('File uploaded successfully')
   } catch (err) {
     console.error('Error uploading file:', err)
@@ -43,17 +43,17 @@ router.post('/:id/upload', upload.single('image'), async (req, res) => {
 //   }
 // })
 router.post('/icon', upload.single('image'), async (req, res) => {
-  
+
   const user_id = getPayload(req).user_id
   const { originalname, mimetype, filename, path, size } = req.file
-  
+
   const sql = 'INSERT INTO images_icon (name, type, filename, path, size,uid) VALUES (?,?, ?, ?, ?, ?)'
-  const values = [originalname, mimetype, filename, path, size,user_id]
+  const values = [originalname, mimetype, filename, path, size, user_id]
   try {
-    
+
     const [rows] = await db.query(sql, values)
-    
-    console.log('File uploaded successfully')
+
+    //console.log('File uploaded successfully')
     res.send('File uploaded successfully')
   } catch (err) {
     console.error('Error uploading file:', err)
@@ -104,7 +104,7 @@ router.get('/icon', async function (req, res, next) {
     error.status = 500
     next(error)
   }
-})  
+})
 
 
 module.exports = router

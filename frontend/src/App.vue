@@ -9,7 +9,7 @@ const userStore = useUserStore()
 let { token } = storeToRefs(userStore)
 const test = () => {
   http.get('/').then((rep) => {
-    console.log(rep.data)
+    //console.log(rep.data)
   })
 }
 </script>

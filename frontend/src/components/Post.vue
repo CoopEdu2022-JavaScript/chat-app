@@ -1,16 +1,16 @@
 <template>
-              <div class="user_inf">
-                <div class="user_icon"></div>
-                <div class="user_name">{{ postAuthors[index] }}</div>
-                <div class="time">sad</div>
-            </div>
-            <h1>{{ post.title }}</h1>
-            <div class="user_blogs_context">{{ post.content }}</div>
-            <div class="functions">
-                <button @click.stop="like" :state="post.liked?'press':'release'">likes</button>: {{ post.likes }}
-                <button class="comments"></button>
-                <input type="text" placeholder="回复" class="send_comment">
-            </div>
+    <div class="user_inf">
+        <div class="user_icon"></div>
+        <div class="user_name">{{ postAuthors[index] }}</div>
+        <div class="time">sad</div>
+    </div>
+    <h1>{{ post.title }}</h1>
+    <div class="user_blogs_context">{{ post.content }}</div>
+    <div class="functions">
+        <button @click.stop="like" :state="post.liked?'press':'release'">likes</button>: {{ post.likes }}
+        <button class="comments"></button>
+        <input type="text" placeholder="回复" class="send_comment">
+    </div>
 </template>
 <script setup>
 import { ref } from 'vue'
@@ -21,17 +21,17 @@ const token = localStorage.getItem(TOKEN_KEY)
 async function getUsername(uid) {
     try {
         const response = await http.get(`/post/usersname/${uid}`);
-        console.log(response.data.usernames);
+        //console.log(response.data.usernames);
         return response.data.usernames;
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         return '';
     }
 }
 async function anotherAsyncFunction(uid) {
     const usernamesPromise = getUsername(uid); // 调用getUsername()函数，并返回Promise对象
     const usernames = await usernamesPromise; // 等待Promise完成，并将结果赋给usernames变量
-    console.log(usernames); // 输出用户名
+    //console.log(usernames); // 输出用户名
     return usernames;
 }
 
@@ -44,7 +44,7 @@ http.get('/post/users/getallpost', {
     }
 })
     .then(response => {
-        console.log(response.data)
+        //console.log(response.data)
         posts.value = response.data
         // 获取并保存每篇文章的作者名字
         response.data.forEach(post => {
@@ -56,12 +56,16 @@ http.get('/post/users/getallpost', {
 //===================
 </script>
 <style scoped>
-.comments{
+.comments {
     background-image: url(../assets/Feed/);
-}.like{
+}
+
+.like {
     background-image: url('../assets/Feed/ic_like_final.png');
 }
-.like,.comments{
+
+.like,
+.comments {
     background-size: contain;
     width: 25px;
     height: 25px;

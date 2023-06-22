@@ -11,7 +11,7 @@ router.post('/newpost', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
     const { title, content } = req.body
-    console.log(title)
+    //console.log(title)
     const namespace = '8e884ace-bee4-11e4-8dfc-aa07a5b093db'
     const time = new Date().getTime().toString()
     const uuid = uuidv5(`${title}${content}${user_id}${time}`, namespace)
@@ -124,7 +124,7 @@ router.get('/:id/hlike', async (req, res) => {
     const values = [id, id, user_id]
     const [rows] = await db.query(sql, values)
     let isLiked = false;
-    console.log(rows)
+    //console.log(rows)
     if (!rows[1][0] == []) isLiked = true;
     res.json({ likes: rows[0][0].likes, isLiked })
 
@@ -175,7 +175,7 @@ router.get('/:id/users', async (req, res) => {
     res.send(rows2[0])
 
   } catch (err) {
-    console.log(err)
+    //console.log(err)
     // console.error('Error fetching post:', err)
     res.status(500).json({ err })
   }
@@ -196,20 +196,20 @@ router.get('/:id/detail', async (req, res) => {
       db.query(sql3, values),
       db.query(sql4, values)
     ]
-Promise.all(promises)
-  .then(([rows, rows2, rows3, rows4]) => {
-    const post = rows[0]
-    const usernames = rows2[0].usernames
-    const images = rows3
-    const likes = rows4.length
-    res.json({ ...post, usernames, images, likes })
-  })
-  .catch(err => {
-    console.error('Error fetching post:', err)
-    const error = new Error('Internal server error')
-    error.status = 500
-    next(error)
-  })
+    Promise.all(promises)
+      .then(([rows, rows2, rows3, rows4]) => {
+        const post = rows[0]
+        const usernames = rows2[0].usernames
+        const images = rows3
+        const likes = rows4.length
+        res.json({ ...post, usernames, images, likes })
+      })
+      .catch(err => {
+        console.error('Error fetching post:', err)
+        const error = new Error('Internal server error')
+        error.status = 500
+        next(error)
+      })
   } catch (err) {
     console.error('Error fetching post:', err)
     res.status(500).json({ err })

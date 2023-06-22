@@ -3,7 +3,7 @@
         <input type="search" v-model="searchTerm" @keydown.enter.prevent="submitSearch" placeholder="搜索功能开发中">
         <button class="notifications" @click="notif_making"></button>
     </div>
-    <!-- <p class="title1">好友快拍</p> 快拍功能，未实现
+    <p class="title1">好友快拍(开发中)</p>
     <div class="fastshot-list">
         <span class="user-block">
             <span class="fastshot-pic"></span>
@@ -29,7 +29,7 @@
             <span class="fastshot-pic"></span>
             <span class="fastshot-words">MoonShot</span>
         </span>
-    </div> -->
+    </div>
     <div class="blogs">
         <div v-for="(post, index) in posts" :key="post.id" class="user_blogs">
             <div class="user_inf">
@@ -43,10 +43,10 @@
                 <button @click.stop="like(post.post_id, post)" :state="post.isLiked ? 'press' : 'release'"
                     class="likes"></button>
                 <div class="likes-count">{{
-                    post.likes }}</div>
+                                    post.likes }}</div>
                 <button class="comments" @click="goToComments(post.post_id)"></button>
                 <div class="comment-count">{{
-                    post.coments_id }}</div>
+                                    post.coments_id }}</div>
                 <input type="text" placeholder="回复 最多15字" class="send-comment" maxlength="15" v-model="post.commentContent">
                 <button class="send-comment-button" :class="{ active: isCommentContentValid(post) }"
                     :disabled="!isCommentContentValid(post)" @click="submitComment(post)">发送</button>
@@ -84,17 +84,17 @@ const isCommentContentValid = (post) => {
 //     headers: {
 //       Authorization: `Bearer ${token}`
 //     }})
-//     console.log(response.data);
+//     //console.log(response.data);
 //     return response.data[index].postId
 // };
 const notif_making = () => {
-  setTimeout(() => {
-    alert("叮~~~(铃铛声)\n这边检测到您点击了通知按钮呢\n遗憾的是我们还在开发呢");
-  }, 300);
+    setTimeout(() => {
+        alert("叮~~~(铃铛声)\n这边检测到您点击了通知按钮呢\n遗憾的是我们还在开发呢");
+    }, 300);
 };
 const submitComment = (post) => {
     // 发送评论
-    console.log('发送评论:', post.commentContent);
+    //console.log('发送评论:', post.commentContent);
     http.post(`/comment/${post.post_id}/comment`, { content: post.commentContent })
         .then(() => {
             // 清空输入框
@@ -112,7 +112,7 @@ const like = (post_id, post_A) => {
             Authorization: `Bearer ${token}`
         }
     }).then(response => {
-        console.log(response.data.isLiked)
+        //console.log(response.data.isLiked)
         post_A.isLiked = response.data.isLiked;
         post_A.isLiked = !post_A.isLiked
         post_A.likes += (post_A.isLiked ? 1 : -1)
@@ -148,17 +148,17 @@ async function getUsername(postid) {
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log(response.data);
+        //console.log(response.data);
         return response.data.usernames;
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         return '';
     }
 }
 async function getUserNames(postid) {
     const usernamesPromise = getUsername(postid); // 调用getUsername()函数，并返回Promise对象
     const usernames = await usernamesPromise; // 等待Promise完成，并将结果赋给usernames变量
-    console.log(usernames); // 输出用户名
+    //console.log(usernames); // 输出用户名
     return usernames;
 }
 
@@ -169,7 +169,7 @@ http.get('/feed', {
 })
     .then(response => {
         posts.value = response.data
-        console.log(response.data)
+        //console.log(response.data)
         // 获取并保存每篇文章的作者名字
         response.data.forEach(post => {
             http.get(`/post/${post.post_id}/hlike`, {
@@ -181,7 +181,7 @@ http.get('/feed', {
                 post.likes = response.data.likes;
                 post.commentContent = '';
             })
-            console.log(post.post_id)
+            //console.log(post.post_id)
             getUserNames(post.post_id).then(username => {
                 postAuthors.value.push(username);
             });
@@ -278,7 +278,7 @@ button.active {
     display: flex;
     align-items: center;
     word-wrap: break-word;
-  overflow: scroll;
+    overflow: scroll;
     color: #FFFFFF;
 }
 
@@ -320,7 +320,7 @@ button.active {
     width: 40px;
     height: 40px;
     border-radius: 20px;
-    background-image: url(https://ts1.cn.mm.bing.net/th/id/R-C.61853f05a57f939cd6ec739ff7e61214?rik=QEwRnHLQtYlc6g&riu=http%3a%2f%2fwww.lgstatic.com%2fthumbnail_300x300%2fi%2fimage2%2fM01%2fA7%2fC9%2fCgoB5lvkC5aATt8fAABmSk5TuSw416.png&ehk=Qp2d%2fXPioALkgThaG4Y5M%2fda0aEZa0YG8lP1GBrSiGk%3d&risl=&pid=ImgRaw&r=0);
+    background-image: url(../assets/Feed/moonshotlogo.png);
     background-size: 75px;
     background-position: 66px -10px;
     margin-right: 8px;

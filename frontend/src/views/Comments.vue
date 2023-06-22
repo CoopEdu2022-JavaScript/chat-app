@@ -1,10 +1,10 @@
 <template>
-<button class="return" @click="goBack"></button>
-<div class="comment-area" v-for="comment in comments" key="comment.conment_id">
-<div class="comment">
-{{ comment.username }}  :  {{ comment.content }}
-</div>
-</div>
+    <button class="return" @click="goBack"></button>
+    <div class="comment-area" v-for="comment in comments" key="comment.conment_id">
+        <div class="comment">
+            {{ comment.username }} : {{ comment.content }}
+        </div>
+    </div>
 </template>
 <script setup>
 import http from '../api/http'
@@ -22,21 +22,23 @@ http.get(`/comment/${post_id}/comment`, {
 }).then(response => {
     comments.value = response.data;
 })
-console.log(comments.value)
+//console.log(comments.value)
 function goBack() {
     router.go(-1)
 }
 </script>
 <style scoped>
-.comment{
-height: 40px;
-line-height: 40px;
-font-style: 30px;
-color:white;
-width: 100%;
-background-color: gray;
-border-bottom: rgb(29, 29, 29) solid 1px;
-}.return {
+.comment {
+    height: 40px;
+    line-height: 40px;
+    font-style: 30px;
+    color: white;
+    width: 100%;
+    background-color: gray;
+    border-bottom: rgb(29, 29, 29) solid 1px;
+}
+
+.return {
     margin-top: 5%;
     margin-bottom: 5%;
     border: none;
