@@ -5,9 +5,9 @@ import { useUserStore } from '../../store/user'
 
 const http = axios.create({
   //  baseURL: "http://192.168.137.1:3000",
-  // baseURL: "http://localhost:3000",
+  baseURL: "http://localhost:3000",
   // baseURL: "http://172.10.21.169:3000",
-  baseURL: "http://172.16.38.164:3000",
+  // baseURL: "http://172.16.38.164:3000",
   headers: {
     'Access-Control-Allow-Origin': '*',
     "Content-type": "application/json",

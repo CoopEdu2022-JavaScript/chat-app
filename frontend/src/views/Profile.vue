@@ -26,7 +26,7 @@
     </div>
     <div v-if="showOptions" class="showOptions">
         <button @click="goToPostBlog" class="postblog">发帖</button>
-        <button class="snap">快拍(开发中)</button>
+        <button class="snap" @click="goToSnapShot">快拍(仅支持预览)</button>
     </div>
 </template>
   
@@ -75,6 +75,9 @@ function goToPostBlog() {
 function goToSettings() {
     router.push('/usersettings')
 }
+function goToSnapShot() {
+    router.push('/postsnapshot')
+}
 const showOptions = ref(false)
 </script>
   
@@ -118,7 +121,7 @@ const showOptions = ref(false)
     right: 20%;
     position: fixed;
     bottom: 13%;
-    background-color: gray;
+    background-color: rgb(218, 144, 244);
     border: none;
     border-radius: 8px;
     font-family: 'PingFang SC';
@@ -158,8 +161,8 @@ const showOptions = ref(false)
     padding-right: 62px;
     position: fixed;
     bottom: 0;
-    padding-bottom: 5%;
     background-color: rgb(29, 29, 29);
+    padding-bottom: 5%;
 }
 
 .mainmenu {

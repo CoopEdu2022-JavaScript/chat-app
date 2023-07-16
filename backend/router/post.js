@@ -16,7 +16,7 @@ router.post('/newpost', async (req, res) => {
     const time = new Date().getTime().toString()
     const uuid = uuidv5(`${title}${content}${user_id}${time}`, namespace)
     const values = [title, content, user_id, uuid]
-    const sql = `INSERT INTO post (title, content,date, uid, likes,coments_id,post_id,images) VALUES (?,?,NOW(),?,0,0,?,9099)`
+    const sql = `INSERT INTO post (title, content,date, uid, likes,coments_id,post_id,images,popularity) VALUES (?,?,NOW(),?,0,0,?,9099,50)`
     const [rows] = await db.query(sql, values)
     res.json({ state: true, post_id: uuid })
   } catch (err) {

@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <button class="return-arrow"></button>
+        <button class="return-arrow" @click="goBack"></button>
     </div>
     <p class="title1">我的情绪是...</p>
     <p class="title2">选择你的情绪卡片</p>
@@ -64,6 +64,12 @@
     </div>
 </template>
 <script setup>
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+function goBack() {
+    router.go(-1);
+}
 </script>
 <style scoped>
 .opt img {
@@ -82,13 +88,14 @@
 }
 
 .opt {
-    color:#FFFFFF;
+    color: #FFFFFF;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: 100px;
     height: 125px;
 }
+
 .options {
     display: flex;
     gap: 16.5px;

@@ -61,7 +61,7 @@
     </div>
     <div v-if="showOptions" class="showOptions">
         <button class="postblog" @click="goToPostBlog">发帖</button>
-        <button class="snap">快拍(开发中)</button>
+        <button class="snap" @click="goToSnapShot">快拍(仅支持预览)</button>
     </div>
 </template>
 <script setup>
@@ -76,8 +76,13 @@ const posts = ref([]);
 const postAuthors = ref([]);
 const commentContent = ref('');
 const comments = ref([])
+function trimAll(ele){
+    if(typeof ele==='string'){
+        return ele.split(/[\t\r\f\n\s]*/g).join('');
+    }333
+}
 const isCommentContentValid = (post) => {
-    return post.commentContent !== '';
+    return trimAll(post.commentContent) !== '';
 };
 // const findComment = async (post,index) => {
 //   const response = await http.get(`/comment/${post.post_id}/comment`, {
@@ -140,6 +145,9 @@ function goToProfile() {
 }
 function goToPostBlog() {
     router.push('/postblog');
+}
+function goToSnapShot(){
+    router.push('/postsnapshot')
 }
 async function getUsername(postid) {
     try {
@@ -378,7 +386,7 @@ button.active {
     bottom: 13%;
     width: 90px;
     height: 45px;
-    background-color: gray;
+    background-color: rgb(218, 144, 244);
     border: none;
     border-radius: 8px;
     font-family: 'PingFang SC';
@@ -441,7 +449,7 @@ button.active {
     margin: 5% auto 5% auto;
     width: 90%;
     background-color: rgb(40, 40, 40);
-    padding: 0% 5% 5% 5%;
+    padding: 0% 5% 15% 5%;
     border-radius: 8px;
 }
 

@@ -13,7 +13,8 @@
             maxlength="200"></textarea>
     </div>
     <div class="picupload">
-        目前发图片功能仅供预览，不可使用
+        目前发图片功能仅供预览，不可使用<br>
+        PS:标题和内容都必须有才能发送
         <label for="fileInput" class="custom-file-input" :style="{ backgroundImage: `url(${previewSrc})` }">
             <input type="file" id="fileInput" accept="image/*" hidden @change="handleFileChange">
             <button v-if="previewSrc !== previewImage" class="clear-button" @click="clearPreview">x</button>
@@ -51,11 +52,11 @@ const sendPost = () => {
     if (isSending) {
         return; // 如果正在发送，则不执行函数体内的代码
     }
-    
+
     isSending = true; // 设置标志为 true，表示正在发送
 
     //console.log(formData)
-    
+
     http.post('/post/newpost', formData, {
         headers: {
             Authorization: `Bearer ${token}`
@@ -110,11 +111,16 @@ function clearPreview(event) {
 function goBack() {
     router.go(-1)
 }
+function trimAll(ele) {
+    if (typeof ele === 'string') {
+        return ele.split(/[\t\r\f\n\s]*/g).join('');
+    }
+}
 watch(() => formData.title, (newVal) => {
     textCount.value = newVal.length;
 });
 const canPost = computed(() => {
-    return formData.title.trim() !== '' && formData.content.trim() !== ''
+    return trimAll(formData.title.trim()) !== '' && trimAll(formData.content.trim()) !== ''
 })
 </script>
 <style scoped>

@@ -9,7 +9,19 @@ router.use(express.urlencoded({ extended: true }))
 router.get('/', async (req, res) => {
     try {
         const { user_id } = getPayload(req)
-        let sql = 'SELECT post_id FROM post ORDER BY date DESC LIMIT 10'
+        let sql = `SELECT * FROM (
+            SELECT post_id FROM post ORDER BY popularity DESC LIMIT 5
+          ) AS t1
+          UNION 
+          SELECT * FROM (
+            SELECT post_id FROM post
+            WHERE post_id NOT IN (
+              SELECT post_id FROM (
+                SELECT post_id FROM post ORDER BY popularity DESC LIMIT 5
+              ) AS t1 
+            )
+            ORDER BY RAND() LIMIT 5
+          ) AS t2`
         
         const [rows] = await db.query(sql)
         
@@ -18,7 +30,7 @@ router.get('/', async (req, res) => {
                 const [postRows] = await db.query('SELECT * FROM post WHERE post_id = ?', [post_id])
                 return postRows[0]
             })
-        )
+        )   
 
         res.send(all)
     } catch (err) {
