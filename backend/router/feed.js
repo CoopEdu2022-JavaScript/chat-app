@@ -5,7 +5,6 @@ const { getPayload } = require('../jwt_config')
 
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
-
 router.get('/', async (req, res) => {
     try {
         const { user_id } = getPayload(req)
@@ -38,4 +37,27 @@ router.get('/', async (req, res) => {
         res.status(500).json({ err })
     }
 })
+router.get('/updatepopularity', async (req, res) => {
+    const { user_id } = getPayload(req)
+
+    let sql = `SELECT * FROM post`
+    
+    const [rows] = await db.query(sql)
+    
+    // 遍历所有帖子并更新热度
+    for (let post of rows) {
+    
+      // 计算时间差
+      const diffHours = (Date.now() - post.date) / (1000 * 60 * 60); 
+
+      
+      // 计算新热度
+      const newPopularity = Math.max(0, 50 - (diffHours/4)) * ((post.likes / 2)+1);
+    
+      // 更新数据库
+      await db.query('UPDATE post SET popularity = ? WHERE post_id = ?', [newPopularity, post.post_id]);
+    
+    }
+})
+
 module.exports = router
