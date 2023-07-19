@@ -7,13 +7,14 @@ const path = require('path')
 const router = express.Router()
 const { getPayload } = require('../jwt_config')
 
-const upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: '../uploads' })
 
 
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
 router.post('/:id/upload', upload.single('image'), async (req, res) => {
+  // console.log(req.headers)
   const { id } = req.params
   const user_id = getPayload(req).user_id
   const { originalname, mimetype, filename, path, size } = req.file

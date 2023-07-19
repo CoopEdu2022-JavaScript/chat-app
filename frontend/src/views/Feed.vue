@@ -82,7 +82,7 @@ setInterval(() => {
 function trimAll(ele){
     if(typeof ele==='string'){
         return ele.split(/[\t\r\f\n\s]*/g).join('');
-    }333
+    }
 }
 const isCommentContentValid = (post) => {
     return trimAll(post.commentContent) !== '';

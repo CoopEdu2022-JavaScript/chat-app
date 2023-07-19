@@ -9,8 +9,13 @@ const http = axios.create({
   // baseURL: "http://172.10.21.169:3000",
   // baseURL: "http://172.16.38.164:3000",
   headers: {
+
     'Access-Control-Allow-Origin': '*',
-    "Content-type": "application/json",
+
+    'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
+
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+
   }
 })
 
@@ -18,7 +23,7 @@ const http = axios.create({
 http.interceptors.request.use( // Request Interceptor
   config => {
     const TOKEN_KEY = 'my_jwt_token'
-const token = localStorage.getItem(TOKEN_KEY)
+    const token = localStorage.getItem(TOKEN_KEY)
     if (token) config.headers.Authorization = `Bearer ${token}`  // add jwt token to headers
     return config
   },

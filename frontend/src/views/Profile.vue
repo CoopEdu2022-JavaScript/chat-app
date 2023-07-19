@@ -272,11 +272,11 @@ const showOptions = ref(false)
 
 .context {
     align-content: flex-start;
-    height: 468px;
+    height: 490px;
     background-color: gray;
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 15px;
+overflow: scroll;
 }
 
 .context-blog {
@@ -287,6 +287,7 @@ const showOptions = ref(false)
     overflow: hidden;
     position: relative;
 }
+
 
 .add-logo {
     background-color: rgb(29, 29, 29);

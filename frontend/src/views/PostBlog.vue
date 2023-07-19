@@ -1,7 +1,7 @@
 <template>
     <div class="heading">
         <button @click="goBack" class="return-arrow"></button>
-        <button type="submit" :disabled="!canPost" :class="{ active: canPost }" @click="sendPost" class="postblog">发布
+        <button type="submit" :disabled="!canPost" :class="{ active: canPost }" @click="sendBlog" class="postblog">发布
         </button>
     </div>
     <div class="blogtitle">
@@ -13,8 +13,7 @@
             maxlength="200"></textarea>
     </div>
     <div class="picupload">
-        目前发图片功能仅供预览，不可使用<br>
-        PS:标题和内容都必须有才能发送
+        PS:目前仅支持上传一张图片当作封面哦
         <label for="fileInput" class="custom-file-input" :style="{ backgroundImage: `url(${previewSrc})` }">
             <input type="file" id="fileInput" accept="image/*" hidden @change="handleFileChange">
             <button v-if="previewSrc !== previewImage" class="clear-button" @click="clearPreview">x</button>
@@ -26,7 +25,6 @@ import { ref, watch, reactive } from 'vue';
 import previewImage from '../assets/PostBlog/btn_addphotos.png';
 import { useRouter } from 'vue-router';
 import http from '../api/http'
-const formDataImage = new FormData();
 const router = useRouter();
 const textCount = ref(0);
 const previewSrc = ref(previewImage);
@@ -38,58 +36,46 @@ const formData = reactive({
     title: '',
     content: ''
 })
-const sendBlog = () => {
-    sendPost()
+async function sendBlog() {
+
+    const postId = await sendPost();
+
+    await sendPic(postId);
     router.push('/feed').then(() => {
         location.reload()
     })
-    // sendPost().
-    // then(() => { sendPic(); })
 }
-let isSending = false;
 
-const sendPost = () => {
-    if (isSending) {
-        return; // 如果正在发送，则不执行函数体内的代码
+async function sendPost() {
+
+    const response = await http.post('/post/newpost', formData, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    return response.data.post_id;
+
+}
+
+async function sendPic(postId) {
+
+    if (!imageFile.value) {
+        return;
     }
 
-    isSending = true; // 设置标志为 true，表示正在发送
+    const formData = new FormData();
 
-    //console.log(formData)
+    formData.append('image', imageFile.value);
 
-    http.post('/post/newpost', formData, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-        .then(response => {
-            postId.value = response.data.post_id
-            //console.log(postId)
-            router.push('/feed').then(() => {
-                location.reload()
-            })
-        })
-        .catch(error => {
-            //
-        })
-        .finally(() => {
-            isSending = false; // 发送完成后，重新设置标志为 false
-        });
-}
-const sendPic = () => {
-    formDataImage.append('image', imageFile.value);
-    //console.log(imageFile.value)
-    http.post(`/upload/${postId.value}/upload`, formDataImage, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-        .then(response => {
-            router.push('/feed')
-        })
-        .catch(error => {
-            //
-        })
+    const headers = {
+        'Content-Type': 'multipart/form-data'
+    };
+
+    await http.post(`/upload/${postId}/upload`, formData, {
+        headers
+    });
+
 }
 function handleFileChange(event) {
     const file = event.target.files[0];
@@ -102,9 +88,13 @@ function handleFileChange(event) {
         imageFile.value = file;
     }
 }
+// clearPreview 函数
 function clearPreview(event) {
     event.preventDefault();
     previewSrc.value = previewImage;
+
+    // 重置 formDataImage
+
     const fileInput = document.querySelector('#fileInput');
     fileInput.value = '';
 }
@@ -142,7 +132,7 @@ textarea:focus {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color: #fff;
+    background-color: red;
     text-align: center;
     line-height: 20px;
     border: none;
