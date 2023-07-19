@@ -1,3 +1,3 @@
 # chat-app
-Version 1
+Version 2
 vue3 + vite + pinia
