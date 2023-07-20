@@ -60,4 +60,20 @@ router.get('/updatepopularity', async (req, res) => {
     }
 })
 
+router.get('/:id/getallpic', async (req, res) => {
+  try {
+
+    const { user_id } = getPayload(req)
+    const id = req.params.id
+    const sql = 'SELECT * from images_post WHERE post_id = ?'
+    const values = [id]
+    const [rows] = await db.query(sql, values)
+    res.send(rows[0])
+  } catch (err) {
+    //console.log(err)
+    // console.error('Error fetching post:', err)
+    res.status(500).json({ err })
+  }
+})
+
 module.exports = router

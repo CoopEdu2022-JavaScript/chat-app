@@ -38,15 +38,15 @@
                 <div class="time">{{ post.date.slice(0, 19).replace('T', ' ') }}</div>
             </div>
             <h1>{{ post.title }}</h1>
-            <div class="user_blogs_context">{{ post.content }}</div>
-            <div class="functions">
+            <div class="user_blogs_context">{{ post.content }}</div>s
+            <img :src="getblogpic(post.post_id)" class="pic">            <div class="functions">
                 <button @click.stop="like(post.post_id, post)" :state="post.isLiked ? 'press' : 'release'"
                     class="likes"></button>
                 <div class="likes-count">{{
-                                    post.likes }}</div>
+                    post.likes }}</div>
                 <button class="comments" @click="goToComments(post.post_id)"></button>
                 <div class="comment-count">{{
-                                    post.coments_id }}</div>
+                    post.coments_id }}</div>
                 <input type="text" placeholder="回复 最多15字" class="send-comment" maxlength="15" v-model="post.commentContent">
                 <button class="send-comment-button" :class="{ active: isCommentContentValid(post) }"
                     :disabled="!isCommentContentValid(post)" @click="submitComment(post)">发送</button>
@@ -77,10 +77,10 @@ const postAuthors = ref([]);
 const commentContent = ref('');
 const comments = ref([])
 setInterval(() => {
-  update_pop()
-}, 1000*60*10);
-function trimAll(ele){
-    if(typeof ele==='string'){
+    update_pop()
+}, 1000 * 60 * 10);
+function trimAll(ele) {
+    if (typeof ele === 'string') {
         return ele.split(/[\t\r\f\n\s]*/g).join('');
     }
 }
@@ -100,7 +100,7 @@ const notif_making = () => {
         alert("叮~~~(铃铛声)\n这边检测到您点击了通知按钮呢\n遗憾的是我们还在开发呢");
     }, 300);
 };
-const update_pop=()=>{
+const update_pop = () => {
     http.get(`/feed/updatepopularity`)
 }
 const submitComment = (post) => {
@@ -152,7 +152,7 @@ function goToProfile() {
 function goToPostBlog() {
     router.push('/postblog');
 }
-function goToSnapShot(){
+function goToSnapShot() {
     router.push('/postsnapshot')
 }
 async function getUsername(postid) {
@@ -175,7 +175,19 @@ async function getUserNames(postid) {
     //console.log(usernames); // 输出用户名
     return usernames;
 }
+function getblogpic(postid) {
+   http.get(`/feed/${postid}/getallpic`)
+        .then(res => {
+            console.log(111)
+            console.log(res.data.path)
+            return res.data.path
+        })
+        .catch(err => {
+            // 请求失败时返回空字符串
+            return ''
+        })
 
+}
 http.get('/feed', {
     headers: {
         Authorization: `Bearer ${token}`
@@ -207,6 +219,10 @@ http.get('/feed', {
 //==================
 </script>
 <style scoped>
+.pic{
+    width: 50px;
+    height: 50px;
+}
 button.active {
     color: black;
 }
