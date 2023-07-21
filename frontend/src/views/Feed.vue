@@ -39,7 +39,7 @@
             </div>
             <h1>{{ post.title }}</h1>
             <div class="user_blogs_context">{{ post.content }}</div>
-            <img :src="getblogpic(post.post_id)" class="pic">           
+            <img :src="getblogpic(post.post_id)">           
             <div class="functions">
                 <button @click.stop="like(post.post_id, post)" :state="post.isLiked ? 'press' : 'release'"
                     class="likes"></button>
@@ -69,7 +69,6 @@
 import http from '../api/http'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
-import { createRequire } from 'module';
 const router = useRouter();
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
@@ -78,7 +77,6 @@ const posts = ref([]);
 const postAuthors = ref([]);
 const commentContent = ref('');
 const comments = ref([])
-const require = createRequire(import.meta.url);
 setInterval(() => {
     update_pop()
 }, 1000 * 60 * 10);
@@ -179,23 +177,21 @@ async function getUserNames(postid) {
     //console.log(usernames); // 输出用户名
     return usernames;
 }
-function getpic(postid) {
-   http.get(`/feed/${postid}/getallpic`)
-        .then(res => {
-            console.log(111)
-            console.log(res.data.path)
-            return require(res.data.path)
-        })
-        .catch(err => {
-            // 请求失败时返回空字符串
-            return ''
-        })
-
+function getblogpic(postid) {
+  return new URL(getimageurl(postid), import.meta.url).href;
 }
-function getblogpic(postid){
-    const imgPath=getpic(postid)
-    const imgBuffer=require(imgPath)
-    return imgBuffer
+
+function getimageurl(postid) {
+  try {
+    http.get(`/feed/${postid}/getallpic`)
+    .then(res=>{
+        console.log(res.data.path)
+        return res.data.path
+    })
+  } catch (error) {
+    console.error(error);
+    return '';
+  }
 }
 http.get('/feed', {
     headers: {
