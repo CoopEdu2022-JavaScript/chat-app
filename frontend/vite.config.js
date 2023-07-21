@@ -1,15 +1,14 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { createRequire } from 'module'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+// 导入 webpack
+import webpack from 'webpack'
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  server: {
-    // port: 8080,
-    host: '0.0.0.0',
-  },
+
   plugins: [
     vue(),
     AutoImport({
@@ -19,6 +18,15 @@ export default defineConfig({
     Components({
       dirs: ['src/components', 'src/views',]
     })
-  ]
-})
+  ],
 
+  // configureWebpack 放到最外层
+  configureWebpack: {
+    plugins: [
+      // Inside configureWebpack
+      new webpack.ProvidePlugin({
+        require: 'imports-loader?require=false'
+      })
+    ]
+  }
+})

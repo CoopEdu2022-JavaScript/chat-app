@@ -65,10 +65,10 @@ router.get('/:id/getallpic', async (req, res) => {
 
     const { user_id } = getPayload(req)
     const id = req.params.id
-    const sql = 'SELECT * from images_post WHERE post_id = ?'
+    const sql = 'SELECT path from images_post WHERE post_id = ?'
     const values = [id]
     const [rows] = await db.query(sql, values)
-    res.send(rows[0])
+    res.send(rows[0]);
   } catch (err) {
     //console.log(err)
     // console.error('Error fetching post:', err)
