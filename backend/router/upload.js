@@ -8,7 +8,7 @@ const router = express.Router()
 const { getPayload } = require('../jwt_config')
 
 const uploadPath = path.join(__dirname, '../../frontend/src/assets/images/');
-const upload = multer({dest: uploadPath});
+const upload = multer({ dest: uploadPath });
 
 
 router.use(express.json())
@@ -19,9 +19,9 @@ router.post('/:id/upload', upload.single('image'), async (req, res) => {
   const { id } = req.params
   const user_id = getPayload(req).user_id
   const { originalname, mimetype, filename, path, size } = req.file
-  fs.renameSync(path,path+'.png')
-  const tmp=path.split('\\')
-const newpath='../assets/images/'+tmp[tmp.length-1]+'.png'
+  fs.renameSync(path, path + '.png')
+  const tmp = path.split('\\')
+  const newpath = 'src/assets/images/' + tmp[tmp.length - 1] + '.png'
   const sql = 'INSERT INTO images_post (name, type, filename, path, size,post_id,uid) VALUES (?,?,?, ?, ?, ?, ?);UPDATE post SET images = images + 1 WHERE post_id = ?'
   const values = [originalname, mimetype, filename, newpath, size, id, user_id, id]
   try {

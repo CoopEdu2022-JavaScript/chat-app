@@ -31,7 +31,7 @@
         </span>
     </div>
     <div class="blogs">
-        <div v-for="(post, index) in posts" :key="post.id" class="user_blogs">
+        <div v-for="(post, index) in posts" :key="post.post_id" class="user_blogs">
             <div class="user_inf">
                 <div class="user_icon"></div>
                 <div class="user_name">{{ postAuthors[index] }}</div>
@@ -39,7 +39,7 @@
             </div>
             <h1>{{ post.title }}</h1>
             <div class="user_blogs_context">{{ post.content }}</div>
-            <img :src="getblogpic(post.post_id)">           
+            <img :src="urls[index]" class="pic">
             <div class="functions">
                 <button @click.stop="like(post.post_id, post)" :state="post.isLiked ? 'press' : 'release'"
                     class="likes"></button>
@@ -177,22 +177,22 @@ async function getUserNames(postid) {
     //console.log(usernames); // 输出用户名
     return usernames;
 }
-function getblogpic(postid) {
-  return new URL(getimageurl(postid), import.meta.url).href;
-}
+// function getblogpic(postid) {
+//   return new URL(getim ageurl(postid), import.meta.url).href;
+// }
 
-function getimageurl(postid) {
-  try {
-    http.get(`/feed/${postid}/getallpic`)
-    .then(res=>{
-        console.log(res.data.path)
-        return res.data.path
-    })
-  } catch (error) {
-    console.error(error);
-    return '';
-  }
+async function getimageurl(postid) {
+    const res = await http.get(`/feed/${postid}/getallpic`)
+    console.log(res.data)
+    return res.data.path
 }
+let urls = [];
+watch(() => posts.value, async(posts) => {
+    for (let i = 0; i < posts.length; i++) {
+        urls.push(await getimageurl(posts[i].post_id));
+    }
+})
+//=================
 http.get('/feed', {
     headers: {
         Authorization: `Bearer ${token}`
@@ -224,10 +224,11 @@ http.get('/feed', {
 //==================
 </script>
 <style scoped>
-.pic{
+.pic {
     width: 50px;
     height: 50px;
 }
+
 button.active {
     color: black;
 }
