@@ -26,7 +26,7 @@
             <span class="fastshot-words">MoonShot</span>
         </span>
         <span class="user-block">
-            <span class="fastshot-pic"></span>
+            <span class="fastshot-pic1"></span>
             <span class="fastshot-words">MoonShot</span>
         </span>
     </div>
@@ -186,12 +186,14 @@ async function getimageurl(postid) {
     console.log(res.data)
     return res.data.path
 }
-let urls = [];
-watch(() => posts.value, async(posts) => {
-    for (let i = 0; i < posts.length; i++) {
-        urls.push(await getimageurl(posts[i].post_id));
-    }
-})
+let urls = ref([]);
+
+watch(() => posts.value, async (posts) => {
+  for (let i = 0; i < posts.length; i++) {
+    const imageUrl = await getimageurl(posts[i].post_id);
+    urls.value.push(imageUrl);
+  }
+});
 //=================
 http.get('/feed', {
     headers: {

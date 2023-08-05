@@ -12,9 +12,8 @@
         </div>
     </div>
     <div class="context">
-        <div v-for="post in posts" :key="post.id" class="context-blog">
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.content }}</p>
+        <div v-for="(post, index) in posts" :key="post.post_id" class="context-blog">
+            <img :src="urls[index]" alt="">
             <button class="delete-post" @click="del_post(post)">Delete</button>
         </div>
     </div>
@@ -38,12 +37,27 @@ import http from '../api/http'
 const user = ref(null)
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
+const posts = ref([])
+//===============图片获取功能
+async function getimageurl(postid) {
+    const res = await http.get(`/feed/${postid}/getallpic`)
+    console.log(res.data)
+    return res.data.path
+}
+let urls = ref([]);
+
+watch(() => posts.value, async (posts) => {
+    for (let i = 0; i < posts.length; i++) {
+        const imageUrl = await getimageurl(posts[i].post_id);
+        urls.value.push(imageUrl);
+    }
+});
+//==================
 const del_post = (post) => {
     http.delete(`/post/${post.post_id}/delete`, { headers: { Authorization: `Bearer ${token}` } }).then(() => {
         location.reload()
     })
 }
-const posts = ref([])
 http.get('/login/profile', {
     headers: {
         Authorization: `Bearer ${token}`
@@ -82,6 +96,10 @@ const showOptions = ref(false)
 </script>
   
 <style scoped>
+img{
+    width: 100%;
+    height: 100%;
+}
 /* #overlay {
   position: fixed;
   top: 0;
@@ -276,7 +294,7 @@ const showOptions = ref(false)
     background-color: gray;
     display: flex;
     flex-wrap: wrap;
-overflow: scroll;
+    overflow: scroll;
 }
 
 .context-blog {

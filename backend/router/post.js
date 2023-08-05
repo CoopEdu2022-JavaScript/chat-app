@@ -253,4 +253,3 @@ router.get('/detail', async (req, res, next) => {
   }
 })
 module.exports = router
-
