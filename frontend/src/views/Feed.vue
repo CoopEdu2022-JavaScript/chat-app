@@ -39,7 +39,11 @@
             </div>
             <h1>{{ post.title }}</h1>
             <div class="user_blogs_context">{{ post.content }}</div>
-            <img :src="urls[index]" class="pic">
+            <a :href="urls[index]" target="_blank">            
+                <img :src="urls[index]" class="pic">
+            </a>
+            <br>
+            <span style="color:white">[点击图片即可查看整张图片]</span>
             <div class="functions">
                 <button @click.stop="like(post.post_id, post)" :state="post.isLiked ? 'press' : 'release'"
                     class="likes"></button>
@@ -227,8 +231,8 @@ http.get('/feed', {
 </script>
 <style scoped>
 .pic {
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
 }
 
 button.active {
