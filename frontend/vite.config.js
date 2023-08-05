@@ -19,7 +19,12 @@ export default defineConfig({
       dirs: ['src/components', 'src/views',]
     })
   ],
-
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    open: true,
+    cors: true
+  },
   // configureWebpack 放到最外层
   configureWebpack: {
     plugins: [
