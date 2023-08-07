@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <input type="search" v-model="searchTerm" @keydown.enter.prevent="submitSearch" placeholder="搜索功能开发中">
+        <input type="search" v-model="searchTerm" @keydown.enter.prevent="submitSearch(searchTerm)" placeholder="请输入搜索内容">
         <button class="notifications" @click="notif_making"></button>
     </div>
     <p class="title1">好友快拍(开发中)</p>
@@ -43,7 +43,7 @@
                 <img :src="urls[index]" class="pic">
             </a>
             <br>
-            <span style="color:white">[点击图片即可查看整张图片]</span>
+            <span style="color:white ">[点击图片即可查看整张图片]</span>
             <div class="functions">
                 <button @click.stop="like(post.post_id, post)" :state="post.isLiked ? 'press' : 'release'"
                     class="likes"></button>
@@ -73,6 +73,11 @@
 import http from '../api/http'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
+// store.js
+// 组件
+import { useSearchStore } from '../../store/searchstore'
+const searchStore = useSearchStore()
+const result = searchStore.searchResult
 const router = useRouter();
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
@@ -101,6 +106,15 @@ const isCommentContentValid = (post) => {
 //     //console.log(response.data);
 //     return response.data[index].postId
 // };
+const submitSearch = (searchWord) => {
+  http.get(`/feed/${searchWord}/search`)
+    .then(res => {
+      // 保存结果
+      useSearchStore().searchResult = res.data 
+      
+      router.push('/searchresult')
+    })  
+}
 const notif_making = () => {
     setTimeout(() => {
         alert("叮~~~(铃铛声)\n这边检测到您点击了通知按钮呢\n遗憾的是我们还在开发呢");

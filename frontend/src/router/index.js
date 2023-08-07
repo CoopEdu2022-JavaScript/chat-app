@@ -63,7 +63,13 @@ const routes = [
     name:'Comment',
     component:()=>import('../views/Comments.vue'),
     meta: {requiresAuth:true}
-  }
+  },
+  {
+    path:'/searchresult',
+    name:'Searchresult',
+    component:()=>import('../views/searchresult.vue'),
+    meta: {requiresAuth:true}
+  },
 ]
 
 const router = createRouter({

@@ -75,4 +75,22 @@ router.get('/:id/getallpic', async (req, res) => {
     res.status(500).json({ err })
   }
 })
+//用于搜索栏的搜索功能
+router.get('/:id/search', async (req, res) => {
+  try {
+    const id = req.params.id
+    const sql = "SELECT * FROM post WHERE content LIKE CONCAT('%',?,'%')"
+    const values = [id]
+    const [rows] = await db.query(sql, values)
+    if(rows.length > 0) {
+      res.send(rows[0]) 
+    } else {
+      res.send({})
+    }
+  } catch (err) {
+    //console.log(err)
+    // console.error('Error fetching post:', err)
+    res.status(500).json({ err })
+  }
+})
 module.exports = router
