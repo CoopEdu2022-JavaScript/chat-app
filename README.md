@@ -4,3 +4,4 @@ vue3 + vite + pinia
 -username bug fixed
 -pic update added
 -profile pic display added
+-searching added
