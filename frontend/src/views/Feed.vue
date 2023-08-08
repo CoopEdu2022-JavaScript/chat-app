@@ -76,8 +76,11 @@ import { useRouter } from 'vue-router';
 // store.js
 // 组件
 import { useSearchStore } from '../../store/searchstore'
+import { SaveWordStore } from '../../store/KeyWordStore'
 const searchStore = useSearchStore()
+const KeyWordStore = SaveWordStore()
 const result = searchStore.searchResult
+const KeyWord = KeyWordStore.WordStore
 const router = useRouter();
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
@@ -111,7 +114,7 @@ const submitSearch = (searchWord) => {
     .then(res => {
       // 保存结果
       useSearchStore().searchResult = res.data 
-      
+      SaveWordStore().WordStore = searchWord
       router.push('/searchresult')
     })  
 }
