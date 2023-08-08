@@ -79,7 +79,7 @@ router.get('/:id/getallpic', async (req, res) => {
 router.get('/:id/search', async (req, res) => {
   try {
     const id = req.params.id
-    const sql = "SELECT * FROM post WHERE title LIKE CONCAT('%',?,'%') ORDER BY popularity DESC"
+    const sql = "SELECT post_id FROM post WHERE title LIKE CONCAT('%',?,'%') ORDER BY popularity DESC"
     const values = [id]
     const [rows] = await db.query(sql, values)
     if (rows.length > 0) {

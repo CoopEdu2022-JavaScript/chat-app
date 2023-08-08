@@ -6,17 +6,17 @@
     </div>
     <div class="blogs">
         <div class="keyword">关键词:{{ KeyWord }}</div>
-        <div v-for="post in result" class="user_blogs">
+        <div v-for="(post, index) in posts" :key="post.postid" class="user_blogs">
             <div class="user_inf">
                 <div class="user_icon"></div>
-                <!-- <div class="user_name">{{ postAuthors[index] }}</div> -->
+                <div class="user_name">{{ postAuthors[index] }}</div>
                 <div class="time">{{ post.date.slice(0, 19).replace('T', ' ') }}</div>
             </div>
             <h1>{{ post.title }}</h1>
-            <div class="user_blogs_context">{{ post.content }}</div>
-            <!-- <a :href="urls[index]" target="_blank">            
+            <div class="user_blogs_context">{{ post.content }}</div> 
+            <a :href="urls[index]" target="_blank">            
                 <img :src="urls[index]" class="pic">
-            </a> -->
+            </a>
             <br>
             <span style="color:white ">[点击图片即可查看整张图片]</span>
             <!-- <div class="functions">
@@ -44,8 +44,50 @@ const KeyWordSave = SaveWordStore()
 const searchStore = useSearchStore()
 const KeyWord = KeyWordSave.WordStore
 const result = searchStore.searchResult
+console.log(result)
+const postAuthors = ref([]);
+const posts = ref([]);
+const urls=ref([]);
+async function getUsername(postid) {
+    try {
+        const response = await http.get(`/post/${postid}/users`
+        );
+        //console.log(response.data);
+        return response.data.usernames;
+    } catch (error) {
+        //console.log(error);
+        return '';
+    }
+}
+async function getUserNames(postid) {
+    const usernamesPromise = getUsername(postid); // 调用getUsername()函数，并返回Promise对象
+    const usernames = await usernamesPromise; // 等待Promise完成，并将结果赋给usernames变量
+    //console.log(usernames); // 输出用户名
+    return usernames;
+}
 function goBack() {
     router.go(-1)
+}
+let post_id
+
+if (result.length > 0) {
+  post_id = result.map(item => item)
+  console.log(post_id)
+for (const pid of post_id) {
+    getUserNames(pid.post_id).then(username => {
+                postAuthors.value.push(username);
+            });
+    http.get(`/searchresult/${pid.post_id}/getdetails`)
+        .then(response => {
+            posts.value.push(response.data)
+            console.log(response.data)
+            // 获取并保存每篇文章的作者名字
+
+        })
+    http.get(`/feed/${pid.post_id}/getallpic`).then(res=>{
+        urls.value.push(res.data.path)
+    })
+}
 }
 </script>
 <style scoped>
@@ -426,4 +468,5 @@ button.active {
     background-position: 13px 8px;
     padding-left: 30px;
     color: white;
-}</style>
+}
+</style>

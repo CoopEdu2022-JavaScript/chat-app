@@ -7,20 +7,13 @@ const db = require('../db')
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
-router.get('/search', async (req, res, next) => {
-    const { q } = req.query
-    const sql = `
-      SELECT post_id
-      FROM posts
-      WHERE title LIKE ?
-        OR content LIKE ?
-    `
-    const values = [`%${q}%`, `%${q}%`]
+router.get('/:id/getdetails', async (req, res, next) => {
     try {
-      const conn = await db.getConnection()
-      const [rows] = await conn.query(sql, values)
-      conn.release()
-      res.json(rows)
+      const id = req.params.id
+      const sql = 'SELECT * FROM post WHERE post_id = ?'
+      const values = [id]
+      const [rows] = await db.query(sql, values)
+      res.json(rows[0])
     } catch (err) {
       console.error('Error searching posts:', err)
       const error = new Error('Internal server error')
