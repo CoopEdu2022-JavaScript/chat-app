@@ -89,9 +89,7 @@ const posts = ref([]);
 const postAuthors = ref([]);
 const commentContent = ref('');
 const comments = ref([])
-setInterval(() => {
-    update_pop()
-}, 1000 * 60 * 10);
+
 function trimAll(ele) {
     if (typeof ele === 'string') {
         return ele.split(/[\t\r\f\n\s]*/g).join('');
@@ -123,9 +121,6 @@ const notif_making = () => {
         alert("叮~~~(铃铛声)\n这边检测到您点击了通知按钮呢\n遗憾的是我们还在开发呢");
     }, 300);
 };
-const update_pop = () => {
-    http.get(`/feed/updatepopularity`)
-}
 const submitComment = (post) => {
     // 发送评论
     //console.log('发送评论:', post.commentContent);

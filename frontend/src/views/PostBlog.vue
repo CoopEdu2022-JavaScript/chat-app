@@ -13,7 +13,7 @@
             maxlength="200"></textarea>
     </div>
     <div class="picupload">
-        PS:目前仅支持上传一张图片当作封面哦
+        PS:必须上传一张图片当作封面哦
         <label for="fileInput" class="custom-file-input" :style="{ backgroundImage: `url(${previewSrc})` }">
             <input type="file" id="fileInput" accept="image/*" hidden @change="handleFileChange">
             <button v-if="previewSrc !== previewImage" class="clear-button" @click="clearPreview">x</button>
@@ -110,7 +110,7 @@ watch(() => formData.title, (newVal) => {
     textCount.value = newVal.length;
 });
 const canPost = computed(() => {
-    return trimAll(formData.title.trim()) !== '' && trimAll(formData.content.trim()) !== ''
+    return trimAll(formData.title.trim()) !== '' && trimAll(formData.content.trim()) !== '' && imageFile.value
 })
 </script>
 <style scoped>

@@ -32,6 +32,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
+import { useMainStore } from '../../store/images_delete';
 //===========
 import http from '../api/http'
 const user = ref(null)
@@ -54,7 +55,7 @@ watch(() => posts.value, async (posts) => {
 });
 //==================
 const del_post = (post) => {
-    http.delete(`/post/${post.post_id}/delete`, { headers: { Authorization: `Bearer ${token}` } }).then(() => {
+    http.delete(`/post/${post.post_id}/delete`, { headers: { Authorization: `Bearer ${token}` } }).then(res => {
         location.reload()
     })
 }

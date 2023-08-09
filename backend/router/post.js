@@ -1,12 +1,35 @@
 /* eslint-disable camelcase */
 const express = require('express')
 const router = express.Router()
+const multer = require('multer')
 const db = require('../db')
 const { getPayload } = require('../jwt_config')
 const { v5: uuidv5 } = require("uuid")
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
-
+const fs = require('fs')
+// server.js
+function emptydir(delpath){
+  fpath="../frontend/src/assets/images"
+  const files=fs.readdirSync(fpath);
+  files.forEach(file=>{
+      const filePath=`${fpath}/${file}`;
+      const stats=fs.statSync(filePath);
+      let path_to_compare=filePath.replace('../frontend/','')
+      if(stats.isDirectory()){
+          emptydir(filePath);
+      }else{
+        if(path_to_compare==delpath)
+        {
+          fs.unlinkSync(filePath);
+          console.log(`删除${file}文件成功`)
+        }
+        else{
+          console.log(path_to_compare)
+        }
+      }
+  });
+}
 router.post('/newpost', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
@@ -26,18 +49,14 @@ router.post('/newpost', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-  try {
     const { user_id } = getPayload(req)
     const id = req.params.id
     const sql = 'SELECT * FROM post WHERE post_id = ?'
     const values = [id]
     const [rows] = await db.query(sql, values)
     res.json(rows[0])
-  } catch (err) {
-    console.error('Error fetching post:', err)
-    res.status(500).json({ err })
   }
-})
+    )
 router.put('/:id/fix', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
@@ -57,10 +76,14 @@ router.delete('/:id/delete', async (req, res) => {
     const id = req.params.id
     const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? ;Delete FROM images_post WHERE post_id = ?`
     const values = [id, user_id, id, id, id]
-
+    const image_del='SELECT path FROM images_post WHERE post_id=?'
+    const val=[id]
+    const [del_img]= await db.query(image_del,val)
+    console.log(del_img[0])
+    emptydir(del_img[0].path)
     const [rows] = await db.query(sql, values)
-
-    res.json({ state: true })
+    // const imgJson=JSON.stringify(del_img)
+    res.json(del_img)
   } catch (err) {
     console.error('Error fetching post:', err)
     res.status(500).json({ err })
@@ -124,7 +147,7 @@ router.get('/:id/hlike', async (req, res) => {
     const values = [id, id, user_id]
     const [rows] = await db.query(sql, values)
     let isLiked = false;
-    //console.log(rows)
+    // console.log(rows[0][0].likes)
     if (!rows[1][0] == []) isLiked = true;
     res.json({ likes: rows[0][0].likes, isLiked })
 
@@ -133,7 +156,20 @@ router.get('/:id/hlike', async (req, res) => {
     res.status(500).json({ err })
   }
 })
+router.get('/:id/can_be_deleted', async (req, res) => {
+  try {
+    const { user_id } = getPayload(req)
+    const id = req.params.id
+    const sql = 'SELECT name FROM images_post WHERE path=?'
+    const values = [id]
+    const [rows] = await db.query(sql, values)
+    res.json(rows[0])
 
+  } catch (err) {
+    console.error('Error fetching likes:', err)
+    res.status(500).json({ err })
+  }
+})
 router.get('/users/getallpost', async (req, res) => {
   try {
     const { user_id } = getPayload(req)

@@ -13,13 +13,13 @@
                 <div class="time">{{ post.date.slice(0, 19).replace('T', ' ') }}</div>
             </div>
             <h1>{{ post.title }}</h1>
-            <div class="user_blogs_context">{{ post.content }}</div> 
-            <a :href="urls[index]" target="_blank">            
+            <div class="user_blogs_context">{{ post.content }}</div>
+            <a :href="urls[index]" target="_blank">
                 <img :src="urls[index]" class="pic">
             </a>
             <br>
             <span style="color:white ">[点击图片即可查看整张图片]</span>
-            <!-- <div class="functions">
+            <div class="functions">
                 <button @click.stop="like(post.post_id, post)" :state="post.isLiked ? 'press' : 'release'"
                     class="likes"></button>
                 <div class="likes-count">{{
@@ -30,8 +30,9 @@
                 <input type="text" placeholder="回复 最多15字" class="send-comment" maxlength="15" v-model="post.commentContent">
                 <button class="send-comment-button" :class="{ active: isCommentContentValid(post) }"
                     :disabled="!isCommentContentValid(post)" @click="submitComment(post)">发送</button>
-            </div> -->
+            </div>
         </div>
+        <div class="isempty">{{ isempty }}</div>
     </div>
 </template>
 <script setup>
@@ -47,7 +48,10 @@ const result = searchStore.searchResult
 console.log(result)
 const postAuthors = ref([]);
 const posts = ref([]);
-const urls=ref([]);
+const urls = ref([]);
+const isempty=ref();
+const TOKEN_KEY = 'my_jwt_token'
+const token = localStorage.getItem(TOKEN_KEY)
 async function getUsername(postid) {
     try {
         const response = await http.get(`/post/${postid}/users`
@@ -71,26 +75,80 @@ function goBack() {
 let post_id
 
 if (result.length > 0) {
-  post_id = result.map(item => item)
-  console.log(post_id)
-for (const pid of post_id) {
-    getUserNames(pid.post_id).then(username => {
-                postAuthors.value.push(username);
-            });
-    http.get(`/searchresult/${pid.post_id}/getdetails`)
-        .then(response => {
-            posts.value.push(response.data)
-            console.log(response.data)
-            // 获取并保存每篇文章的作者名字
+    post_id = result.map(item => item)
+    console.log(post_id)
+    for (const pid of post_id) {
+        getUserNames(pid.post_id).then(username => {
+            postAuthors.value.push(username);
+        });
+        http.get(`/searchresult/${pid.post_id}/getdetails`)
+            .then(response => {
+                posts.value.push(response.data)
+                console.log(response.data)
+                // 获取并保存每篇文章的作者名字
 
+            })
+        http.get(`/feed/${pid.post_id}/getallpic`).then(res => {
+            urls.value.push(res.data.path)
         })
-    http.get(`/feed/${pid.post_id}/getallpic`).then(res=>{
-        urls.value.push(res.data.path)
+    }
+}
+else {
+    isempty.value="搜索结果为空"
+}
+const like = (post_id, post_A) => {
+    http.get(`/post/${post_id}/hlike`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }).then(response => {
+        //console.log(response.data.isLiked)
+        post_A.isLiked = response.data.isLiked;
+        post_A.isLiked = !post_A.isLiked
+        post_A.likes += (post_A.isLiked ? 1 : -1)
+        if (post_A.isLiked) http.post(`post/${post_id}/likes`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        else http.delete(`/post/${post_id}/unlike`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
     })
 }
+function trimAll(ele) {
+    if (typeof ele === 'string') {
+        return ele.split(/[\t\r\f\n\s]*/g).join('');
+    }
+}
+
+const isCommentContentValid = (post) => {
+    return trimAll(post.commentContent) !== '';
+};
+const submitComment = (post) => {
+    // 发送评论
+    //console.log('发送评论:', post.commentContent);
+    http.post(`/comment/${post.post_id}/comment`, { content: post.commentContent })
+        .then(() => {
+            // 清空输入框
+            post.commentContent = '';
+            // 刷新feed页面
+            location.reload();
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 }
 </script>
 <style scoped>
+.isempty{
+    color:white;
+    font-size: 20px;
+    font-weight:bolder;
+    font-style: italic;
+}
 .heading {
     width: 100%;
     margin-top: 75px;
@@ -271,100 +329,6 @@ button.active {
     padding-top: 5%;
 }
 
-.add-logo {
-    background-color: rgb(29, 29, 29);
-    width: 45.35px;
-    height: 34px;
-    display: inline-block;
-    border: none;
-}
-
-.mine {
-    display: inline-block;
-    font-family: 'PingFang SC';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 22px;
-    text-align: center;
-    width: 32px;
-    height: 22px;
-    background-color: rgb(29, 29, 29);
-    border: none;
-    color: rgb(153, 153, 153);
-}
-
-.showOptions {
-    margin: 0 auto;
-    position: relative;
-    width: 60%;
-    display: flex;
-    justify-content: space-between;
-}
-
-.snap {
-    right: 20%;
-    bottom: 13%;
-    width: 90px;
-    height: 45px;
-    background-color: rgb(218, 144, 244);
-    border: none;
-    border-radius: 8px;
-    font-family: 'PingFang SC';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 22px;
-    text-align: center;
-    color: #FFFFFF;
-    position: fixed;
-}
-
-.postblog {
-    color: #FFFFFF;
-    border-radius: 8px;
-    bottom: 13%;
-    width: 90px;
-    height: 45px;
-    background-color: rgb(218, 144, 244);
-    border: none;
-    font-family: 'PingFang SC';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 22px;
-    text-align: center;
-    left: 20%;
-    position: fixed;
-}
-
-.mainmenu {
-    background-color: rgb(29, 29, 29);
-    display: inline-block;
-    font-family: 'PingFang SC';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 22px;
-    width: 32px;
-    height: 22px;
-    border: none;
-    color: #FFFFFF;
-}
-
-.btm {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    padding-left: 62px;
-    padding-right: 62px;
-    background-color: rgb(29, 29, 29);
-    position: fixed;
-    bottom: 0;
-    padding-bottom: 5%;
-}
 
 .blogs {
     margin: 5% auto 5% auto;
@@ -374,99 +338,9 @@ button.active {
     border-radius: 8px;
 }
 
-.fastshot-words {
-    font-family: 'PingFang SC';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 17px;
-    color: #FFFFFF;
-    width: 60px;
-    height: 17px;
-    overflow: scroll;
-}
-
-.fastshot-pic {
-    background-color: yellow;
-    width: 60px;
-    height: 60px;
-    border-radius: 30px 0 30px 0;
-}
-
-.fastshot-list .user-block {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 80px;
-    height: 88px;
-    flex-shrink: 0;
-}
-
-.fastshot-list {
-    margin-top: 2px;
-    width: 95%;
-    margin-left: 5%;
-    gap: 10px;
-    height: 117px;
-    display: flex;
-    overflow: auto;
-    flex-wrap: nowrap;
-}
 
 * {
     margin: 0;
     padding: 0;
-}
-
-.title1 {
-    font-family: 'PingFang SC';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 22px;
-    display: flex;
-    align-items: center;
-    color: gray;
-    margin-top: 19px;
-    margin-left: 5%;
-}
-
-.notifications {
-    background-image: url(../assets/Feed/ic_home_notification_normal.png);
-    width: 28px;
-    height: 28px;
-    background-color: rgb(29, 29, 29);
-    background-size: contain;
-    border: none;
-    line-height: 28px;
-}
-
-.notifications:active {
-    background-image: url(../assets/Feed/ic_home_notification_active.png);
-}
-
-.header {
-    width: 90%;
-    line-height: 28px;
-    height: 28px;
-    margin: 5% auto 5% auto;
-    display: flex;
-    justify-content: space-between;
-}
-
-.header input {
-    line-height: 28px;
-    width: 80%;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    border: none;
-    background-image: url(../assets/Feed/ic_home_search_normal.png);
-    background-size: 15px 13px;
-    background-repeat: no-repeat;
-    background-position: 13px 8px;
-    padding-left: 30px;
-    color: white;
 }
 </style>

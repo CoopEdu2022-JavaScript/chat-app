@@ -38,12 +38,8 @@ router.get('/', async (req, res) => {
   }
 })
 router.get('/updatepopularity', async (req, res) => {
-  const { user_id } = getPayload(req)
-
   let sql = `SELECT * FROM post`
-
   const [rows] = await db.query(sql)
-
   // 遍历所有帖子并更新热度
   for (let post of rows) {
 
