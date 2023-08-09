@@ -5,7 +5,6 @@ const cors = require('cors')
 const port = 3000
 const fs=require('fs')
 const path = require('path');
-const http = require('http')
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname + '/uploads'))
 const corsOptions = {
@@ -19,9 +18,3 @@ app.listen(port, () => {
   //console.log('Server is running on http://localhost:3000')
 })
 
-const update_pop = () => {
-  http.get(`/feed/updatepopularity`)
-}
-setInterval(() => {
-  update_pop()
-}, 1000 * 60 * 10);
