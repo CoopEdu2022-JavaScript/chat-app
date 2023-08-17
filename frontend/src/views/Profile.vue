@@ -1,7 +1,9 @@
 <template>
     <!-- <div id="overlay"></div> 按按钮时显示遮罩,并把下面的元素都变成不可交互-->
     <div class="user">
-        <div class="usericon"></div>
+        <label for="fileupload" class="usericon" :style="{ backgroundImage: `url(${user_icon})` }">
+            <input type="file" id="fileupload" accept="image/*" hidden @change="handleFileChange">
+        </label>
         <div class="username">{{ user ? user.usernames : '' }}</div>
     </div>
     <button @click="goToSettings" class="settings"></button>
@@ -33,6 +35,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { useMainStore } from '../../store/images_delete';
+import previewImage from '../assets/Feed/moonshotlogo.png';
 //===========
 import http from '../api/http'
 const user = ref(null)
@@ -40,6 +43,8 @@ const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
 const posts = ref([])
 //===============图片获取功能
+const user_icon = ref(previewImage);
+const imageFile = ref()
 async function getimageurl(postid) {
     const res = await http.get(`/feed/${postid}/getallpic`)
     console.log(res.data)
@@ -59,6 +64,22 @@ const del_post = (post) => {
         location.reload()
     })
 }
+function handleFileChange(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => {
+            user_icon.value = reader.result;
+        });
+        reader.readAsDataURL(file);
+        imageFile.value = file;
+        const formData = new FormData();
+
+        formData.append('image', imageFile.value);
+        http.post('/profile/deleteicon')
+        http.post('/upload/icon',formData)
+    }
+}
 http.get('/login/profile', {
     headers: {
         Authorization: `Bearer ${token}`
@@ -67,6 +88,9 @@ http.get('/login/profile', {
     .then(response => {
         //console.log(response.data)
         user.value = response.data
+        if(response.data.usericon){
+            user_icon.value=response.data.usericon
+        }
 
         // 发出第二个请求
         return http.get('/post/users/getallpost', {
@@ -97,10 +121,11 @@ const showOptions = ref(false)
 </script>
   
 <style scoped>
-img{
+img {
     width: 100%;
     height: 100%;
 }
+
 /* #overlay {
   position: fixed;
   top: 0;
@@ -243,9 +268,7 @@ img{
     border-radius: 40.5px;
     position: relative;
     top: 10px;
-    background-image: url(../assets//Feed/moonshotlogo.png);
-    background-size: 116px;
-    background-position: 104px -13px;
+    background-size: contain;
 }
 
 .username {

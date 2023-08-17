@@ -68,7 +68,7 @@ router.get('/profile', async (req, res) => {
       return
     }
     const user = rows[0]
-    res.json({ email: user.email, usernames: user.usernames, stuID: user.stuID })
+    res.json({ email: user.email, usernames: user.usernames, stuID: user.stuID, usericon: user.usericon })
   } catch (err) {
     console.error('Error fetching profile:', err)
     res.status(500).json({ err })

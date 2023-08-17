@@ -14,24 +14,33 @@ const upload = multer({ dest: uploadPath });
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
-router.post('/:id/upload', upload.single('image'), async (req, res) => {
-  // console.log(req.headers)
-  const { id } = req.params
+function emptydir(delpath){
+  fpath="../frontend/src/assets/icons"
+  const files=fs.readdirSync(fpath);
+  files.forEach(file=>{
+      const filePath=`${fpath}/${file}`;
+      const stats=fs.statSync(filePath);
+      let path_to_compare=filePath.replace('../frontend/','')
+      if(stats.isDirectory()){
+          emptydir(filePath);
+      }else{
+        if(path_to_compare==delpath)
+        {
+          fs.unlinkSync(filePath);
+          console.log(`删除${file}文件成功`)
+        }
+        else{
+          console.log(path_to_compare)
+        }
+      }
+  });
+}
+router.post('/deleteicon', upload.single('image'), async (req, res) => {
+
   const user_id = getPayload(req).user_id
-  const { originalname, mimetype, filename, path, size } = req.file
-  fs.renameSync(path, path + '.png')
-  const tmp = path.split('\\')
-  const newpath = 'src/assets/images/' + tmp[tmp.length - 1] + '.png'
-  const sql = 'INSERT INTO images_post (name, type, filename, path, size,post_id,uid) VALUES (?,?,?, ?, ?, ?, ?);UPDATE post SET images = images + 1 WHERE post_id = ?'
-  const values = [originalname, mimetype, filename, newpath, size, id, user_id, id]
-  try {
-    const conn = await db.getConnection()
-    const [rows] = await conn.query(sql, values)
-    conn.release()
-    //console.log('File uploaded successfully')
-    res.send('File uploaded successfully')
-  } catch (err) {
-    console.error('Error uploading file:', err)
-    res.status(500).json({ error: 'Internal server error' })
-  }
+  const sql = 'SELECT usericon from users WHERE uid=?'
+  const values = [user_id]
+  const [del_img]=await db.query(sql,values)
+  emptydir(del_img[0].usericon)
 })
+module.exports = router

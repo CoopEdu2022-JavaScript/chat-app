@@ -7,7 +7,7 @@ const path = require('path')
 const router = express.Router()
 const { getPayload } = require('../jwt_config')
 
-const uploadPath = path.join(__dirname, '../../frontend/src/assets/images/');
+const uploadPath = path.join(__dirname, '../../frontend/src/assets/icons/');
 const upload = multer({ dest: uploadPath });
 
 
@@ -50,10 +50,13 @@ router.post('/:id/upload', upload.single('image'), async (req, res) => {
 router.post('/icon', upload.single('image'), async (req, res) => {
 
   const user_id = getPayload(req).user_id
+  console.log(user_id)
   const { originalname, mimetype, filename, path, size } = req.file
-
-  const sql = 'INSERT INTO images_icon (name, type, filename, path, size,uid) VALUES (?,?, ?, ?, ?, ?)'
-  const values = [originalname, mimetype, filename, path, size, user_id]
+  fs.renameSync(path, path + '.png')
+  const tmp = path.split('\\')
+  const newpath = 'src/assets/icons/' + tmp[tmp.length - 1] + '.png'
+  const sql = 'UPDATE users SET usericon=? WHERE uid=?'
+  const values = [newpath,user_id]
   try {
 
     const [rows] = await db.query(sql, values)
