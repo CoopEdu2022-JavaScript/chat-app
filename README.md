@@ -6,3 +6,4 @@ vue3 + vite + pinia
 -profile pic display added
 -searching added（目前是仅支持标题关键词匹配）
 -popularity bug fixed
+-usericon added
