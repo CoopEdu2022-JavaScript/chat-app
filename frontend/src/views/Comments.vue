@@ -3,6 +3,7 @@
     <div class="comment-area" v-for="comment in comments" key="comment.conment_id">
         <div class="comment">
             {{ comment.username }} : {{ comment.content }}
+            <img src="../assets/Comments/report.png" class="report"/>
         </div>
     </div>
 </template>
@@ -28,7 +29,16 @@ function goBack() {
 }
 </script>
 <style scoped>
+.report{
+    display: inline-block;
+    background-color: Gray;
+    position: absolute;
+    width: 10%;
+    height: 100%; 
+    right:0; 
+}
 .comment {
+    position: relative;
     height: 40px;
     line-height: 40px;
     font-style: 30px;
