@@ -33,7 +33,7 @@
     <div class="blogs">
         <div v-for="(post, index) in posts" :key="post.post_id" class="user_blogs">
             <div class="user_inf">
-                <div class="user_icon"></div>
+                <img :src="icon_urls[index]" class="user_icon"/>
                 <div class="user_name">{{ postAuthors[index] }}</div>
                 <div class="time">{{ post.date.slice(0, 19).replace('T', ' ') }}</div>
             </div>
@@ -129,7 +129,9 @@ const submitComment = (post) => {
             // 清空输入框
             post.commentContent = '';
             // 刷新feed页面
-            location.reload();
+            setTimeout(function(){
+                location.reload(); 
+            },50)
         })
         .catch((error) => {
             console.error(error);
@@ -233,8 +235,12 @@ http.get('/feed', {
             //console.log(post.post_id)
             getUserNames(post.post_id).then(username => {
                 postAuthors.value.push(username);
+                http.get(`/feed/${post.post_id}/getusericon`).then(res=>{
+                console.log(res.data.usericon)
+                icon_urls.value.push(res.data.usericon)
+            })
             });
-            //等会在这里写getusericonURL
+          
             // if(findComment(post)!=[])comments.value.push(findComment(post));
         });
     })
@@ -243,6 +249,14 @@ http.get('/feed', {
 //==================
 </script>
 <style scoped>
+.user_icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-size:contain;
+    margin-right: 8px;
+    border:2px white solid
+}
 .pic {
     width: 100px;
     height: 100px;
@@ -371,15 +385,7 @@ button.active {
     width: 100%;
 }
 
-.user_icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    background-image: url(../assets/Feed/moonshotlogo.png);
-    background-size: 75px;
-    background-position: 66px -10px;
-    margin-right: 8px;
-}
+
 
 .user_inf {
     width: 50%;

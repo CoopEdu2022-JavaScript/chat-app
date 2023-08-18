@@ -41,9 +41,7 @@ async function sendBlog() {
     const postId = await sendPost();
 
     await sendPic(postId);
-    router.push('/feed').then(() => {
-        location.reload()
-    })
+    router.push('/feed')
 }
 
 async function sendPost() {

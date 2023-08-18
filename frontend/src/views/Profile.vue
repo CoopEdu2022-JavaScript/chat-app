@@ -46,7 +46,7 @@ const user_icon = ref();
 const imageFile = ref()
 async function getimageurl(postid) {
     const res = await http.get(`/feed/${postid}/getallpic`)
-    console.log(res.data)
+    // console.log(res.data)
     return res.data.path
 }
 let urls = ref([]);
@@ -60,7 +60,9 @@ watch(() => posts.value, async (posts) => {
 //==================
 const del_post = (post) => {
     http.delete(`/post/${post.post_id}/delete`, { headers: { Authorization: `Bearer ${token}` } }).then(res => {
-        location.reload()
+        setTimeout(function(){
+                location.reload(); 
+            },50)
     })
 }
 function handleFileChange(event) {
@@ -76,7 +78,7 @@ function handleFileChange(event) {
 
         formData.append('image', imageFile.value);
         http.post('/profile/deleteicon')
-        http.post('/upload/icon',formData)
+        http.post('/uploadicon/icon',formData)
     }
 }
 http.get('/login/profile', {
