@@ -35,7 +35,6 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { useMainStore } from '../../store/images_delete';
-import previewImage from '../assets/Feed/moonshotlogo.png';
 //===========
 import http from '../api/http'
 const user = ref(null)
@@ -43,7 +42,7 @@ const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
 const posts = ref([])
 //===============图片获取功能
-const user_icon = ref(previewImage);
+const user_icon = ref();
 const imageFile = ref()
 async function getimageurl(postid) {
     const res = await http.get(`/feed/${postid}/getallpic`)

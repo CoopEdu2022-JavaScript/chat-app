@@ -89,7 +89,7 @@ const posts = ref([]);
 const postAuthors = ref([]);
 const commentContent = ref('');
 const comments = ref([])
-
+const icon_urls = ref([])
 function trimAll(ele) {
     if (typeof ele === 'string') {
         return ele.split(/[\t\r\f\n\s]*/g).join('');
@@ -234,6 +234,7 @@ http.get('/feed', {
             getUserNames(post.post_id).then(username => {
                 postAuthors.value.push(username);
             });
+            //等会在这里写getusericonURL
             // if(findComment(post)!=[])comments.value.push(findComment(post));
         });
     })
