@@ -9,25 +9,24 @@ router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 const fs = require('fs')
 // server.js
-function emptydir(delpath){
-  fpath="../frontend/src/assets/images"
-  const files=fs.readdirSync(fpath);
-  files.forEach(file=>{
-      const filePath=`${fpath}/${file}`;
-      const stats=fs.statSync(filePath);
-      let path_to_compare=filePath.replace('../frontend/','')
-      if(stats.isDirectory()){
-          emptydir(filePath);
-      }else{
-        if(path_to_compare==delpath)
-        {
-          fs.unlinkSync(filePath);
-          console.log(`删除${file}文件成功`)
-        }
-        else{
-          console.log(path_to_compare)
-        }
+function emptydir(delpath) {
+  fpath = "../frontend/src/assets/images"
+  const files = fs.readdirSync(fpath);
+  files.forEach(file => {
+    const filePath = `${fpath}/${file}`;
+    const stats = fs.statSync(filePath);
+    let path_to_compare = filePath.replace('../frontend/', '')
+    if (stats.isDirectory()) {
+      emptydir(filePath);
+    } else {
+      if (path_to_compare == delpath) {
+        fs.unlinkSync(filePath);
+        console.log(`删除${file}文件成功`)
       }
+      else {
+        console.log(path_to_compare)
+      }
+    }
   });
 }
 router.post('/newpost', async (req, res) => {
@@ -49,14 +48,14 @@ router.post('/newpost', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-    const { user_id } = getPayload(req)
-    const id = req.params.id
-    const sql = 'SELECT * FROM post WHERE post_id = ?'
-    const values = [id]
-    const [rows] = await db.query(sql, values)
-    res.json(rows[0])
-  }
-    )
+  const { user_id } = getPayload(req)
+  const id = req.params.id
+  const sql = 'SELECT * FROM post WHERE post_id = ?'
+  const values = [id]
+  const [rows] = await db.query(sql, values)
+  res.json(rows[0])
+}
+)
 router.put('/:id/fix', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
@@ -76,9 +75,9 @@ router.delete('/:id/delete', async (req, res) => {
     const id = req.params.id
     const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? ;Delete FROM images_post WHERE post_id = ?`
     const values = [id, user_id, id, id, id]
-    const image_del='SELECT path FROM images_post WHERE post_id=?'
-    const val=[id]
-    const [del_img]= await db.query(image_del,val)
+    const image_del = 'SELECT path FROM images_post WHERE post_id=?'
+    const val = [id]
+    const [del_img] = await db.query(image_del, val)
     console.log(del_img[0])
     emptydir(del_img[0].path)
     const [rows] = await db.query(sql, values)
@@ -103,7 +102,12 @@ router.post('/:id/likes', async (req, res) => {
     UPDATE post SET likes = likes + 1 WHERE post_id = ?;`
     const values = [id, user_id, id]
     const [rows] = await db.query(sql, values)
-
+    const sql2 = 'SELECT uid FROM post WHERE post_id=?'
+    const values2 = [id]
+    const [rows2] = await db.query(sql2, values2)
+    const sql3 = 'UPDATE users SET notif_likes = notif_likes + 1 WHERE uid = ?'
+    const values3 = [rows2[0].uid]
+    const [rows3] = await db.query(sql3, values3)
     res.send({ state: true })
   } catch (err) {
     console.error('not success', err)
@@ -125,6 +129,12 @@ router.delete('/:id/unlike', async (req, res) => {
     UPDATE post SET likes=likes-1 WHERE post_id = ?`
     const values = [id, user_id, id]
     const [rows] = await db.query(sql, values)
+    const sql2 = "SELECT uid FROM post WHERE post_id=?"
+    const values2 = [id]
+    const [rows2] = await db.query(sql2, values2)
+    const sql3 = "UPDATE users SET notif_likes = notif_likes - 1 WHERE uid=? AND notif_likes>0"
+    const values3 = [rows2[0].uid]
+    const [rows3] = await db.query(sql3, values3)
     res.send(true)
   } catch (err) {
     console.error('not success', err)

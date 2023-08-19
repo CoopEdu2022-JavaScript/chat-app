@@ -33,13 +33,13 @@
     <div class="blogs">
         <div v-for="(post, index) in posts" :key="post.post_id" class="user_blogs">
             <div class="user_inf">
-                <img :src="icon_urls[index]" class="user_icon"/>
+                <img :src="icon_urls[index]" class="user_icon" />
                 <div class="user_name">{{ postAuthors[index] }}</div>
                 <div class="time">{{ post.date.slice(0, 19).replace('T', ' ') }}</div>
             </div>
             <h1>{{ post.title }}</h1>
             <div class="user_blogs_context">{{ post.content }}</div>
-            <a :href="urls[index]" target="_blank">            
+            <a :href="urls[index]" target="_blank">
                 <img :src="urls[index]" class="pic">
             </a>
             <br>
@@ -77,6 +77,7 @@ import { useRouter } from 'vue-router';
 // 组件
 import { useSearchStore } from '../../store/searchstore'
 import { SaveWordStore } from '../../store/KeyWordStore'
+import { HttpStatusCode } from 'axios';
 const searchStore = useSearchStore()
 const KeyWordStore = SaveWordStore()
 const result = searchStore.searchResult
@@ -90,6 +91,7 @@ const postAuthors = ref([]);
 const commentContent = ref('');
 const comments = ref([])
 const icon_urls = ref([])
+const bgc = ref("#fff")
 function trimAll(ele) {
     if (typeof ele === 'string') {
         return ele.split(/[\t\r\f\n\s]*/g).join('');
@@ -108,18 +110,28 @@ const isCommentContentValid = (post) => {
 //     return response.data[index].postId
 // };
 const submitSearch = (searchWord) => {
-  http.get(`/feed/${searchWord}/search`)
-    .then(res => {
-      // 保存结果
-      useSearchStore().searchResult = res.data 
-      SaveWordStore().WordStore = searchWord
-      router.push('/searchresult')
-    })  
+    http.get(`/feed/${searchWord}/search`)
+        .then(res => {
+            // 保存结果
+            useSearchStore().searchResult = res.data
+            SaveWordStore().WordStore = searchWord
+            router.push('/searchresult')
+        })
 }
 const notif_making = () => {
-    setTimeout(() => {
-        alert("叮~~~(铃铛声)\n这边检测到您点击了通知按钮呢\n遗憾的是我们还在开发呢");
-    }, 300);
+    // setTimeout(() => {
+    //     alert("叮~~~(铃铛声)\n这边检测到您点击了通知按钮呢\n遗憾的是我们还在开发呢");
+    // }, 300);
+    let i = 100
+
+    const interval = setInterval(() => {
+        i -= 1
+        bgc.value = `hsl(0, 0%, ${i}%)`
+
+        if (i <= 0) {
+            clearInterval(interval)
+        }
+    }, 20)
 };
 const submitComment = (post) => {
     // 发送评论
@@ -129,9 +141,9 @@ const submitComment = (post) => {
             // 清空输入框
             post.commentContent = '';
             // 刷新feed页面
-            setTimeout(function(){
-                location.reload(); 
-            },50)
+            setTimeout(function () {
+                location.reload();
+            }, 50)
         })
         .catch((error) => {
             console.error(error);
@@ -152,11 +164,13 @@ const like = (post_id, post_A) => {
                 Authorization: `Bearer ${token}`
             }
         })
-        else http.delete(`/post/${post_id}/unlike`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        else {
+            http.delete(`/post/${post_id}/unlike`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+        }
     })
 }
 function goToComments(postID) {
@@ -207,10 +221,10 @@ async function getimageurl(postid) {
 let urls = ref([]);
 
 watch(() => posts.value, async (posts) => {
-  for (let i = 0; i < posts.length; i++) {
-    const imageUrl = await getimageurl(posts[i].post_id);
-    urls.value.push(imageUrl);
-  }
+    for (let i = 0; i < posts.length; i++) {
+        const imageUrl = await getimageurl(posts[i].post_id);
+        urls.value.push(imageUrl);
+    }
 });
 //=================
 http.get('/feed', {
@@ -235,12 +249,12 @@ http.get('/feed', {
             //console.log(post.post_id)
             getUserNames(post.post_id).then(username => {
                 postAuthors.value.push(username);
-                http.get(`/feed/${post.post_id}/getusericon`).then(res=>{
-                console.log(res.data.usericon)
-                icon_urls.value.push(res.data.usericon)
-            })
+                http.get(`/feed/${post.post_id}/getusericon`).then(res => {
+                    console.log(res.data.usericon)
+                    icon_urls.value.push(res.data.usericon)
+                })
             });
-          
+
             // if(findComment(post)!=[])comments.value.push(findComment(post));
         });
     })
@@ -253,10 +267,11 @@ http.get('/feed', {
     width: 40px;
     height: 40px;
     border-radius: 20px;
-    background-size:contain;
+    background-size: contain;
     margin-right: 8px;
-    border:2px white solid
+    border: 2px white solid
 }
+
 .pic {
     width: 100px;
     height: 100px;

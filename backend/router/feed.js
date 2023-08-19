@@ -105,4 +105,35 @@ router.get('/:id/getusericon', async (req, res) => {
     res.status(500).json({ err })
   }
 })
+router.get('/:id/user_notif_inf', async (req, res) => {
+  try {
+    const id = req.params.id
+    const sql = "SELECT uid FROM post WHERE post_id=?"
+    const values = [id]
+    const [rows] = await db.query(sql, values)
+    const sql2="SELECT notif_likes,notif_comments FROM users WHERE uid=?"
+    const values2=[rows[0].uid]
+    const [rows2] = await db.query(sql2, values2)
+    res.send(rows2[0])
+  } catch (err) {
+    //console.log(err)
+    // console.error('Error fetching post:', err)
+    res.status(500).json({ err })
+  }
+})
+// router.get('/:id/notif_likes_decrease', async (req, res) => {
+//   try {
+//     const id = req.params.id
+//     const sql = "SELECT uid FROM post WHERE post_id=?"
+//     const values = [id]
+//     const [rows] = await db.query(sql, values)
+//     const sql2="UPDATE users SET notif_likes = notif_likes - 1 WHERE uid=?"
+//     const values2=[rows[0].uid]
+//     const [rows2] = await db.query(sql2, values2)
+//   } catch (err) {
+//     //console.log(err)
+//     // console.error('Error fetching post:', err)
+//     res.status(500).json({ err })
+//   }
+// })
 module.exports = router

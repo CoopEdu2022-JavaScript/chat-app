@@ -15,6 +15,12 @@ router.post('/:id/comment', async (req, res) => {
 		const { content } = req.body
 		const value = [content, id, user_id, id]
 		await db.query(`INSERT INTO conment (content, post_id, uid, date) VALUES ( ?, ?, ?, NOW());UPDATE post SET coments_id = coments_id + 1 WHERE post_id = ?`, value)
+		const sql = "SELECT uid FROM post WHERE post_id=?"
+		const values = [id]
+		const [rows] = await db.query(sql, values)
+		const sql2="UPDATE users SET notif_comments = notif_comments + 1 WHERE uid=?"
+		const values2=[rows[0].uid]
+		const [rows2] = await db.query(sql2, values2)
 		res.json({ state: true })
 	} catch (err) {
 		console.error('Error creating comment:', err)
