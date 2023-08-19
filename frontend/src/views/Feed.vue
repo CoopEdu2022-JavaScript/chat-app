@@ -1,8 +1,18 @@
 <template>
     <div class="header">
         <input type="search" v-model="searchTerm" @keydown.enter.prevent="submitSearch(searchTerm)" placeholder="请输入搜索内容">
-        <button class="notifications" @click="notif_making"></button>
+        <button class="notifications" @click="notif_making">{{ notif_num }}</button>
     </div>
+    <div>
+        <!-- 以下是弹窗 -->
+        <teleport to="body">
+            <div v-if="show" class="popup" :style="{backgroundColor:bgc}">
+                <p>{{ notif_message }}</p>
+                <button @click="close_notif" :style="{backgroundColor:bgc}">关闭</button>
+            </div>
+        </teleport>
+    </div>
+    <!-- 弹窗 -->
     <p class="title1">好友快拍(开发中)</p>
     <div class="fastshot-list">
         <span class="user-block">
@@ -78,6 +88,12 @@ import { useRouter } from 'vue-router';
 import { useSearchStore } from '../../store/searchstore'
 import { SaveWordStore } from '../../store/KeyWordStore'
 import { HttpStatusCode } from 'axios';
+//================弹窗
+const show = ref(false)
+function showPopup() {
+    show.value = true
+}
+//===========
 const searchStore = useSearchStore()
 const KeyWordStore = SaveWordStore()
 const result = searchStore.searchResult
@@ -92,6 +108,8 @@ const commentContent = ref('');
 const comments = ref([])
 const icon_urls = ref([])
 const bgc = ref("#fff")
+const notif_num = ref()
+const notif_message = ref("")
 function trimAll(ele) {
     if (typeof ele === 'string') {
         return ele.split(/[\t\r\f\n\s]*/g).join('');
@@ -119,6 +137,11 @@ const submitSearch = (searchWord) => {
         })
 }
 const notif_making = () => {
+    http.get('/feed/clear_notif')
+    const notificationsEl = document.querySelector('.notifications')
+    notificationsEl.style.backgroundColor = 'rgb(40,40,40)'
+    notif_num.value = ""
+    showPopup()
     // setTimeout(() => {
     //     alert("叮~~~(铃铛声)\n这边检测到您点击了通知按钮呢\n遗憾的是我们还在开发呢");
     // }, 300);
@@ -133,6 +156,11 @@ const notif_making = () => {
         }
     }, 20)
 };
+const close_notif=()=>{
+show.value=false
+bgc.value="#fff"
+notif_message.value = "目前还没有新的通知哦"
+}
 const submitComment = (post) => {
     // 发送评论
     //console.log('发送评论:', post.commentContent);
@@ -254,7 +282,27 @@ http.get('/feed', {
                     icon_urls.value.push(res.data.usericon)
                 })
             });
+            http.get(`/feed/${post.post_id}/user_notif_inf`).then(res => {
+                notif_num.value = res.data.notif_likes + res.data.notif_comments
+                if (notif_num.value == 0) {
+                    const notificationsEl = document.querySelector('.notifications')
+                    notificationsEl.style.backgroundColor = 'rgb(40,40,40)'
+                    notif_num.value = ""
+                    notif_message.value = "目前还没有新的通知哦"
+                }
+                else {
+                    const notificationsEl = document.querySelector('.notifications')
+                    notificationsEl.style.backgroundColor = 'rgb(235,246,28)'
+                    if (notif_num > 99) {
+                        notif_num = "99+"
+                    }
+                    if (res.data.notif_likes > 0 && res.data.notif_comments > 0) {
+                        notif_message.value = `您获得了${res.data.notif_likes}个新的点赞和${res.data.notif_comments}条新的评论`
+                    } else if (res.data.notif_likes > 0) { notif_message.value = `您获得了${res.data.notif_likes}个新的点赞` }
+                    else { notif_message.value = `您获得了${res.data.notif_comments}条新的评论` }
+                }
 
+            })
             // if(findComment(post)!=[])comments.value.push(findComment(post));
         });
     })
@@ -263,6 +311,28 @@ http.get('/feed', {
 //==================
 </script>
 <style scoped>
+.popup button{
+    margin-top: 10px;
+    border: none;
+    border-radius: 10%;
+    font-weight: bold;
+}
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 45px;
+    background-color: white;
+    font-weight: bolder;
+    font-size: 20px;
+    font-style: italic;
+    color:white;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 30%;
+}
+
 .user_icon {
     width: 40px;
     height: 40px;
@@ -581,17 +651,21 @@ button.active {
 
 .notifications {
     background-image: url(../assets/Feed/ic_home_notification_normal.png);
-    width: 28px;
-    height: 28px;
-    background-color: rgb(29, 29, 29);
+    width: 40px;
+    height: 40px;
+    background-color: rgb(40, 40, 40);
+    color: red;
+    border-radius: 20px;
+    font-weight: 800;
     background-size: contain;
     border: none;
-    line-height: 28px;
+    line-height: 40px;
 }
 
-.notifications:active {
+/*按下右上角的小玲铛以后变黄色，暂时禁用(手机端效果不是很好)
+/* .notifications:active {
     background-image: url(../assets/Feed/ic_home_notification_active.png);
-}
+} */
 
 .header {
     width: 90%;
