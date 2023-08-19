@@ -8,6 +8,5 @@ vue3 + vite + pinia
 -report function added
 -usericon added
 -notifications added
--
 <br/>
 <h3>PS:commit中的17354都是Stan,只不过因为本地git没设置用户名，所以记录的是本地的用户名,这也导致了contribution不显示的问题</h1>
