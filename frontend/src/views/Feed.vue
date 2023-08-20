@@ -6,9 +6,9 @@
     <div>
         <!-- 以下是弹窗 -->
         <teleport to="body">
-            <div v-if="show" class="popup" :style="{backgroundColor:bgc}">
+            <div v-if="show" class="popup" :style="{ backgroundColor: bgc }">
                 <p>{{ notif_message }}</p>
-                <button @click="close_notif" :style="{backgroundColor:bgc}">关闭</button>
+                <button @click="close_notif" :style="{ backgroundColor: bgc }">关闭</button>
             </div>
         </teleport>
     </div>
@@ -88,6 +88,7 @@ import { useRouter } from 'vue-router';
 import { useSearchStore } from '../../store/searchstore'
 import { SaveWordStore } from '../../store/KeyWordStore'
 import { HttpStatusCode } from 'axios';
+import { selectProps } from 'ant-design-vue/es/vc-select';
 //================弹窗
 const show = ref(false)
 function showPopup() {
@@ -148,7 +149,7 @@ const notif_making = () => {
     let i = 100
 
     const interval = setInterval(() => {
-        i -= 1
+        i -= 2
         bgc.value = `hsl(0, 0%, ${i}%)`
 
         if (i <= 0) {
@@ -156,10 +157,10 @@ const notif_making = () => {
         }
     }, 20)
 };
-const close_notif=()=>{
-show.value=false
-bgc.value="#fff"
-notif_message.value = "目前还没有新的通知哦"
+const close_notif = () => {
+    show.value = false
+    bgc.value = "#fff"
+    notif_message.value = "目前还没有新的通知哦"
 }
 const submitComment = (post) => {
     // 发送评论
@@ -225,15 +226,15 @@ async function getUsername(postid) {
             }
         });
         //console.log(response.data);
-        return response.data.usernames;
+        return response.data;
     } catch (error) {
         //console.log(error);
         return '';
     }
 }
 async function getUserNames(postid) {
-    const usernamesPromise = getUsername(postid); // 调用getUsername()函数，并返回Promise对象
-    const usernames = await usernamesPromise; // 等待Promise完成，并将结果赋给usernames变量
+    const usernamesPromise = await getUsername(postid); // 调用getUsername()函数，并返回Promise对象
+    const usernames = usernamesPromise; // 等待Promise完成，并将结果赋给usernames变量
     //console.log(usernames); // 输出用户名
     return usernames;
 }
@@ -261,10 +262,13 @@ http.get('/feed', {
     }
 })
     .then(response => {
-        posts.value = response.data
+       posts.value = response.data
+        console.log(posts.value)
         //console.log(response.data)
         // 获取并保存每篇文章的作者名字
-        response.data.forEach(post => {
+        getData(0,posts.value.length)
+        function getData(i,length) {
+            let post=posts.value[i]
             http.get(`/post/${post.post_id}/hlike`, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -275,13 +279,6 @@ http.get('/feed', {
                 post.commentContent = '';
             })
             //console.log(post.post_id)
-            getUserNames(post.post_id).then(username => {
-                postAuthors.value.push(username);
-                http.get(`/feed/${post.post_id}/getusericon`).then(res => {
-                    console.log(res.data.usericon)
-                    icon_urls.value.push(res.data.usericon)
-                })
-            });
             http.get(`/feed/${post.post_id}/user_notif_inf`).then(res => {
                 notif_num.value = res.data.notif_likes + res.data.notif_comments
                 if (notif_num.value == 0) {
@@ -304,19 +301,31 @@ http.get('/feed', {
 
             })
             // if(findComment(post)!=[])comments.value.push(findComment(post));
-        });
+            getUserNames(post.post_id).then(res => {
+                    console.log(res)
+                    console.log(post)
+                    console.log(posts.value[0])
+                    console.log(i)
+                    postAuthors.value.push(res.usernames);
+                    icon_urls.value.push(res.usericon)
+                    if(++i<length){
+                getData(i,length)
+            }
+                });
+        };
     })
 
 //===================
 //==================
 </script>
 <style scoped>
-.popup button{
+.popup button {
     margin-top: 10px;
     border: none;
     border-radius: 10%;
     font-weight: bold;
 }
+
 .popup {
     position: fixed;
     top: 50%;
@@ -327,7 +336,7 @@ http.get('/feed', {
     font-weight: bolder;
     font-size: 20px;
     font-style: italic;
-    color:white;
+    color: white;
     line-height: 20px;
     text-align: center;
     border-radius: 30%;

@@ -215,7 +215,7 @@ router.get('/:id/users', async (req, res) => {
     const sql = 'SELECT uid FROM post WHERE post_id = ?'
     const values = [id]
     const [rows] = await db.query(sql, values)
-    const sql2 = 'SELECT usernames FROM users WHERE uid = ? LIMIT 1'
+    const sql2 = 'SELECT * FROM users WHERE uid = ? LIMIT 1'
     const values2 = [rows[0].uid]
     const [rows2] = await db.query(sql2, values2)
     res.send(rows2[0])
