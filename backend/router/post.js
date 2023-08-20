@@ -2,7 +2,7 @@
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
-const db = require('../db')
+const db = require('../db/db')
 const { getPayload } = require('../jwt_config')
 const { v5: uuidv5 } = require("uuid")
 router.use(express.json())

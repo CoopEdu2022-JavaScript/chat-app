@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { getPayload } = require('../jwt_config')
-const db = require('../db')
+const db = require('../db/db')
 
 
 

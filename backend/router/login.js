@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcryptjs')
 // const jwt = require('jsonwebtoken')
-const db = require('../db')
+const db = require('../db/db')
 const { setToken } = require('../jwt_config')
 const { getPayload } = require('../jwt_config')
 
