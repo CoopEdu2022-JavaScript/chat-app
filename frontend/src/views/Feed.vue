@@ -13,33 +13,6 @@
         </teleport>
     </div>
     <!-- 弹窗 -->
-    <p class="title1">好友快拍(开发中)</p>
-    <div class="fastshot-list">
-        <span class="user-block">
-            <span class="fastshot-pic"></span>
-            <span class="fastshot-words">MoonShot</span>
-        </span>
-        <span class="user-block">
-            <span class="fastshot-pic"></span>
-            <span class="fastshot-words">MoonShot</span>
-        </span>
-        <span class="user-block">
-            <span class="fastshot-pic"></span>
-            <span class="fastshot-words">MoonShot</span>
-        </span>
-        <span class="user-block">
-            <span class="fastshot-pic"></span>
-            <span class="fastshot-words">MoonShot</span>
-        </span>
-        <span class="user-block">
-            <span class="fastshot-pic"></span>
-            <span class="fastshot-words">MoonShot</span>
-        </span>
-        <span class="user-block">
-            <span class="fastshot-pic1"></span>
-            <span class="fastshot-words">MoonShot</span>
-        </span>
-    </div>
     <div class="blogs">
         <div v-for="(post, index) in posts" :key="post.post_id" class="user_blogs">
             <div class="user_inf">
@@ -599,76 +572,21 @@ button.active {
     padding: 0% 5% 15% 5%;
     border-radius: 8px;
 }
-
-.fastshot-words {
-    font-family: 'PingFang SC';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 17px;
-    color: #FFFFFF;
-    width: 60px;
-    height: 17px;
-    overflow: scroll;
-}
-
-.fastshot-pic {
-    background-color: yellow;
-    width: 60px;
-    height: 60px;
-    border-radius: 30px 0 30px 0;
-}
-
-.fastshot-list .user-block {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 80px;
-    height: 88px;
-    flex-shrink: 0;
-}
-
-.fastshot-list {
-    margin-top: 2px;
-    width: 95%;
-    margin-left: 5%;
-    gap: 10px;
-    height: 117px;
-    display: flex;
-    overflow: auto;
-    flex-wrap: nowrap;
-}
-
 * {
     margin: 0;
     padding: 0;
 }
-
-.title1 {
-    font-family: 'PingFang SC';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 22px;
-    display: flex;
-    align-items: center;
-    color: gray;
-    margin-top: 19px;
-    margin-left: 5%;
-}
-
 .notifications {
     background-image: url(../assets/Feed/ic_home_notification_normal.png);
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     background-color: rgb(40, 40, 40);
     color: red;
     border-radius: 20px;
     font-weight: 800;
     background-size: contain;
     border: none;
-    line-height: 40px;
+    line-height: 30px;
 }
 
 /*按下右上角的小玲铛以后变黄色，暂时禁用(手机端效果不是很好)

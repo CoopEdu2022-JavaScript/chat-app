@@ -5,15 +5,16 @@
         </button>
     </div>
     <div class="blogtitle">
-        <input v-model="formData.title" name="title" maxlength="20" placeholder="标题" />
-        <span>{{ textCount }}/20</span>
+        <input v-model="formData.title" name="title" maxlength="15" placeholder="标题" />
+        <span>{{ textCount }}/15</span>
     </div>
     <div class="context">
         <textarea v-model="formData.content" name="content" placeholder="分享你的生活" cols="30" rows="10"
             maxlength="200"></textarea>
     </div>
     <div class="picupload">
-        PS:必须上传一张图片当作封面哦
+        PS:必须上传一张图片当作封面哦<br>
+        PS2:尽量使用中文发帖，使用英文发帖时务必用空格隔开英文词，不然可能会出现显示上的问题
         <label for="fileInput" class="custom-file-input" :style="{ backgroundImage: `url(${previewSrc})` }">
             <input type="file" id="fileInput" accept="image/*" hidden @change="handleFileChange">
             <button v-if="previewSrc !== previewImage" class="clear-button" @click="clearPreview">x</button>
