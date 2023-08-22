@@ -1,7 +1,10 @@
 <template>
     <div class="header">
         <input type="search" v-model="searchTerm" @keydown.enter.prevent="submitSearch(searchTerm)" placeholder="请输入搜索内容">
-        <button class="notifications" @click="notif_making">{{ notif_num }}</button>
+        <!-- <q-input outlined type="search" rounded v-model="searchTerm" placeholder="Placeholder" :dense="dense" class="search-input"/> -->
+        <q-btn color="white" dense round flat class="notifications" @click="notif_making">
+            <q-badge color=red class="notif-badge" round floating transparent align="middle">{{ notif_num }}</q-badge>
+        </q-btn>
     </div>
     <div>
         <!-- 以下是弹窗 -->
@@ -10,6 +13,13 @@
                 <p>{{ notif_message }}</p>
                 <button @click="close_notif" :style="{ backgroundColor: bgc }">关闭</button>
             </div>
+        </teleport>
+        <teleport to="body">
+            <transition name="popup2-fade">
+                <div v-if="show_Popup" class="popup2">
+                    <img :src="currentUrl" @click="show_Popup = false">
+                </div>
+            </transition>
         </teleport>
     </div>
     <!-- 弹窗 -->
@@ -20,13 +30,13 @@
                 <div class="user_name">{{ postAuthors[index] }}</div>
                 <div class="time">{{ post.date.slice(0, 19).replace('T', ' ') }}</div>
             </div>
-            <h1>{{ post.title }}</h1>
+            <h4>{{ post.title }}</h4>
             <div class="user_blogs_context">{{ post.content }}</div>
-            <a :href="urls[index]" target="_blank">
-                <img :src="urls[index]" class="pic">
-            </a>
+            <!-- <a :href="urls[index]" target="_blank"> -->
+            <img :src="urls[index]" class="pic" @click="showImg(urls[index])">
+            <!-- </a> -->
             <br>
-            <span style="color:white ">[点击图片即可查看整张图片]</span>
+            <br><br>
             <div class="functions">
                 <button @click.stop="like(post.post_id, post)" :state="post.isLiked ? 'press' : 'release'"
                     class="likes"></button>
@@ -67,7 +77,15 @@ const show = ref(false)
 function showPopup() {
     show.value = true
 }
-//===========
+//===========弹窗2
+const show_Popup = ref(false)
+const currentUrl = ref('')
+
+function showImg(url) {
+    currentUrl.value = url
+    show_Popup.value = true
+}
+//============
 const searchStore = useSearchStore()
 const KeyWordStore = SaveWordStore()
 const result = searchStore.searchResult
@@ -112,8 +130,6 @@ const submitSearch = (searchWord) => {
 }
 const notif_making = () => {
     http.get('/feed/clear_notif')
-    const notificationsEl = document.querySelector('.notifications')
-    notificationsEl.style.backgroundColor = 'rgb(40,40,40)'
     notif_num.value = ""
     showPopup()
     // setTimeout(() => {
@@ -235,13 +251,13 @@ http.get('/feed', {
     }
 })
     .then(response => {
-       posts.value = response.data
+        posts.value = response.data
         console.log(posts.value)
         //console.log(response.data)
         // 获取并保存每篇文章的作者名字
-        getData(0,posts.value.length)
-        function getData(i,length) {
-            let post=posts.value[i]
+        getData(0, posts.value.length)
+        function getData(i, length) {
+            let post = posts.value[i]
             http.get(`/post/${post.post_id}/hlike`, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -255,16 +271,13 @@ http.get('/feed', {
             http.get(`/feed/${post.post_id}/user_notif_inf`).then(res => {
                 notif_num.value = res.data.notif_likes + res.data.notif_comments
                 if (notif_num.value == 0) {
-                    const notificationsEl = document.querySelector('.notifications')
-                    notificationsEl.style.backgroundColor = 'rgb(40,40,40)'
+
                     notif_num.value = ""
                     notif_message.value = "目前还没有新的通知哦"
                 }
                 else {
-                    const notificationsEl = document.querySelector('.notifications')
-                    notificationsEl.style.backgroundColor = 'rgb(235,246,28)'
-                    if (notif_num > 99) {
-                        notif_num = "99+"
+                    if (notif_num.value > 99) {
+                        notif_num.value = "99+"
                     }
                     if (res.data.notif_likes > 0 && res.data.notif_comments > 0) {
                         notif_message.value = `您获得了${res.data.notif_likes}个新的点赞和${res.data.notif_comments}条新的评论`
@@ -275,16 +288,16 @@ http.get('/feed', {
             })
             // if(findComment(post)!=[])comments.value.push(findComment(post));
             getUserNames(post.post_id).then(res => {
-                    console.log(res)
-                    console.log(post)
-                    console.log(posts.value[0])
-                    console.log(i)
-                    postAuthors.value.push(res.usernames);
-                    icon_urls.value.push(res.usericon)
-                    if(++i<length){
-                getData(i,length)
-            }
-                });
+                console.log(res)
+                console.log(post)
+                console.log(posts.value[0])
+                console.log(i)
+                postAuthors.value.push(res.usernames);
+                icon_urls.value.push(res.usericon)
+                if (++i < length) {
+                    getData(i, length)
+                }
+            });
         };
     })
 
@@ -292,6 +305,35 @@ http.get('/feed', {
 //==================
 </script>
 <style scoped>
+.popup2 img{
+    width: 100%;
+    margin:auto
+}
+.popup2-fade-enter-active {
+  transition: all 0.3s ease;
+}
+
+.popup2-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.popup2-fade-enter-from,
+.popup2-fade-leave-to {
+  opacity: 0;
+}
+.popup2 {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+}
+.search-input {
+    border-color: aqua;
+}
+
 .popup button {
     margin-top: 10px;
     border: none;
@@ -572,17 +614,19 @@ button.active {
     padding: 0% 5% 15% 5%;
     border-radius: 8px;
 }
+
 * {
     margin: 0;
     padding: 0;
 }
+
 .notifications {
     background-image: url(../assets/Feed/ic_home_notification_normal.png);
     width: 30px;
     height: 30px;
     background-color: rgb(40, 40, 40);
     color: red;
-    border-radius: 20px;
+    border-radius: 15px;
     font-weight: 800;
     background-size: contain;
     border: none;

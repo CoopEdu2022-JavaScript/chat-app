@@ -6,11 +6,17 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 // 导入 webpack
 import webpack from 'webpack'
-
+import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 export default defineConfig({
 
   plugins: [
-    vue(),
+    vue({
+      template: { transformAssetUrls }
+    }),
+
+    quasar({
+      sassVariables: 'src/quasar-variables.sass'
+    }),
     AutoImport({
       imports: ['vue', 'vue-router', 'pinia'],
       dirs: ['src/store', 'src/api'],

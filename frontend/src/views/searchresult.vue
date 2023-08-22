@@ -6,19 +6,19 @@
     </div>
     <div class="blogs">
         <div class="keyword">关键词:{{ KeyWord }}</div>
-        <div v-for="(post, index) in posts" :key="post.postid" class="user_blogs">
+        <div v-for="(post, index) in posts" :key="post.post_id" class="user_blogs">
             <div class="user_inf">
-                <div class="user_icon"></div>
+                <img :src="icon_urls[index]" class="user_icon" />
                 <div class="user_name">{{ postAuthors[index] }}</div>
                 <div class="time">{{ post.date.slice(0, 19).replace('T', ' ') }}</div>
             </div>
-            <h1>{{ post.title }}</h1>
+            <h4>{{ post.title }}</h4>
             <div class="user_blogs_context">{{ post.content }}</div>
             <a :href="urls[index]" target="_blank">
                 <img :src="urls[index]" class="pic">
             </a>
             <br>
-            <span style="color:white ">[点击图片即可查看整张图片]</span>
+            <span style="color:white ">[点击图片即可查看整张图片]</span><br><br>
             <div class="functions">
                 <button @click.stop="like(post.post_id, post)" :state="post.isLiked ? 'press' : 'release'"
                     class="likes"></button>
@@ -45,19 +45,21 @@ const KeyWordSave = SaveWordStore()
 const searchStore = useSearchStore()
 const KeyWord = KeyWordSave.WordStore
 const result = searchStore.searchResult
+const commentContent = ref('');
 console.log(result)
 const postAuthors = ref([]);
 const posts = ref([]);
 const urls = ref([]);
-const isempty=ref();
+const isempty = ref();
 const TOKEN_KEY = 'my_jwt_token'
 const token = localStorage.getItem(TOKEN_KEY)
+const icon_urls = ref([])
 async function getUsername(postid) {
     try {
         const response = await http.get(`/post/${postid}/users`
         );
         //console.log(response.data);
-        return response.data.usernames;
+        return response.data;
     } catch (error) {
         //console.log(error);
         return '';
@@ -77,9 +79,11 @@ let post_id
 if (result.length > 0) {
     post_id = result.map(item => item)
     console.log(post_id)
+
     for (const pid of post_id) {
-        getUserNames(pid.post_id).then(username => {
-            postAuthors.value.push(username);
+        getUserNames(pid.post_id).then(res => {
+            postAuthors.value.push(res.usernames);
+            icon_urls.value.push(res.usericon)
         });
         http.get(`/searchresult/${pid.post_id}/getdetails`)
             .then(response => {
@@ -94,7 +98,11 @@ if (result.length > 0) {
     }
 }
 else {
-    isempty.value="搜索结果为空"
+    isempty.value = "搜索结果为空"
+}
+for (let i = 0; i < posts.value.length; i++) {
+    let post = posts.value[i];
+    post.commentContent = '';
 }
 const like = (post_id, post_A) => {
     http.get(`/post/${post_id}/hlike`, {
@@ -143,12 +151,13 @@ const submitComment = (post) => {
 }
 </script>
 <style scoped>
-.isempty{
-    color:white;
+.isempty {
+    color: white;
     font-size: 20px;
-    font-weight:bolder;
+    font-weight: bolder;
     font-style: italic;
 }
+
 .heading {
     width: 100%;
     margin-top: 75px;
@@ -307,10 +316,9 @@ button.active {
     width: 40px;
     height: 40px;
     border-radius: 20px;
-    background-image: url(../assets/Feed/moonshotlogo.png);
-    background-size: 75px;
-    background-position: 66px -10px;
     margin-right: 8px;
+    border: 2px white solid;
+    background-size: contain;
 }
 
 .user_inf {

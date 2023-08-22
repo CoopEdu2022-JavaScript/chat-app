@@ -1,12 +1,12 @@
 
 <template>
   <h1 class="login-font">登录</h1>
-  <div class="acc">学号</div>
-  <input v-model="formData.ID" type="text" name="ID" maxlength="10" placeholder="请输入"><br>
-  <div class="psw">密码</div>
-  <input v-model="formData.password" type="password" name="password" minlength="6" maxlength="8" placeholder="请输入6-8位密码">
+  <q-input class="textin-1" label-color="white" standout="bg-teal" v-model="formData.ID" :input-style="{ color: 'white' }"
+    clearable clear-icon="×" label="学号" />
+  <q-input class="textin-2" label-color="white" standout="bg-teal" v-model="formData.password" minlength="6" maxlength="8"
+    clearable clear-icon="×" :input-style="{ color: 'white' }" label="密码" />
   <div class="error-msg">{{ errorMsg }}</div>
-  <button type="submit" @click="login">登录</button>
+  <q-btn :ripple="{ color: 'red' }" color="secondary" label="登录" no-caps @click="login" />
 </template>
 
 <script setup>
@@ -24,7 +24,7 @@ const formData = reactive({
 })
 const { token } = storeToRefs(useUserStore())
 const errorMsg = ref('')
-const login = () => {
+function login() {
   http.post('/login', formData)
     .then(response => {
       const TOKEN_KEY = 'my_jwt_token'
@@ -43,11 +43,19 @@ const login = () => {
 </script>
 
 <style scoped>
-/* 样式不变 */
-</style>
+.textin-1,
+.textin-2 {
+  width: 80%;
+  margin-left: 10%;
+  border-bottom: 1px white solid;
+  margin-top: 17%;
+  background-color: rgb(31, 31, 31);
+}
 
+.textin-2 {
+  margin-bottom: 15%;
+}
 
-<style scoped>
 .error-msg {
   margin-top: 3%;
   margin-left: 10%;
@@ -59,12 +67,6 @@ const login = () => {
 
 div {
   display: block;
-}
-
-input[type="text"]:focus,
-input[type="password"]:focus {
-  outline: none;
-  border-bottom: 1px solid white;
 }
 
 * {
@@ -86,46 +88,6 @@ input[type="password"]:focus {
   height: 44px;
 }
 
-
-.acc {
-  margin-top: 57px;
-  font-family: 'PingFang SC';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  height: 28px;
-  margin-bottom: 13px;
-  margin-left: 10%;
-}
-
-.psw {
-  font-family: 'PingFang SC';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
-  margin-bottom: 16px;
-  margin-left: 10%;
-}
-
-input[type="text"],
-input[type="password"] {
-  width: 80%;
-  height: 22px;
-  background-color: rgb(29, 29, 29);
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 1px gray solid;
-  font-family: 'PingFang SC';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 22px;
-  margin-left: 10%;
-}
-
 input[type="text"] {
   margin-bottom: 60px;
 }
@@ -133,7 +95,6 @@ input[type="text"] {
 
 
 button {
-  background-color: rgb(248, 233, 253);
   width: 80%;
   height: 65px;
   border-radius: 20px;
@@ -145,10 +106,6 @@ button {
   line-height: 28px;
   text-align: center;
   margin-left: 10%;
-}
-
-button:active {
-  background-color: rgb(189, 108, 216);
 }
 </style>
 

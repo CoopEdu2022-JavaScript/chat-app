@@ -45,7 +45,7 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
-h1{
+h4{
   font-family: 'PingFang SC';
 font-style: normal;
 font-weight: 600;
@@ -58,6 +58,7 @@ line-height: 42px;
 
 color: #FFFFFF;
 }
+
 /* 
 
 
