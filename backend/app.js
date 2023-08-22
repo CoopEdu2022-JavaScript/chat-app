@@ -3,12 +3,12 @@ const app = express()
 const router = require('./router')
 const cors = require('cors')
 const port = 3000
-const fs=require('fs')
+const fs = require('fs')
 const path = require('path');
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname + '/uploads'))
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://172.10.21.169:5173', 'http://10.16.0.152:5173', 'http://192.168.137.1:5173', 'http://172.16.38.164:5173','http://192.168.0.6:5173']
+  origin: ['http://localhost:5173', 'http://172.10.21.169:5173', 'http://10.16.0.152:5173', 'http://192.168.137.1:5173', 'http://172.16.38.164:5173', 'http://192.168.0.6:5173']
 }
 app.use(cors(corsOptions))
 

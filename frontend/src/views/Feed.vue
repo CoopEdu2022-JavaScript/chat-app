@@ -96,12 +96,11 @@ const token = localStorage.getItem(TOKEN_KEY)
 const showOptions = ref(false)
 const posts = ref([]);
 const postAuthors = ref([]);
-const commentContent = ref('');
-const comments = ref([])
 const icon_urls = ref([])
 const bgc = ref("#fff")
 const notif_num = ref()
 const notif_message = ref("")
+let urls = ref([]);
 function trimAll(ele) {
     if (typeof ele === 'string') {
         return ele.split(/[\t\r\f\n\s]*/g).join('');
@@ -236,7 +235,6 @@ async function getimageurl(postid) {
     console.log(res.data)
     return res.data.path
 }
-let urls = ref([]);
 
 watch(() => posts.value, async (posts) => {
     for (let i = 0; i < posts.length; i++) {
@@ -281,17 +279,14 @@ http.get('/feed', {
                     }
                     if (res.data.notif_likes > 0 && res.data.notif_comments > 0) {
                         notif_message.value = `您获得了${res.data.notif_likes}个新的点赞和${res.data.notif_comments}条新的评论`
-                    } else if (res.data.notif_likes > 0) { notif_message.value = `您获得了${res.data.notif_likes}个新的点赞` }
+                    }
+                    else if (res.data.notif_likes > 0) { notif_message.value = `您获得了${res.data.notif_likes}个新的点赞` }
                     else { notif_message.value = `您获得了${res.data.notif_comments}条新的评论` }
                 }
 
             })
             // if(findComment(post)!=[])comments.value.push(findComment(post));
             getUserNames(post.post_id).then(res => {
-                console.log(res)
-                console.log(post)
-                console.log(posts.value[0])
-                console.log(i)
                 postAuthors.value.push(res.usernames);
                 icon_urls.value.push(res.usericon)
                 if (++i < length) {
@@ -305,31 +300,34 @@ http.get('/feed', {
 //==================
 </script>
 <style scoped>
-.popup2 img{
+.popup2 img {
     width: 100%;
-    margin:auto
+    margin: auto
 }
+
 .popup2-fade-enter-active {
-  transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .popup2-fade-leave-active {
-  transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .popup2-fade-enter-from,
 .popup2-fade-leave-to {
-  opacity: 0;
+    opacity: 0;
 }
+
 .popup2 {
-  position: fixed;
-  top: 0; 
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.8);
-  display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
 }
+
 .search-input {
     border-color: aqua;
 }

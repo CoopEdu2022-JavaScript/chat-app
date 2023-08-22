@@ -8,47 +8,26 @@ const { v5: uuidv5 } = require("uuid")
 router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 const fs = require('fs')
-// server.js
-// function emptydir(delpath) {
-//   fpath = "../frontend/src/assets/images"
-//   const files = fs.readdirSync(fpath);
-//   files.forEach(file => {
-//     const filePath = `${fpath}/${file}`;
-//     const stats = fs.statSync(filePath);
-//     let path_to_compare = filePath.replace('../frontend/', '')
-//     if (stats.isDirectory()) {
-//       emptydir(filePath);
-//     } else {
-//       if (path_to_compare == delpath) {
-//         fs.unlinkSync(filePath);
-//         console.log(`删除${file}文件成功`)
-//       }
-//       else {
-//         console.log(path_to_compare)
-//       }
-//     }
-//   });
-// }
-// function emptydir(delpath) {
-//   fpath = "../frontend/src/assets/images"
-//   const files = fs.readdirSync(fpath);
-//   files.forEach(file => {
-//     const filePath = `${fpath}/${file}`;
-//     const stats = fs.statSync(filePath);
-//     let path_to_compare = filePath.replace('../frontend/', '')
-//     if (stats.isDirectory()) {
-//       emptydir(filePath);
-//     } else {
-//       if (path_to_compare == delpath) {
-//         fs.unlinkSync(filePath);
-//         console.log(`删除${file}文件成功`)
-//       }
-//       else {
-//         console.log(path_to_compare)
-//       }
-//     }
-//   });
-// }
+function emptydir(delpath) {
+  fpath = "../frontend/src/assets/images"
+  const files = fs.readdirSync(fpath);
+  files.forEach(file => {
+    const filePath = `${fpath}/${file}`;
+    const stats = fs.statSync(filePath);
+    let path_to_compare = filePath.replace('../frontend/', '')
+    if (stats.isDirectory()) {
+      emptydir(filePath);
+    } else {
+      if (path_to_compare == delpath) {
+        fs.unlinkSync(filePath);
+        console.log(`删除${file}文件成功`)
+      }
+      else {
+        console.log(path_to_compare)
+      }
+    }
+  });
+}
 router.post('/newpost', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
@@ -74,8 +53,8 @@ router.get('/:id', async (req, res) => {
   const values = [id]
   const [rows] = await db.query(sql, values)
   res.json(rows[0])
-}
-)
+})
+
 router.put('/:id/fix', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
@@ -89,44 +68,41 @@ router.put('/:id/fix', async (req, res) => {
     res.status(500).json({ err })
   }
 })
-// router.delete('/:id/delete', async (req, res) => {
-//   try {
-//     const { user_id } = getPayload(req)
-//     const id = req.params.id
-//     const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? `
-//     const values = [id, user_id, id, id, id]
-//     const image_del = 'SELECT path FROM images_post WHERE post_id=?'
-//     const val = [id]
-//     const [del_img] = await db.query(image_del, val)
-//     console.log(del_img[0])
-//     emptydir(del_img[0].path)
-//     const [rows] = await db.query(sql, values)
-//     // const imgJson=JSON.stringify(del_img)
-//     res.json(del_img)
-//   } catch (err) {
-//     console.error('Error fetching post:', err)
-//     res.status(500).json({ err })
-//   }
-// })
 router.delete('/:id/delete', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
     const id = req.params.id
     const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? `
-    const values = [id, user_id, id, id]
-    await db.query(sql,values);
-    const sql2 = 'UPDATE images_post SET status=inactive WHERE post_id=?'
-    const values2 = [id]
-    await db.query(sql2,values2)
-
-    
-    
-    
+    const values = [id, user_id, id, id, id]
+    const image_del = 'SELECT path FROM images_post WHERE post_id=?'
+    const val = [id]
+    const [del_img] = await db.query(image_del, val)
+    console.log(del_img[0])
+    emptydir(del_img[0].path)
+    const [rows] = await db.query(sql, values)
+    // const imgJson=JSON.stringify(del_img)
+    res.json(del_img)
   } catch (err) {
     console.error('Error fetching post:', err)
     res.status(500).json({ err })
   }
 })
+
+// router.delete('/:id/delete', async (req, res) => {
+//   try {
+//     const { user_id } = getPayload(req)
+//     const id = req.params.id
+//     const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? `
+//     const values = [id, user_id, id, id]
+//     await db.query(sql, values);
+//     const sql2 = 'UPDATE images_post SET status=inactive WHERE post_id=?'
+//     const values2 = [id]
+//     await db.query(sql2, values2)
+//   } catch (err) {
+//     console.error('Error fetching post:', err)
+//     res.status(500).json({ err })
+//   }
+// })
 
 router.post('/:id/likes', async (req, res) => {
   // const { id } = req.params
@@ -205,6 +181,7 @@ router.get('/:id/hlike', async (req, res) => {
     res.status(500).json({ err })
   }
 })
+
 router.get('/:id/can_be_deleted', async (req, res) => {
   try {
     const { user_id } = getPayload(req)
@@ -337,36 +314,37 @@ router.get('/detail', async (req, res, next) => {
     res.status(500).json({ err })
   }
 })
-function deleteInactiveImages() {
-  const currentTime = new Date();
-  const targetTime = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 5, 0, 0); // 设置目标时间为当天的5:00
-  const targetTime1 = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 5, 1, 0);
+// function deleteInactiveImages() {
+//   const currentTime = new Date();
+//   const targetTime = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 5, 0, 0); // 设置目标时间为当天的5:00
+//   const targetTime1 = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 5, 1, 0);
 
-  if (currentTime >= targetTime&& currentTime<targetTime1) {
-    const deleteQuery = 'SELECT path FROM images_post WHERE status = "inactive"';
-    db.query(deleteQuery, (error, results, fields) => {
-      if (error) throw error;
-      if (results){
-      for (let i = 0; i < results.length; i++) {
-        const filePath = results[i].path;
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-          console.log(`文件 ${filePath} 已成功删除！`);
-        });
-      }}
-
-
-    });
-
- 
-    clearInterval(timer);
-  }
-}
+//   if (currentTime >= targetTime && currentTime < targetTime1) {
+//     const deleteQuery = 'SELECT path FROM images_post WHERE status = "inactive"';
+//     db.query(deleteQuery, (error, results, fields) => {
+//       if (error) throw error;
+//       if (results) {
+//         for (let i = 0; i < results.length; i++) {
+//           const filePath = results[i].path;
+//           fs.unlink(filePath, (err) => {
+//             if (err) {
+//               console.error(err);
+//               return;
+//             }
+//             console.log(`文件 ${filePath} 已成功删除！`);
+//           });
+//         }
+//       }
 
 
-const timer = setInterval(deleteInactiveImages, 1000000);
+//     });
+
+
+//     clearInterval(timer);
+//   }
+// }
+
+
+// const timer = setInterval(deleteInactiveImages, 1000000);
 
 module.exports = router
