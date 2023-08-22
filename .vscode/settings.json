@@ -3,5 +3,6 @@
         "Antd",
         "pinia",
         "Vite"
-    ]
+    ],
+    "git.ignoreLimitWarning": true
 }
