@@ -115,7 +115,7 @@ router.delete('/:id/delete', async (req, res) => {
     const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? `
     const values = [id, user_id, id, id]
     await db.query(sql,values);
-    const sql2 = 'UPDATE images_post SET status=inactive WHERE post_id=?'
+    const sql2 = 'UPDATE images_post SET status="inactive" WHERE post_id=?'
     const values2 = [id]
     await db.query(sql2,values2)
 
