@@ -298,4 +298,21 @@ router.get('/detail', async (req, res, next) => {
     res.status(500).json({ err })
   }
 })
+function deleteInactiveImages() {
+  const currentTime = new Date();
+  const targetTime = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 5, 0, 0); // 设置目标时间为当天的5:00
+
+  if (currentTime >= targetTime) {
+    const deleteQuery = 'SELECT path FROM image_post WHERE status = inactive ';
+    connection.query(deleteQuery, (error, results, fields) => {
+      if (error) throw error;
+      console.log('已成功删除标记为 deactive 的图片！');
+    });
+
+    
+    clearInterval(timer);
+  }
+}
+const timer = setInterval(deleteInactiveImages, 100000);
+
 module.exports = router
