@@ -29,6 +29,26 @@ const fs = require('fs')
 //     }
 //   });
 // }
+// function emptydir(delpath) {
+//   fpath = "../frontend/src/assets/images"
+//   const files = fs.readdirSync(fpath);
+//   files.forEach(file => {
+//     const filePath = `${fpath}/${file}`;
+//     const stats = fs.statSync(filePath);
+//     let path_to_compare = filePath.replace('../frontend/', '')
+//     if (stats.isDirectory()) {
+//       emptydir(filePath);
+//     } else {
+//       if (path_to_compare == delpath) {
+//         fs.unlinkSync(filePath);
+//         console.log(`删除${file}文件成功`)
+//       }
+//       else {
+//         console.log(path_to_compare)
+//       }
+//     }
+//   });
+// }
 router.post('/newpost', async (req, res) => {
   try {
     const { user_id } = getPayload(req)

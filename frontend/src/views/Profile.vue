@@ -10,7 +10,7 @@
     <div class="background-pur">
         <div class="background-blk">
             <div class="tiezi">帖子</div>
-            <div class="fastshot">快拍(开发中)</div>
+            <div class="fastshot">暂时没想出来这里做啥功能</div>
         </div>
     </div>
     <div class="context">
