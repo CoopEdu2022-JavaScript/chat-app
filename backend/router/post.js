@@ -68,41 +68,41 @@ router.put('/:id/fix', async (req, res) => {
     res.status(500).json({ err })
   }
 })
-router.delete('/:id/delete', async (req, res) => {
-  try {
-    const { user_id } = getPayload(req)
-    const id = req.params.id
-    const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? `
-    const values = [id, user_id, id, id, id]
-    const image_del = 'SELECT path FROM images_post WHERE post_id=?'
-    const val = [id]
-    const [del_img] = await db.query(image_del, val)
-    console.log(del_img[0])
-    emptydir(del_img[0].path)
-    const [rows] = await db.query(sql, values)
-    // const imgJson=JSON.stringify(del_img)
-    res.json(del_img)
-  } catch (err) {
-    console.error('Error fetching post:', err)
-    res.status(500).json({ err })
-  }
-})
-
-// router.delete('/:id/delete', async (req, res) => {
+// router.delete('/:id/delete_user_icon', async (req, res) => {
 //   try {
 //     const { user_id } = getPayload(req)
 //     const id = req.params.id
 //     const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? `
-//     const values = [id, user_id, id, id]
-//     await db.query(sql, values);
-//     const sql2 = 'UPDATE images_post SET status=inactive WHERE post_id=?'
-//     const values2 = [id]
-//     await db.query(sql2, values2)
+//     const values = [id, user_id, id, id, id]
+//     const image_del = 'SELECT path FROM images_post WHERE post_id=?'
+//     const val = [id]
+//     const [del_img] = await db.query(image_del, val)
+//     console.log(del_img[0])
+//     emptydir(del_img[0].path)
+//     const [rows] = await db.query(sql, values)
+//     // const imgJson=JSON.stringify(del_img)
+//     res.json(del_img)
 //   } catch (err) {
 //     console.error('Error fetching post:', err)
 //     res.status(500).json({ err })
 //   }
 // })
+
+router.delete('/:id/delete', async (req, res) => {
+  try {
+    const { user_id } = getPayload(req)
+    const id = req.params.id
+    const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? `
+    const values = [id, user_id, id, id]
+    await db.query(sql, values);
+    const sql2 = 'UPDATE images_post SET status=inactive WHERE post_id=?'
+    const values2 = [id]
+    await db.query(sql2, values2)
+  } catch (err) {
+    console.error('Error fetching post:', err)
+    res.status(500).json({ err })
+  }
+})
 
 router.post('/:id/likes', async (req, res) => {
   // const { id } = req.params
@@ -345,6 +345,6 @@ router.get('/detail', async (req, res, next) => {
 // }
 
 
-// const timer = setInterval(deleteInactiveImages, 1000000);
+// const timer = setInterval(deleteInactiveImages, 9*60*1000);
 
 module.exports = router

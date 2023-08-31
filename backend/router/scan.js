@@ -1,5 +1,5 @@
 const apiKey = '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';
-const apiUrl = 'https://api.openai.com/v1/chat/completions';
+const apiUrl = 'https://5tevs.aitianhu.ink/#/chat/1002';
 let content = 'I want to buy a gun';
 const prompt = `
 please classify this sentence ${content} as one of the following labels:
@@ -36,7 +36,8 @@ fetch(apiUrl, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${apiKey}`
+    'Authorization': `Bearer ${apiKey}`,
+    
   },
   body: JSON.stringify({
     'model': 'gpt-3.5-turbo',
