@@ -67,6 +67,7 @@ import http from '../api/http'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 // store.js
+import store from '../../store';
 // 组件
 import { useSearchStore } from '../../store/searchstore'
 import { SaveWordStore } from '../../store/KeyWordStore'
@@ -165,28 +166,16 @@ const submitComment = (post) => {
         });
 }
 const like = (post_id, post_A) => {
-    http.get(`/post/${post_id}/hlike`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }).then(response => {
-        //console.log(response.data.isLiked)
-        post_A.isLiked = response.data.isLiked;
-        post_A.isLiked = !post_A.isLiked
-        post_A.likes += (post_A.isLiked ? 1 : -1)
-        if (post_A.isLiked) http.post(`post/${post_id}/likes`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        else {
-            http.delete(`/post/${post_id}/unlike`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-        }
-    })
+    if(localStorage.getItem("posts")==null){
+        localStorage.setItem("posts",JSON.stringify({}))
+    }
+    let obj=JSON.parse(localStorage.getItem("posts"))
+    obj[post_id]=!post_A.isLiked;
+    console.log(obj)
+    // localStorage.setItem("posts",JSON.stringify(obj))
+    console.log(localStorage.getItem("posts"))
+    post_A.isLiked = !post_A.isLiked
+    post_A.likes += (post_A.isLiked ? 1 : -1)
 }
 function goToComments(postID) {
     // Store the postID in sessionStorage
