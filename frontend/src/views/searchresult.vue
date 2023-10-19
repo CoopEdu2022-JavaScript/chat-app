@@ -4,6 +4,16 @@
         <div class="placeholder">
         </div>
     </div>
+    <div>
+        <!-- 弹窗 -->
+        <teleport to="body">
+            <transition name="popup-fade">
+                <div v-if="show_Popup" class="popup">
+                    <img :src="currentUrl" @click="show_Popup = false">
+                </div>
+            </transition>
+        </teleport>
+    </div>
     <div class="blogs">
         <div class="keyword">关键词:{{ KeyWord }}</div>
         <div v-for="(post, index) in posts" :key="post.post_id" class="user_blogs">
@@ -14,11 +24,11 @@
             </div>
             <h4>{{ post.title }}</h4>
             <div class="user_blogs_context">{{ post.content }}</div>
-            <a :href="urls[index]" target="_blank">
-                <img :src="urls[index]" class="pic">
-            </a>
+            <!-- <a :href="urls[index]" target="_blank"> -->
+            <img :src="urls[index]" class="pic" @click="showImg(urls[index])">
+            <!-- </a> -->
             <br>
-            <span style="color:white ">[点击图片即可查看整张图片]</span><br><br>
+            <br><br>
             <div class="functions">
                 <button @click.stop="like(post.post_id, post)" :state="post.isLiked ? 'press' : 'release'"
                     class="likes"></button>
@@ -40,6 +50,8 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { useSearchStore } from '../../store/searchstore'
 import { SaveWordStore } from '../../store/KeyWordStore'
+const show_Popup = ref(false)
+const currentUrl = ref('')
 const router = useRouter();
 const KeyWordSave = SaveWordStore()
 const searchStore = useSearchStore()
@@ -64,6 +76,10 @@ async function getUsername(postid) {
         //console.log(error);
         return '';
     }
+}
+function showImg(url) {
+    currentUrl.value = url
+    show_Popup.value = true
 }
 async function getUserNames(postid) {
     const usernamesPromise = getUsername(postid); // 调用getUsername()函数，并返回Promise对象
@@ -151,6 +167,34 @@ const submitComment = (post) => {
 }
 </script>
 <style scoped>
+.popup img {
+    width: 100%;
+    margin: auto
+}
+
+.popup-fade-enter-active {
+    transition: all 0.3s ease;
+}
+
+.popup-fade-leave-active {
+    transition: all 0.3s ease;
+}
+
+.popup-fade-enter-from,
+.popup-fade-leave-to {
+    opacity: 0;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+}
+
 .isempty {
     color: white;
     font-size: 20px;
