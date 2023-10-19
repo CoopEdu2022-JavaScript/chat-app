@@ -70,8 +70,6 @@ import { useRouter } from 'vue-router';
 // 组件
 import { useSearchStore } from '../../store/searchstore'
 import { SaveWordStore } from '../../store/KeyWordStore'
-import { HttpStatusCode } from 'axios';
-import { selectProps } from 'ant-design-vue/es/vc-select';
 //================弹窗
 const show = ref(false)
 function showPopup() {
@@ -345,14 +343,13 @@ http.get('/feed', {
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 45px;
-    background-color: white;
     font-weight: bolder;
     font-size: 20px;
     font-style: italic;
     color: white;
     line-height: 20px;
     text-align: center;
-    border-radius: 30%;
+    border-radius: 20%;
 }
 
 .user_icon {
