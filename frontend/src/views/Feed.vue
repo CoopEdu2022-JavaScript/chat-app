@@ -166,13 +166,13 @@ const submitComment = (post) => {
         });
 }
 const like = (post_id, post_A) => {
-    if(localStorage.getItem("posts")==null){
-        localStorage.setItem("posts",JSON.stringify({}))
+    if (localStorage.getItem("posts") == null) {
+        localStorage.setItem("posts", JSON.stringify({}))
     }
-    let obj=JSON.parse(localStorage.getItem("posts"))
-    obj[post_id]=!post_A.isLiked;
+    let obj = JSON.parse(localStorage.getItem("posts"))
+    obj[post_id] = !post_A.isLiked;
     console.log(obj)
-    // localStorage.setItem("posts",JSON.stringify(obj))
+    localStorage.setItem("posts", JSON.stringify(obj))
     console.log(localStorage.getItem("posts"))
     post_A.isLiked = !post_A.isLiked
     post_A.likes += (post_A.isLiked ? 1 : -1)
@@ -180,17 +180,32 @@ const like = (post_id, post_A) => {
 function goToComments(postID) {
     // Store the postID in sessionStorage
     sessionStorage.setItem('postID', postID);
-
+    if (localStorage.getItem("posts") != null) {
+        console.log(localStorage.getItem("posts"))
+        http.post(`/post/${localStorage.getItem("posts")}/likes`)
+    }
     // Navigate to the comment page
     router.push('/comment');
 }
 function goToProfile() {
+    if (localStorage.getItem("posts") != null) {
+        console.log(localStorage.getItem("posts"))
+        http.post(`/post/${localStorage.getItem("posts")}/likes`)
+    }
     router.push('/profile');
 }
 function goToPostBlog() {
+    if (localStorage.getItem("posts") != null) {
+        console.log(localStorage.getItem("posts"))
+        http.post(`/post/${localStorage.getItem("posts")}/likes`)
+    }
     router.push('/postblog');
 }
 function goToSnapShot() {
+    if (localStorage.getItem("posts") != null) {
+        console.log(localStorage.getItem("posts"))
+        http.post(`/post/${localStorage.getItem("posts")}/likes`)
+    }
     router.push('/postsnapshot')
 }
 async function getUsername(postid) {
@@ -284,6 +299,28 @@ http.get('/feed', {
     })
 
 //===================
+const countdown = ref(10)//这边是一个倒计时,用于优化like算法
+const interval = ref(null)
+onMounted(() => {
+    interval.value = setInterval(() => {
+        countdown.value--
+        if (countdown.value === 0) {
+            // Run statement here
+            if (localStorage.getItem("posts") != null) {
+                console.log('Likes Added')
+                console.log(localStorage.getItem("posts"))
+                http.post(`/post/${localStorage.getItem("posts")}/likes`).then(res => {
+                    localStorage.clear()
+                })
+            }
+            countdown.value = 10 // Reset countdown
+        }
+    }, 1000)
+})
+
+onUnmounted(() => {
+    clearInterval(interval.value)
+})
 //==================
 </script>
 <style scoped>

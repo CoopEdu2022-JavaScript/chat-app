@@ -68,25 +68,6 @@ router.put('/:id/fix', async (req, res) => {
     res.status(500).json({ err })
   }
 })
-// router.delete('/:id/delete_user_icon', async (req, res) => {
-//   try {
-//     const { user_id } = getPayload(req)
-//     const id = req.params.id
-//     const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? `
-//     const values = [id, user_id, id, id, id]
-//     const image_del = 'SELECT path FROM images_post WHERE post_id=?'
-//     const val = [id]
-//     const [del_img] = await db.query(image_del, val)
-//     console.log(del_img[0])
-//     emptydir(del_img[0].path)
-//     const [rows] = await db.query(sql, values)
-//     // const imgJson=JSON.stringify(del_img)
-//     res.json(del_img)
-//   } catch (err) {
-//     console.error('Error fetching post:', err)
-//     res.status(500).json({ err })
-//   }
-// })
 
 router.delete('/:id/delete', async (req, res) => {
   try {
@@ -95,9 +76,12 @@ router.delete('/:id/delete', async (req, res) => {
     const sql = `DELETE FROM post WHERE post_id = ? AND uid=?;DELETE FROM like_post WHERE post_id =?;DELETE FROM conment WHERE post_id = ? `
     const values = [id, user_id, id, id]
     await db.query(sql, values);
-    const sql2 = 'UPDATE images_post SET status=inactive WHERE post_id=?'
+    const sql2 = 'SELECT path FROM images_post WHERE post_id=?'
     const values2 = [id]
-    await db.query(sql2, values2)
+    const [del_img] = await db.query(sql2, values2)
+    emptydir(del_img[0].path)
+    res.send(null)
+
   } catch (err) {
     console.error('Error fetching post:', err)
     res.status(500).json({ err })
@@ -105,24 +89,36 @@ router.delete('/:id/delete', async (req, res) => {
 })
 
 router.post('/:id/likes', async (req, res) => {
-  // const { id } = req.params
-  // db.query('UPDATE post SET likes = likes + 1 WHERE id = ?', [id], (err, data) => {
-  //   if (err) res.status(500).json({ err })
-  //   else res.send(true)
-  // })
   try {
     const { user_id } = getPayload(req)
-    const id = req.params.id
-    const sql = `INSERT INTO like_post (post_id, uid, time) VALUES (?, ?, NOW());
-    UPDATE post SET likes = likes + 1 WHERE post_id = ?;`
-    const values = [id, user_id, id]
-    const [rows] = await db.query(sql, values)
-    const sql2 = 'SELECT uid FROM post WHERE post_id=?'
-    const values2 = [id]
-    const [rows2] = await db.query(sql2, values2)
-    const sql3 = 'UPDATE users SET notif_likes = notif_likes + 1 WHERE uid = ?'
-    const values3 = [rows2[0].uid]
-    const [rows3] = await db.query(sql3, values3)
+    let IDs = JSON.parse(req.params.id)
+    for (let key in IDs) {
+      let id = key
+      if (IDs[key]) {
+        let sql = `INSERT INTO like_post (post_id, uid, time) VALUES (?, ?, NOW());
+      UPDATE post SET likes = likes + 1 WHERE post_id = ?;`
+        let values = [id, user_id, id]
+        let [rows] = await db.query(sql, values)
+        let sql2 = 'SELECT uid FROM post WHERE post_id=?'
+        let values2 = [id]
+        let [rows2] = await db.query(sql2, values2)
+        let sql3 = 'UPDATE users SET notif_likes = notif_likes + 1 WHERE uid = ?'
+        let values3 = [rows2[0].uid]
+        let [rows3] = await db.query(sql3, values3)
+      }
+      else {
+        let sql = `DELETE FROM like_post WHERE post_id = ? AND uid = ?;
+        UPDATE post SET likes=likes-1 WHERE post_id = ?`
+        let values = [id, user_id, id]
+        let [rows] = await db.query(sql, values)
+        let sql2 = "SELECT uid FROM post WHERE post_id=?"
+        let values2 = [id]
+        let [rows2] = await db.query(sql2, values2)
+        let sql3 = "UPDATE users SET notif_likes = notif_likes - 1 WHERE uid=? AND notif_likes>0"
+        let values3 = [rows2[0].uid]
+        let [rows3] = await db.query(sql3, values3)
+      }
+    }
     res.send({ state: true })
   } catch (err) {
     console.error('not success', err)
